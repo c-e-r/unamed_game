@@ -4,9 +4,7 @@
 package unamedGame;
 
 import java.awt.Color;
-import java.util.Random;
 
-import org.dom4j.Element;
 
 import unamedGame.entities.Enemy;
 import unamedGame.entities.Player;
@@ -29,7 +27,6 @@ public class Combat {
 	private Player player;
 	private Enemy enemy;
 	private static boolean inCombat;
-	private Random rand = new Random();
 
 	/**
 	 * Starts a combat loop between the player and given Enemy.

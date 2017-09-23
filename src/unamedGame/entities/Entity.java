@@ -5,8 +5,8 @@ package unamedGame.entities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
+import unamedGame.Dice;
 import unamedGame.Game;
 import unamedGame.effects.Effect;
 import unamedGame.items.Item;
@@ -99,8 +99,6 @@ public class Entity {
 	protected String innateWeaponMissDescription;
 	protected String innatePlayerWeaponHitDescription;
 	protected String innatePlayerWeaponMissDescription;
-
-	protected Random rand = new Random();
 
 	/**
 	 * Restores health to the Entity
@@ -205,7 +203,7 @@ public class Entity {
 		}
 		String[] description = null;
 
-		int damage = (int) (((attacker.getEffectiveStrength() + weaponBaseDamage + rand.nextInt(weaponVariableDamage)
+		int damage = (int) (((attacker.getEffectiveStrength() + weaponBaseDamage + Dice.roll(weaponVariableDamage)
 				+ attacker.getDamageMod()) * attacker.getDamageMult()));
 		damage = applyResistances(damage, weaponDamageType);
 		// Prevent damage from going below 0
@@ -213,7 +211,7 @@ public class Entity {
 			damage = 0;
 		}
 
-		int temp = rand.nextInt(100);
+		int temp = Dice.roll(100);
 		System.out.println(attacker.getEffectiveHit() + "+" + weaponHitChance + "+" + temp);
 		System.out.println(getEffectiveDodge());
 
@@ -326,7 +324,7 @@ public class Entity {
 		}
 		String[] description = null;
 
-		int damage = (int) (((attacker.getEffectiveStrength() + weaponBaseDamage + rand.nextInt(weaponVariableDamage)
+		int damage = (int) (((attacker.getEffectiveStrength() + weaponBaseDamage + Dice.roll(weaponVariableDamage)
 				+ attacker.getDamageMod()) * attacker.getDamageMult()));
 		damage = applyResistances(damage, weaponDamageType);
 		// Prevent damage from going below 0
@@ -334,7 +332,7 @@ public class Entity {
 			damage = 0;
 		}
 
-		int temp = rand.nextInt(100);
+		int temp = Dice.roll(100);
 		System.out.println(attacker.getEffectiveHit() + "+" + weaponHitChance + "+" + temp);
 		System.out.println(getEffectiveDodge());
 
