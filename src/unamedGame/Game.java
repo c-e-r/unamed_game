@@ -18,7 +18,7 @@ import unamedGame.time.TimeObserver;
 import unamedGame.ui.Window;
 
 /**
- * @author camer
+ * @author c-e-r
  *
  */
 public class Game {

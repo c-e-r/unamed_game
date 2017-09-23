@@ -23,7 +23,7 @@ import unamedGame.util.CubePoint;
 import unamedGame.world.World;
 
 /**
- * @author camer
+ * @author c-e-r
  *
  */
 public class Player extends Entity {

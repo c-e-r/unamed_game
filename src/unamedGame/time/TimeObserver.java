@@ -9,7 +9,7 @@ import java.util.Observer;
 
 /**
  * A class to observe time and allow other classes to do things when time passes
- * @author camer
+ * @author c-e-r
  *
  */
 public class TimeObserver implements Observer {

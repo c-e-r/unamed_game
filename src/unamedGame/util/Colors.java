@@ -8,7 +8,7 @@ import java.awt.Color;
 /**
  * Stores commonly used colors.
  * 
- * @author camer
+ * @author c-e-r
  *
  */
 public class Colors {

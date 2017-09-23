@@ -25,7 +25,7 @@ import unamedGame.world.WorldTile;
 /**
  * A panel to display the map
  * 
- * @author camer
+ * @author c-e-r
  *
  */
 

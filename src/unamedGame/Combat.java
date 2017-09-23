@@ -21,7 +21,7 @@ import unamedGame.ui.Window;
 /**
  * Handles the games combat loop.
  * 
- * @author camer
+ * @author c-e-r
  *
  */
 public class Combat {

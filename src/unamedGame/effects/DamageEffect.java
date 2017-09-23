@@ -11,7 +11,7 @@ import unamedGame.util.Colors;
 /**
  * An effect that deals damage
  * 
- * @author camer
+ * @author c-e-r
  *
  */
 public class DamageEffect extends Effect {

@@ -11,7 +11,7 @@ import unamedGame.util.Colors;
 /**
  * An effect that heals health
  * 
- * @author camer
+ * @author c-e-r
  *
  */
 public class HealEffect extends Effect {

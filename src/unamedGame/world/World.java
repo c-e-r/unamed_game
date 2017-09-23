@@ -7,7 +7,7 @@ import java.awt.Point;
 
 /**
  * A class to store and manipulate the world
- * @author camer
+ * @author c-e-r
  *
  */
 public class World {

@@ -15,7 +15,7 @@ import unamedGame.ui.Window;
 import unamedGame.util.Colors;
 
 /**
- * @author camer
+ * @author c-e-r
  *
  */
 public class Entity {

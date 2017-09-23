@@ -20,7 +20,7 @@ import unamedGame.ui.Window;
 /**
  * A parent class to base all other effects off of
  * 
- * @author camer
+ * @author c-e-r
  *
  */
 public abstract class Effect {

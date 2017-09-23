@@ -23,7 +23,7 @@ import unamedGame.skills.Skill;
 import unamedGame.ui.Window;
 
 /**
- * @author camer
+ * @author c-e-r
  *
  */
 public class Enemy extends Entity {

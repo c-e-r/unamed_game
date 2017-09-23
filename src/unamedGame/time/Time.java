@@ -12,7 +12,7 @@ import unamedGame.entities.Player;
 /**
  * Keeps track of the games current time and contains methods for manipulating that time.
  * 
- * @author camer
+ * @author c-e-r
  *
  */
 public class Time extends Observable {

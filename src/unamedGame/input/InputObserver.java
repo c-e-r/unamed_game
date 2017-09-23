@@ -6,7 +6,7 @@ package unamedGame.input;
 import java.util.EventListener;
 
 /**
- * @author camer
+ * @author c-e-r
  *
  */
 public interface InputObserver extends EventListener {

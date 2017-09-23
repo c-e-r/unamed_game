@@ -6,7 +6,7 @@ package unamedGame.world;
 import java.awt.Point;
 
 /**
- * @author camer
+ * @author c-e-r
  *
  */
 public class WorldTile {

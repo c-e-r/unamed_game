@@ -26,7 +26,7 @@ import unamedGame.ui.Window;
 /**
  * Reads and runs events from xml files
  * 
- * @author camer
+ * @author c-e-r
  *
  */
 public class EventReader {

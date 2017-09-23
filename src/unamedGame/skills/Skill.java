@@ -20,7 +20,7 @@ import unamedGame.entities.Entity;
 /**
  * 
  * 
- * @author camer
+ * @author c-e-r
  *
  */
 public class Skill {
