@@ -1,0 +1,29 @@
+attack 50%
+skill   30%
+    skill 1
+    skill 2
+    skill 3
+    skill 4
+spell 0%
+    spell 1
+item 20%
+    item 1
+    item 2
+flee 0%
+    
+    
+    
+attack
+buff
+    check if it alreay has that buff
+debuff
+    check if you have that debuff
+heal
+    only use if not at full health
+
+what if it choses item but theres only 1 buff item that it has already used?
+
+
+getAvailiableSkills() method will return an array list with only skils it will use and thats the list checked in the first step
+
+should it be possible to use the same thing twice in a row?

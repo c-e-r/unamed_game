@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<item>
+    <name>test item</name>
+    <description>this is a test item</description>
+    <useText>#userNameCapital# uses the test item</useText>
+    <useOnText>#userNameCapital# uses the test item on #targetName#</useOnText>
+    <playerUseText>You use the test item</playerUseText>
+    <playerUseOnText>You use the test item on #targetName#</playerUseOnText>
+    <offensive>true</offensive>
+    <weight>1</weight>
+    <uses>1</uses>
+    <maxUses>2</maxUses>
+    <battleUse>true</battleUse>
+    <fieldUse>true</fieldUse>
+    <equippable equipSlot='held'>true</equippable>
+    <effect
+        toSelf='true'
+        name='itemName' 
+        magnitude="7"
+        baseAccuracy='-1'
+        effectDescription='#targetNameCapital# healed for #totalHeal# health' 
+        playerEffectDescription='You are healed for #totalHeal#'
+    >heal</effect>
+    <effect 
+        name='itemName' 
+        magnitude='2' 
+        length='0'
+        damageType='physical' 
+        resistType='physical'
+        repeatType='untillResist'
+        effectDescription='#targetNameCapital# takes #totalDamage# damage'
+        repeatEffectDescription='#targetNameCapital# takes #totalDamage# damage'
+        playerRepeatEffectDescription='You take #totalDamage# damage'
+        playerEffectDescription='F You take #totalDamage# damage'
+        resistEffectDescription='#targetNameCapital# resists the effect'
+        resistRepeatEffectDescription='#targetNameCapital# resisted the effect this turn'
+        playerResistEffectDescription='You resist the effect'
+        playerResistRepeatEffectDescription='You resisted the effect this turn'
+        >damage</effect>
+    <effect 
+        name='itemName'
+        magnitude='5'
+        playerEffectDescription='You gain #magnitude# #stat# for the next #time# hours'
+        baseAccuracy='-1'
+        stat='spirit'
+        length='-1'
+        >increaseStat
+    </effect>
+    <effect
+        name='itemName'
+        magnitude='15'
+        length='-1'
+        baseAccuracy='-1'
+        stat='strength'
+        effectDescription='strength +15 enemy'
+        playerEffectDescription='strength +15 you'
+        repeatEffectDescription='N/A'
+        playerRepeatEffectDescription='N/A'
+        
+    >increaseStat</effect>
+</item>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<enemy>
+    <name>racoon</name>
+    <useName>the raccon</useName>
+    
+    <vitality>2</vitality>
+    <strength>1</strength>
+    <dexterity>3</dexterity>
+    <intellect>1</intellect>
+    <spirit>1</spirit>
+    <luck>2</luck>
+    
+    <description>You are fighting a very angry racoon</description>
+    <deathDescription>The raccon dies</deathDescription>
+    <killDescription>The raccon kills you</killDescription>
+    <innateSkill>testSkill</innateSkill>
+    <innateWeaponDamage>2</innateWeaponDamage>
+    <innateWeaponVariableDamage>1</innateWeaponVariableDamage>
+    <innateWeaponHitChance>5</innateWeaponHitChance>
+    <innateWeaponSpeed>2</innateWeaponSpeed>
+    <innateWeaponDamageType>physical</innateWeaponDamageType>
+    <innateWeaponHitDescription>#userNameCapital# scratches #targetName# with its claws dealing #damage# damage</innateWeaponHitDescription>
+    <innateWeaponMissDescription>#userNameCapital# scratches #targetName# with its claws but misses</innateWeaponMissDescription>
+    <innatePlayerWeaponHitDescription>You scratch #targetName# dealing #damage# damage</innatePlayerWeaponHitDescription>
+    <innatePlayerWeaponMissDescription>You scratch at #targetName# but miss</innatePlayerWeaponMissDescription>
+
+</enemy>

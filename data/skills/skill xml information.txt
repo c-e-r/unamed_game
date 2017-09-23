@@ -1,0 +1,22 @@
+<skill>
+    name=''                     [REQUIRED]                      the name of the skill
+    damageType=''               [REQUIRED if isAttack='true']   the type of damage the skill does
+    description=''              [REQUIRED]                      a description of the skill
+    attackDescription=''        [REQUIRED]                      a description displayed when a non-player entity uses the skill and hits
+    playerAttackDescription=''  [REQUIRED]                      a description displayed when a player uses the skill and hits
+    missDescription=''          [REQUIRED if isAttack='true']   a description displayed when a non-player entity uses the skill and misses
+    playerMissDescription=''    [REQUIRED if isAttacl='true']   a description displayed when a player uses the skill and misses
+    staminaCost=''              [OPTIONAL: default 0]       the amount of stamina it costs to use the skill
+    isAttack=''                 [OPTIONAL: default false]   if the skill makes an attack as part of its use
+    attackDamageBonus           [OPTIONAL: default 0]       the amount of bonus damage granted by the skill
+    attackVariableDamageBonus   [OPTIONAL: default 0]       the amount of variable bonus damage granted by the skill
+    attackDamageMult            [OPTIONAL: default 1]       the amount of damage multiplier granted by the skill. A double
+    attackHitBonus              [OPTIONAL: default 0]       the amount of bonus hit granted by the skill
+    attackSpeedBonus            [OPTIONAL: default 0]       the amount of bonus speed granted by the skill
+    
+    <hitEffect>                 [OPTIONAL]      the name of an effect that will apply if the skill hits. Can have multiple
+    <missEffect>                [OPTIONAL]      the name of an effect that will apply if the skill misses. Can have multiple
+    <alwaysEffects>             [OPTIONAL]      the name of an effect that will always apply after the skill. Can have multiple
+    <hitSkill>                  [OPTIONAL]      the name of a skill that will be used if the skill hits. Can have multiple
+    <missSkill>                 [OPTIONAL]      the name of a skill that will be used if the skill misses. Can have multiple
+    <alwaysSkill>               [OPTIONAL]      the name of a skill that will always be used after the skill. Can have multiple

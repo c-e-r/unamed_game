@@ -1,0 +1,31 @@
+<item>      root element
+    <name>              [REQUIRED]                  the name of the item
+    <description>       [REQUIRED]                  the inventory description of the item
+    <weight>            [OPTIONAL: default 0]       the weight of the item
+    <uses>              [OPTIONAL: default maxUses] the number of remaining uses on the item
+    <maxUses>           [OPTIONAL: default 0]       the maximum numer of uses on the item
+    <useText>           [REQUIRED]                  the text displayed when a non-player entity uses the item on itself
+    <useOnText>         [REQUIRED]                  the text displayed when a non-player entity uses the item on another entity
+    <playerUseText>     [REQUIRED]                  the text displayed when the player uses the item on themself
+    <playerUseOnText>   [REQUIRED]                  the text displayed when the player uses the item on another entity
+    <attackHitDescription> [REQUIRED for equippable as held]        the text displayed when a non-player entity attacks with the item and hits
+    <attackMissDescription> [REQUIRED for equippable as held]       the text displayed when a non-player entity attacks with the item and misses
+    <playerAttackHitDescription> [REQUIRED for equippable as held]  the text displayed when a player attacks with the item and hits
+    <playerAttackMissDescription> [REQUIRED for equippable as held] the text displayed when a player attacks with the item and misses
+    <battleUse>         [OPTIONAL: default false]                   if the item can be used in battle
+    <fieldUse           [OPTIONAL: default false]                   if the item can be used outside of battle
+    <offensive>         [OPTIONAL: default false]                   if when used in battle the item will be used on the opponent rather than self
+    <equippable>        [OPTIONAL: default false]                   if the item can be equipped
+        equipSlot=''    [REQUIRED for equippable items]             the slot the item can be equipped in. valid options are "head", "body", "hand", "held", "neck", "feet"
+   
+    <attackEffect>      [OPTIONAL]                  the name of the effect that will apply when the weapon is used in an attack. Can have multiple. 
+    <effect>            [OPTIONAL]                  the name of the effect that will apply when the weapon is used. Can have multiple. 
+    <permanantEffect>   [OPTIONAL]                  the name of the permanant effect that will apply when the weapon is used. Can have multiple. 
+    <equipEffect>       [OPTIONAL]                  the name of the effect imparted on an entity equipping this item. Can have multiple. 
+    <weaponHitChance>   [OPTIONAL: default 0]       the amount of bonus hit change this weapon grants
+    <weaponBaseDamage>  [OPTIONAL: default 0]       the amount of bonus damage this weapon deals
+    <weaponVariableDamage [OPTIONAL; default 0 ]    the amount of bonus variable damage this weapon deals
+    <weaponSpeed>       [OPTIONAL: default 0]       the amount of bonus speed this weapon grants
+    <skill>             [OPTIONAL]                  the name of the skill granted to an entity equipping this item. Can have multiple.
+    <armorValue>        [OPTIONAL: default 0]       the amount of armor granted by eqipping this item
+    <damageType>        [REQUIRED for equippable held] the type of damage this item deals when wielded as a weapon

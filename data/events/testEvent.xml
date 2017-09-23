@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<event>
+    <branch number = '0'>
+        <text>line 0 </text>
+        <text>line 1
+        <text>line 1.5</text>
+        <addItem>testItem</addItem>
+        </text>
+        <text>line 2</text>
+        <choice>
+            <choiceDescription>You have choices</choiceDescription>
+            <option branch='1'>choice 1</option>
+            <option branch='3'>choice 2</option>
+            <option branch='2'>choice 3</option>
+        </choice>
+    </branch>
+   
+    
+    <branch number='1'>
+        <text>before combat</text>
+        <combat>testEnemy</combat>
+        <text>after combat</text>
+        <end></end>
+    </branch>
+    
+    <branch number='2'>
+        <text>branch 2</text>
+        <end></end>
+    </branch>
+    
+    <branch number='3'>
+        <text>branch 2</text>
+        <end></end>
+    </branch>
+</event>

@@ -1,0 +1,20 @@
+effects are always contained within other xml files and are consistent across different types
+
+
+The following are shared between all effects
+<effect>    root element
+    name=''                     [REQUIRED]      the name of the effect
+    duration=''                 [OPTIONAL: default 0]      the duration of the effect. 0 means instant. -1 is permanant
+    increment=''                [OPTIONAL: default 0}      how often the effect triggers
+    effectDescription=''        [REQUIRED]           the text displayed when the effect initialy affects a non-player entity
+    playerEffectDescription=''  [REQUIRED]           the text displayed when the effect initialy affects a player
+    repeatEffectDescription=''              [REQUIRED]           the text displayed when the effect affects a non-player entity on repeat turns
+    playerRepeatEffectDescription=''        [REQUIRED]           the text displayed when the effect affects a player on repeat turns
+    resistEffectDescription=''              [REQUIRED]           the text displayed when the effect initialy is resisted by a non-player entity
+    playerResistEffectDescription=''        [REQUIRED]           the text displayed when the effect initialy in rsisted by a player
+    repeatRepeatEffectDescription=''        [REQUIRED]           the text displayed when the effect is resisted by a non-player entity on repeat turns
+    playerRepeatRepeatEffectDescription=''  [REQUIRED]           the text displayed when the effect is resisted by a player on repeat turns
+    baseAccuracy=''     [OPTIONAL: default -1]      the base accuracy of the effect -1 means the skill will bypass resistances
+    resistType=''       [REQUIRED if baseAccuracy not -1]   the resistance the skill checks against
+    repeatType=''       [OPTIONAL: default 'noRepeat']            determines if and how the effect repeats. Options are "noRepeat", "untilResist", "persistant"
+    toSelf=''           [OPTIONAL: default false]                 denotes that the effect will always apply to the user even if the item its on is offensive or if its on a skill or spell.                  

@@ -1,0 +1,50 @@
+Stats and what they effect
+
+vitality
+    maxHealth
+    bloodMagic?
+    physicalResistances
+        bleed
+        poison
+        climate
+    stamina |less
+strength
+    physicalDamage
+    physicalResistances | less
+    stamina | less
+    carryWeight
+dexterity
+    hitChance
+    dodgeChance
+    stamina |less
+    physicalDamage | can
+    critChance|less
+intellect
+    arcaneMagic
+    mentalResistance
+    mana |less
+    hitChance |less
+    dodgeChance|less
+spirit
+    mana | more
+    holyMagic
+    mentalResistances| more
+luck
+    hitChance |less
+    critChance
+    effectChance
+
+Equipment slots
+
+equipment
+    body
+    left held
+    right held
+    head
+    neck
+    hand gloves, ring, gauntlet, etc
+    hand gloves, ring, gauntlet, etc
+    feet
+    
+    
+    

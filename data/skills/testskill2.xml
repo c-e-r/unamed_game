@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<skill 
+    name='Taunt'
+    numberOfAttacks='0'
+    staminaCost='10'
+    description='Taunty'
+    attackDescription='#userNameCapital# taunts you'
+    playerAttackDescription='You taunt the enemy'
+    >
+    <alwaysEffect 
+        name='itemName' 
+        magnitude='1' 
+        damageType='physical' 
+        effectDescription='#targetNameCapital# takes #totalDamage# extra damage' 
+        playerEffectDescription='You take #totalDamage# extra damage' 
+    >damage</alwaysEffect>
+    <alwaysEffect
+        name='itemName'
+        magnitude='7'
+        toSelf='true'
+        effectDescription='#targetNameCapital# is healed by #totalHeal#'
+        playerEffectDescription='you are healed by #totalHeal#'
+    >heal<effect
+            name='itemName'
+            magnitude='1'
+            toSelf='true'
+            effectDescription='#targetNameCapital# is healed by #totalHeal#'
+            playerEffectDescription='you are healed by #totalHeal#'
+            >heal</effect>
+    </alwaysEffect>
+</skill>

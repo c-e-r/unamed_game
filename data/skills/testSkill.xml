@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<skill
+    name='bite'
+    isAttack='true'
+    attackHitBonus='0'
+    attackSpeedBonus='3'
+    staminaCost='0'
+    damageType='physical'
+    description='A scratch with claws'
+    attackDescription='#userNameCapital# scratches #targetName# with its claws dealing #damage# damage'
+    missDescription='#userNameCapital# scratches at #targetName# with its claws but misses'
+    playerAttackDescription='You scratch #targetName# with your claws and deal #damage#'
+    playerMissDescription='You scratch at #targetName# with your claws butmiss.'
+    >
+    <effect 
+        name='itemName' 
+        magnitude='1' 
+        damageType='physical' 
+        effectDescription='#targetNameCapital# takes #totalDamage# extra damage' 
+        playerEffectDescription='You take #totalDamage# extra damage' 
+    >damage</effect>
+    <hitSkill>testSkill2</hitSkill>
+</skill>
