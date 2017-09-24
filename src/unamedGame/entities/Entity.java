@@ -212,8 +212,6 @@ public class Entity {
 		}
 
 		int temp = Dice.roll(100);
-		System.out.println(attacker.getEffectiveHit() + "+" + weaponHitChance + "+" + temp);
-		System.out.println(getEffectiveDodge());
 
 		if (attacker.getEffectiveHit() + weaponHitChance + temp >= this.getEffectiveDodge()) {
 			attackHit = true;
@@ -656,6 +654,20 @@ public class Entity {
 			}
 		}
 	}
+	
+	/**
+	 * Returns true if there is an effect of the same name as the one given in the entity's effects list
+	 * @param effect the effect to compare
+	 * @return if an effect of the same name exists
+	 */
+	public boolean checkIfEffectExists(Effect effect) {
+		for (Effect effect2 : effects) {
+			if(effect2.getName().equals(effect.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Removes an effect from the permanant effects array list
@@ -669,7 +681,7 @@ public class Entity {
 	}
 
 	/**
-	 * Add an effect to the permanat effects array list
+	 * Add an effect to the permanent effects array list
 	 * 
 	 * @param effect
 	 */
@@ -688,7 +700,6 @@ public class Entity {
 	 * @return the amount of damage taken
 	 */
 	public int takeDamage(int damage, String type) {
-		System.out.println("damage taken : " + damage);
 		currentHealth -= damage;
 		return damage;
 	}
@@ -1242,6 +1253,13 @@ public class Entity {
 	}
 
 	/**
+	 * @return the effects
+	 */
+	public List<Effect> getEffects() {
+		return effects;
+	}
+
+	/**
 	 * An enumerator to store equipment array indexes
 	 * 
 	 * @author c-e-r
@@ -1260,6 +1278,14 @@ public class Entity {
 			return index;
 		}
 
+	}
+	
+	/**
+	 * Returns true if the entity is at full health
+	 * @return if the entity is at full health
+	 */
+	public boolean isAtFullHealth() {
+		return currentHealth == getEffectiveMaxHealth();
 	}
 
 	/**

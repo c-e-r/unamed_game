@@ -31,8 +31,14 @@ public class Enemy extends Entity {
 	private String description;
 	private String deathDescription;
 	private String killDescription;
-	private String attackDescription;
-	private String damageType;
+	private int attackChance;
+	private int skillChance;
+	private int spellChance;
+	private int itemChance;
+	private int buffChance;
+	private int debuffChance;
+	private int offensiveChance;
+	private int healChance;
 
 	/**
 	 * Creates an enemy from an xml with the given filename
@@ -52,6 +58,7 @@ public class Enemy extends Entity {
 		loadEnemyFromXML(fileName);
 		calculateDerivedStats();
 		reloadSkills();
+		calculateChances();
 		currentHealth = maxHealth;
 	}
 
@@ -83,8 +90,18 @@ public class Enemy extends Entity {
 		return description;
 	}
 
+	public void calculateChances() {
+		spellChance += attackChance;
+		skillChance += spellChance;
+		itemChance += skillChance;
+		debuffChance += offensiveChance;
+		buffChance += debuffChance;
+		healChance += buffChance;
+	}
+	
 	/**
-	 * Prints the description for using the item depending on the user and target and calls the items use method
+	 * Prints the description for using the item depending on the user and target
+	 * and calls the items use method
 	 * 
 	 * @param item
 	 *            the item to apply
@@ -206,6 +223,47 @@ public class Enemy extends Entity {
 					luck = Integer.parseInt(element.getText());
 				}
 				break;
+			case "attackChance":
+				if (Game.isNumeric(element.getText())) {
+					attackChance = Integer.parseInt(element.getText());
+				}
+				break;
+			case "spellChance":
+				if (Game.isNumeric(element.getText())) {
+					spellChance = Integer.parseInt(element.getText());
+				}
+				break;
+			case "itemChance":
+				if (Game.isNumeric(element.getText())) {
+					itemChance = Integer.parseInt(element.getText());
+				}
+				break;
+			case "skillChance":
+				if (Game.isNumeric(element.getText())) {
+					skillChance = Integer.parseInt(element.getText());
+				}
+				break;
+			case "buffChance":
+				if (Game.isNumeric(element.getText())) {
+					buffChance = Integer.parseInt(element.getText());
+				}
+				break;
+			case "debuffChance":
+				if (Game.isNumeric(element.getText())) {
+					debuffChance = Integer.parseInt(element.getText());
+				}
+				break;
+			case "offensiveChance":
+				if (Game.isNumeric(element.getText())) {
+					offensiveChance = Integer.parseInt(element.getText());
+				}
+				break;
+			case "healChance":
+				if (Game.isNumeric(element.getText())) {
+					healChance = Integer.parseInt(element.getText());
+				}
+				break;
+
 			case "description":
 				description = element.getText();
 				break;
@@ -416,7 +474,9 @@ public class Enemy extends Entity {
 
 	/**
 	 * Unequips the item associated with the index given if it is equipped
-	 * @param itemIndex the index of the item to unequip
+	 * 
+	 * @param itemIndex
+	 *            the index of the item to unequip
 	 */
 	public void unequipInventoryItem(int itemIndex) {
 		Item toRemove = getInventoryItem(itemIndex);
@@ -430,5 +490,84 @@ public class Enemy extends Entity {
 		}
 
 	}
+	
+	public List<Skill> getSkillsOfType(String type){
+		List<Skill> temp = new ArrayList<Skill>();
+		for (Skill skill : combinedSkills) {
+			if(skill.getSkillType().equals(type)) {
+				temp.add(skill);
+			}
+		}
+		return temp;
+	}
+
+
+	public List<Item> getItemsOfType(String type){
+		List<Item> temp = new ArrayList<Item>();
+		for (Item item : inventory) {
+			if(item.getItemType().equals(type)) {
+				temp.add(item);
+			}
+		}
+		return temp;
+	}
+
+	/**
+	 * @return the attackChance
+	 */
+	public int getAttackChance() {
+		return attackChance;
+	}
+
+	/**
+	 * @return the skillChance
+	 */
+	public int getSkillChance() {
+		return skillChance;
+	}
+
+	/**
+	 * @return the spellChance
+	 */
+	public int getSpellChance() {
+		return spellChance;
+	}
+
+	/**
+	 * @return the itemChance
+	 */
+	public int getItemChance() {
+		return itemChance;
+	}
+
+	/**
+	 * @return the buffChance
+	 */
+	public int getBuffChance() {
+		return buffChance;
+	}
+
+	/**
+	 * @return the debuffChance
+	 */
+	public int getDebuffChance() {
+		return debuffChance;
+	}
+
+	/**
+	 * @return the offensiveChance
+	 */
+	public int getOffensiveChance() {
+		return offensiveChance;
+	}
+
+	/**
+	 * @return the healChance
+	 */
+	public int getHealChance() {
+		return healChance;
+	}
+	
+	
 
 }

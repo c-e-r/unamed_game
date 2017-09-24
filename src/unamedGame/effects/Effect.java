@@ -144,7 +144,6 @@ public abstract class Effect {
 			return true;
 		}
 		int target = accuracy;
-		System.out.println(target);
 		switch (resistType) {
 		case "physical":
 			target -= owner.getEffectivePhysicalResistance();
@@ -158,7 +157,6 @@ public abstract class Effect {
 			break;
 		}
 		int temp = Dice.roll(100);
-		System.out.println(temp + " < " + target);
 		return temp < target;
 
 	}
@@ -244,7 +242,6 @@ public abstract class Effect {
 			Window.addToPane(Window.getInstance().getTextPane(), owner.getUseName());
 			break;
 		case "targetNameCapital":
-			System.out.println(owner == null);
 			Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(owner.getUseName()));
 			break;
 		default:
@@ -269,14 +266,10 @@ public abstract class Effect {
 		Effect effect = this;
 
 		if (startTime != endTime) {
-			System.out.println("TIME OBSERVER ADDED: " + increment);
 			Time.getInstance().addObserver(new TimeObserver() {
 				@Override
 				public void update(Observable o, Object arg) {
-					System.out.println("OBSERVER ACTIVATED");
 					if (increment > 0) {
-						System.out.println("increment > 0");
-						System.out.println(this);
 						int newActivateCount;
 						if (Time.getInstance().getTime() > endTime) {
 							newActivateCount = (endTime - startTime) / increment;
@@ -286,7 +279,6 @@ public abstract class Effect {
 						}
 						if (duration == -1 || (activateCount < maxActivateCount && activateCount < newActivateCount)) {
 							while (activateCount < newActivateCount) {
-								System.out.println("EFFECT ACTIVATED");
 								activateCount++;
 								if (checkResistance()) {
 									active = true;
@@ -323,7 +315,6 @@ public abstract class Effect {
 	 * @return
 	 */
 	public static Effect buildEffect(Element element) {
-		System.out.println(element.getName());
 
 		int baseAccuracy;
 		if (element.attributeValue("baseAccuracy") != null) {
@@ -450,6 +441,14 @@ public abstract class Effect {
 	 */
 	public String getRepeatType() {
 		return repeatType;
+	}
+
+	/**
+	 * Returns the effects name
+	 * @return the name of the effect
+	 */
+	public String getName() {
+		return name;
 	}
 
 	@Override

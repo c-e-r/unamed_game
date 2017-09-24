@@ -87,7 +87,6 @@ public class DamageEffect extends Effect {
 		totalDamage = owner.takeDamage(magnitude, damageType);
 
 		printDescription();
-		System.out.println("activate count: " + activateCount);
 	}
 
 	/**
@@ -134,7 +133,6 @@ public class DamageEffect extends Effect {
 				}
 			} else {
 				if (owner instanceof Player) {
-					System.out.println(playerResistRepeatEffectDescription);
 					description = playerResistRepeatEffectDescription.split("#");
 				} else {
 					description = resistRepeatEffectDescription.split("#");

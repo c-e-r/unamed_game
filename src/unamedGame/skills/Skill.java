@@ -32,6 +32,7 @@ public class Skill {
 
 	private String name;
 	private boolean isAttack;
+	private String skillType;
 	private String damageType;
 	private String description;
 	private String attackDescription;
@@ -88,6 +89,7 @@ public class Skill {
 		playerAttackDescription = element.attributeValue("playerAttackDescription");
 		missDescription = element.attributeValue("missDescription");
 		playerMissDescription = element.attributeValue("playerMissDescription");
+		skillType = element.attributeValue("skillType");
 
 		if (element.attributeValue("staminaCost") != null) {
 			staminaCost = Integer.parseInt(element.attributeValue("staminaCost"));
@@ -391,6 +393,13 @@ public class Skill {
 	 */
 	public List<Skill> getMissSkills() {
 		return missSkills;
+	}
+	
+	/**
+	 * @return the skillType
+	 */
+	public String getSkillType() {
+		return skillType;
 	}
 
 	/*

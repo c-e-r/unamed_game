@@ -29,3 +29,4 @@
     <skill>             [OPTIONAL]                  the name of the skill granted to an entity equipping this item. Can have multiple.
     <armorValue>        [OPTIONAL: default 0]       the amount of armor granted by eqipping this item
     <damageType>        [REQUIRED for equippable held] the type of damage this item deals when wielded as a weapon
+    <itemType>          [REQUIRED for usable items]                  used by ai to decide what to do. Valid options are "offensive","buff", "debuff", "heal"

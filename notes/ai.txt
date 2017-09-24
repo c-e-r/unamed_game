@@ -15,7 +15,7 @@ flee 0%
     
 attack
 buff
-    check if it alreay has that buff
+    check if it already has that buff
 debuff
     check if you have that debuff
 heal

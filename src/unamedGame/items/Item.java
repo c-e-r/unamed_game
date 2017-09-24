@@ -52,6 +52,7 @@ public class Item {
 	private String equipSlot;
 	private boolean equipped;
 	private String damageType;
+	private String itemType;
 
 	private int weaponHitChance;
 	private int weaponBaseDamage;
@@ -212,6 +213,8 @@ public class Item {
 			case "damageType":
 				damageType = element.getText();
 				break;
+			case "itemType":
+				itemType = element.getText();
 			default:
 				System.out.println("Error unrecognized element name: " + element.getName());
 				break;
@@ -599,6 +602,13 @@ public class Item {
 	 */
 	public String getPlayerAttackMissDescription() {
 		return playerAttackMissDescription;
+	}
+
+	/**
+	 * @return the itemType
+	 */
+	public String getItemType() {
+		return itemType;
 	}
 
 }

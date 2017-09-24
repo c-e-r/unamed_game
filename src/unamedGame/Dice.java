@@ -15,12 +15,17 @@ public class Dice {
 
 	/**
 	 * Returns a number between one and the specified value inclusive
-	 * @param d the upper bound
+	 * 
+	 * @param d
+	 *            the upper bound
 	 * @return the random number
 	 */
 	public static int roll(int d) {
-		d = rand.nextInt(d) +1;
-		
+		if (d == 0) {
+		return 0;
+		}
+		d = rand.nextInt(d) + 1;
+
 		return d;
 	}
 

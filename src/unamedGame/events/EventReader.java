@@ -166,7 +166,6 @@ public class EventReader {
 			@Override
 			public void inputChanged(InputEvent evt) {
 				int choice = -1;
-				System.out.println(max);
 				if (Game.isNumeric(evt.getText()) && Integer.parseInt(evt.getText()) <= max) {
 					choice = Integer.parseInt(
 							((Element) choices.get(Integer.parseInt(evt.getText()) - 1)).attributeValue("branch"));

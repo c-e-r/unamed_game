@@ -2,15 +2,16 @@
 <skill
     name='bite'
     isAttack='true'
+    skillType='offensive'
     attackHitBonus='0'
     attackSpeedBonus='3'
     staminaCost='0'
     damageType='physical'
-    description='A scratch with claws'
-    attackDescription='#userNameCapital# scratches #targetName# with its claws dealing #damage# damage'
-    missDescription='#userNameCapital# scratches at #targetName# with its claws but misses'
-    playerAttackDescription='You scratch #targetName# with your claws and deal #damage#'
-    playerMissDescription='You scratch at #targetName# with your claws butmiss.'
+    description='A bite'
+    attackDescription='#userNameCapital# bites #targetName# with its teeth dealing #damage# damage'
+    missDescription='#userNameCapital# bites at #targetName# with its teeth but misses'
+    playerAttackDescription='You bites #targetName# with your teeth and deal #damage#'
+    playerMissDescription='You bites at #targetName# with your teeth butmiss.'
     >
     <effect 
         name='itemName' 

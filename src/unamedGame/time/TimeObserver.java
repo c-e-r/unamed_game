@@ -20,6 +20,5 @@ public class TimeObserver implements Observer {
 	  @Override
 	  public void update(Observable o, Object arg) {
 	    int time = ((Time) o).getTime();
-	    System.out.println( "The time is: " +time);
 	  }
 }

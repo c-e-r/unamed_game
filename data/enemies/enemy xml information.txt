@@ -6,6 +6,18 @@
     <intellect>                     [OPTIONAL: default 0]   the enemy's intellect stat
     <spirit>                        [OPTIONAL: default 0]   the enemy's spirit stat
     <luck>                          [OPTIONAL: default 0]   the enemy's luck stat
+                   \
+    <attackChance>  |
+    <skillChance>   | Must add up to 100                    used to decide what action the enemy will take in battle
+    <spellChHance>  | Default to 0
+    <itemChance>    |
+                   /
+                      \
+    <offensiveChance> |
+    <debuffChance>    | Must add up to 100                  used to decide what type of action the enemy will take in battle
+    <buffChance>      | Default to 0
+    <healChance>      |
+                     /
     <description>                   [REQUIRED]              a description of the enemy
     <deathDescription>              [REQUIRED]              the description shown when the enemy dies
     <killDescription>               [REQUIRED]              the description shown then the player kills the enemy

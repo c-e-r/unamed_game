@@ -48,7 +48,6 @@ public class Time extends Observable {
 	public  void passTime(int time) {
 		for (int i = 0; i < time; i++) {
 			this.time++;
-			System.out.println("time passed");
 			setChanged();
 			notifyObservers();
 		}

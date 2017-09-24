@@ -4,9 +4,10 @@
 package unamedGame;
 
 import java.awt.Color;
-
+import java.util.List;
 
 import unamedGame.entities.Enemy;
+import unamedGame.entities.Entity;
 import unamedGame.entities.Player;
 import unamedGame.events.EventReader;
 import unamedGame.input.InputEvent;
@@ -27,6 +28,11 @@ public class Combat {
 	private Player player;
 	private Enemy enemy;
 	private static boolean inCombat;
+
+	private static final String OFFENSIVE = "offensive";
+	private static final String DEBUFF = "debuff";
+	private static final String BUFF = "buff";
+	private static final String HEAL = "heal";
 
 	/**
 	 * Starts a combat loop between the player and given Enemy.
@@ -247,8 +253,99 @@ public class Combat {
 	 * Makes the enemy take an action.
 	 */
 	private void enemyAction() {
+		boolean failure = false;
 		enemy.reloadSkills();
-		enemy.attack(player);
+
+		if (failure == false) {
+			int die = Dice.roll(100);
+
+			if (die <= enemy.getAttackChance()) {
+				enemy.attack(player);
+			} else if (die <= enemy.getSpellChance()) {
+
+			} else if (die <= enemy.getSkillChance()) {
+				String type = chooseActionType();
+				if (checkIfPossibleSkillExists()) {
+					while (enemy.getSkillsOfType(type).size() == 0) {
+						type = chooseActionType();
+					}
+					List<Skill> skills = enemy.getSkillsOfType(type);
+					enemy.useSkill(Dice.roll(skills.size() - 1), player);
+				} else {
+					failure = true;
+				}
+			} else if (die <= enemy.getItemChance()) {
+				String type = chooseActionType();
+				if (checkIfPossibleItemExists()) {
+					while (enemy.getSkillsOfType(type).size() == 0) {
+						type = chooseActionType();
+					}
+					List<Item> items = enemy.getItemsOfType(type);
+					enemy.useSkill(Dice.roll(items.size() - 1), player);
+
+				} else {
+					failure = true;
+				}
+			}
+		}
+
+		if (failure == true)
+
+		{
+			enemyAction();
+		}
+	}
+
+	/*
+	 * choose a random action type
+	 */
+	private String chooseActionType() {
+		int die = Dice.roll(100);
+
+		if (die <= enemy.getOffensiveChance()) {
+			return OFFENSIVE;
+		} else if (die <= enemy.getDebuffChance()) {
+			return DEBUFF;
+		} else if (die <= enemy.getBuffChance()) {
+			return BUFF;
+		} else if (die <= enemy.getHealChance() && !enemy.isAtFullHealth()) {
+			return HEAL;
+		}
+		return null;
+	}
+
+	private boolean checkIfPossibleSkillExists() {
+		if (enemy.getOffensiveChance() > 0 && enemy.getSkillsOfType(OFFENSIVE).size() > 0) {
+			return true;
+		}
+		if (enemy.getDebuffChance() > enemy.getAttackChance() && enemy.getSkillsOfType(DEBUFF).size() > 0) {
+			return true;
+		}
+		if (enemy.getBuffChance() > enemy.getDebuffChance() && enemy.getSkillsOfType(BUFF).size() > 0) {
+			return true;
+		}
+		if (enemy.getHealChance() > enemy.getBuffChance() && enemy.getSkillsOfType(HEAL).size() > 0) {
+			return true;
+		}
+		return false;
+
+	}
+
+	private boolean checkIfPossibleItemExists() {
+		if (enemy.getOffensiveChance() > 0 && enemy.getItemsOfType(OFFENSIVE).size() > 0) {
+			return true;
+		}
+		if (enemy.getDebuffChance() > enemy.getAttackChance() && enemy.getItemsOfType(DEBUFF).size() > 0) {
+			return true;
+		}
+		if (enemy.getBuffChance() > enemy.getDebuffChance() && enemy.getItemsOfType(BUFF).size() > 0) {
+			return true;
+		}
+		if (enemy.getHealChance() > enemy.getBuffChance() && enemy.getItemsOfType(HEAL).size() > 0) {
+			return true;
+		}
+		return false;
+
 	}
 
 	/*

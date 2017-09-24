@@ -10,6 +10,16 @@
     <spirit>1</spirit>
     <luck>2</luck>
     
+    <attackChance>70</attackChance>
+    <spellChance>0</spellChance>
+    <skillChance>30</skillChance>
+    <itemChance>0</itemChance>
+    
+    <buffChance>0</buffChance>
+    <debuffChance>0</debuffChance>
+    <offensiveChance>100</offensiveChance>
+    <healChance>0</healChance>
+    
     <description>You are fighting a very angry racoon</description>
     <deathDescription>The raccon dies</deathDescription>
     <killDescription>The raccon kills you</killDescription>

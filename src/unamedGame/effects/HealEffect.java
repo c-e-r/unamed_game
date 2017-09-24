@@ -83,7 +83,6 @@ public class HealEffect extends Effect {
 		totalHeal = owner.restoreHealth(magnitude);
 
 		printDescription();
-		System.out.println("activate count: " + activateCount);
 	}
 
 	/**
@@ -130,7 +129,6 @@ public class HealEffect extends Effect {
 				}
 			} else {
 				if (owner instanceof Player) {
-					System.out.println(playerResistRepeatEffectDescription);
 					description = playerResistRepeatEffectDescription.split("#");
 				} else {
 					description = resistRepeatEffectDescription.split("#");
