@@ -256,7 +256,7 @@ public class Combat {
 		enemy.reloadSkills();
 
 		if (failure == false) {
-			int die = Dice.roll(100);
+			int die = Dice.roll(enemy.getItemChance());
 
 			if (die <= enemy.getAttackChance()) {
 				enemy.attack(player);
@@ -299,7 +299,7 @@ public class Combat {
 	 * choose a random action type
 	 */
 	private String chooseActionType() {
-		int die = Dice.roll(100);
+		int die = Dice.roll(enemy.getHealChance());
 
 		if (die <= enemy.getOffensiveChance()) {
 			return OFFENSIVE;

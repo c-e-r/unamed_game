@@ -10,6 +10,11 @@ import java.util.Random;
  *
  */
 public class Dice {
+	
+
+	public static final int HIT_DIE = 100;
+	public static final int RESISTANCE_DIE = 100;
+	public static final int SPEED_DIE = 10;
 
 	private static Random rand = new Random();
 

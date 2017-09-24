@@ -216,7 +216,7 @@ public class Entity extends Observable {
 			damage = 0;
 		}
 
-		int temp = Dice.roll(100);
+		int temp = Dice.roll(Dice.HIT_DIE);
 
 		if (attacker.getEffectiveHit() + weaponHitChance + temp >= this.getEffectiveDodge()) {
 			attackHit = true;
@@ -346,7 +346,7 @@ public class Entity extends Observable {
 			damage = 0;
 		}
 
-		int temp = Dice.roll(100);
+		int temp = Dice.roll(Dice.HIT_DIE);
 
 		if (skill.isAttack()) {
 			if (attacker.getEffectiveHit() + weaponHitChance + skill.getAttackHitBonus() + temp >= this
@@ -637,12 +637,11 @@ public class Entity extends Observable {
 	}
 
 	/**
-	 * Checks the units speed
-	 * 
-	 * @return
+	 * Returns effective speed + a roll of the SPEED_DIE
+	 * @return the speed to check
 	 */
 	public int speedCheck() {
-		return speed + speedMod;
+		return speed + speedMod + Dice.roll(Dice.SPEED_DIE);
 	}
 
 	/**

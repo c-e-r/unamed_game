@@ -212,7 +212,7 @@ public abstract class Effect {
 			break;
 
 		}
-		int temp = Dice.roll(100);
+		int temp = Dice.roll(Dice.RESISTANCE_DIE);
 		return temp < target;
 
 	}
@@ -237,7 +237,7 @@ public abstract class Effect {
 			break;
 
 		}
-		int temp = Dice.roll(100);
+		int temp = Dice.roll(Dice.RESISTANCE_DIE);
 		System.out.println(temp + " < " + target);
 		return temp < target;
 
