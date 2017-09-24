@@ -126,7 +126,7 @@ public class EventReader {
 			Window.appendToPane(Window.getInstance().getTextPane(), currentElement.getTextTrim());
 			return true;
 		case "end":
-			Window.appendToPane(Window.getInstance().getTextPane(), "end of event");
+			Game.openExplorationMenu();
 			return false;
 		case "choice":
 			Window.clearPane(Window.getInstance().getSidePane());

@@ -46,10 +46,10 @@ public class Game {
 
 	}
 
-	/*
+	/**
 	 * Opens the main exploration menu and waits for player input
 	 */
-	private static void openExplorationMenu() {
+	public static void openExplorationMenu() {
 		Window.clearPane(window.getSidePane());
 		Window.addToPane(window.getSidePane(), "1: Explore \n2: Move\n3: Gather\n4: Inventory \n5: Status");
 

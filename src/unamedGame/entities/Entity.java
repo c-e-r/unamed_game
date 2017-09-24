@@ -325,7 +325,9 @@ public class Entity {
 		String[] description = null;
 
 		int damage = (int) (((attacker.getEffectiveStrength() + weaponBaseDamage + Dice.roll(weaponVariableDamage)
-				+ attacker.getDamageMod()) * attacker.getDamageMult()));
+				+ attacker.getDamageMod() + skill.getAttackDamageBonus()
+				+ Dice.roll(skill.getAttackVariableDamageBonus()))
+				* (attacker.getDamageMult() + skill.getAttackDamageMult())));
 		damage = applyResistances(damage, weaponDamageType);
 		// Prevent damage from going below 0
 		if (damage < 0) {
@@ -333,11 +335,10 @@ public class Entity {
 		}
 
 		int temp = Dice.roll(100);
-		System.out.println(attacker.getEffectiveHit() + "+" + weaponHitChance + "+" + temp);
-		System.out.println(getEffectiveDodge());
 
 		if (skill.isAttack()) {
-			if (attacker.getEffectiveHit() + weaponHitChance + temp >= this.getEffectiveDodge()) {
+			if (attacker.getEffectiveHit() + weaponHitChance + skill.getAttackHitBonus() + temp >= this
+					.getEffectiveDodge()) {
 				attackHit = true;
 				this.takeDamage(damage, weaponDamageType);
 
