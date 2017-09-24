@@ -21,13 +21,23 @@
         effectDescription='#targetNameCapital# healed for #totalHeal# health' 
         playerEffectDescription='You are healed for #totalHeal#'
     >heal</effect>
+    <effect
+        toSelf='true'
+        name='itemName' 
+        magnitude="7"
+        baseAccuracy='-1'
+        effectDescription='#targetNameCapital# healed for #totalHeal# health' 
+        playerEffectDescription='You are healed for #totalHeal#'
+    >heal</effect>
     <effect 
         name='itemName' 
         magnitude='2' 
-        length='0'
+        duration='-1'
+        increment='1'
         damageType='physical' 
         resistType='physical'
-        repeatType='untillResist'
+        repeatType='persistant'
+        baseAccuracy='130'
         effectDescription='#targetNameCapital# takes #totalDamage# damage'
         repeatEffectDescription='#targetNameCapital# takes #totalDamage# damage'
         playerRepeatEffectDescription='You take #totalDamage# damage'
@@ -36,16 +46,22 @@
         resistRepeatEffectDescription='#targetNameCapital# resisted the effect this turn'
         playerResistEffectDescription='You resist the effect'
         playerResistRepeatEffectDescription='You resisted the effect this turn'
+        selfDestructTrigger='attacked'
+        selfDestructDescription='Effect self destructed on #targetName#'
+        playerSelfDestructDescription='Effect self destructed on player'
+        specialEffectTrigger='attacked'
+        specialResistType='physical'
+        specialAccuracyBonus='-130'
+        specialEffectDescription='#targetNameCapital# takes #totalDamage# extra damage from a special effect'
+        playerSpecialEffectDescription='You take #totalDamage# extra damage from a special effect'
+        specialResistEffectDescription='#targetNameCapital# resists the special effect'
+        playerSpecialResistEffectDescription='You resist the special effect'
+
+
+        
         >damage</effect>
-    <effect 
-        name='itemName'
-        magnitude='5'
-        playerEffectDescription='You gain #magnitude# #stat# for the next #time# hours'
-        baseAccuracy='-1'
-        stat='spirit'
-        length='-1'
-        >increaseStat
-    </effect>
+        
+    
     <effect
         name='itemName'
         magnitude='15'

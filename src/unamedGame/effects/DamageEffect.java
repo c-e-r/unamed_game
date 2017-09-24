@@ -4,7 +4,6 @@ import java.util.List;
 
 import unamedGame.entities.Entity;
 import unamedGame.entities.Player;
-import unamedGame.time.Time;
 import unamedGame.ui.Window;
 import unamedGame.util.Colors;
 
@@ -71,10 +70,17 @@ public class DamageEffect extends Effect {
 			String resistType, String repeatType, boolean toSelf, String playerEffectDescription,
 			String playerRepeatEffectDescription, String effectDescription, String repeatEffectDescription,
 			String resistEffectDescription, String playerResistEffectDescription, String resistRepeatEffectDescription,
-			String playerResistRepeatEffectDescription, String damageType, int magnitude) {
+			String playerResistRepeatEffectDescription, String selfDestructTrigger, String selfDestructDescription,
+			String playerSelfDestructDescription, String specialEffectTrigger, String specialEffectDescription,
+			String playerSpecialEffectDescription, String specialResistEffectDescription,
+			String playerSpecialResistEffectDescription, String specialResistType, int specialAccuracyBonus,
+			String damageType, int magnitude) {
 		super(effects, name, duration, increment, baseAccuracy, resistType, repeatType, toSelf, playerEffectDescription,
 				playerRepeatEffectDescription, effectDescription, repeatEffectDescription, resistEffectDescription,
-				playerResistEffectDescription, resistRepeatEffectDescription, playerResistRepeatEffectDescription);
+				playerResistEffectDescription, resistRepeatEffectDescription, playerResistRepeatEffectDescription,
+				selfDestructTrigger, selfDestructDescription, playerSelfDestructDescription, specialEffectTrigger,
+				specialEffectDescription, playerSpecialEffectDescription, specialResistEffectDescription,
+				playerSpecialResistEffectDescription, specialResistType, specialAccuracyBonus);
 		this.damageType = damageType;
 		this.magnitude = magnitude;
 	}
@@ -83,21 +89,36 @@ public class DamageEffect extends Effect {
 	 * Deals damage to the owner
 	 */
 	public void activate() {
-
 		totalDamage = owner.takeDamage(magnitude, damageType);
-
-		printDescription();
+		if (owner instanceof Player) {
+			printDescription(playerRepeatEffectDescription);
+		} else {
+			printDescription(repeatEffectDescription);
+		}
 	}
 
 	/**
 	 * Deals damage to the owner
 	 */
 	public void firstActivate() {
-		applyEffect(owner);
 		totalDamage = owner.takeDamage(magnitude, damageType);
+		if (owner instanceof Player) {
+			printDescription(playerEffectDescription);
+		} else {
+			printDescription(effectDescription);
+		}
+	}
 
-		printDescription();
-
+	/**
+	 * Deals Damage to the owner
+	 */
+	public void specialActivate() {
+		totalDamage = owner.takeDamage(magnitude, damageType);
+		if (owner instanceof Player) {
+			printDescription(playerSpecialEffectDescription);
+		} else {
+			printDescription(specialEffectDescription);
+		}
 	}
 
 	/**
@@ -107,42 +128,10 @@ public class DamageEffect extends Effect {
 	}
 
 	@Override
-	public void printDescription() {
-		String[] description;
-		if (active) {
-			if (activateCount == 0) {
-				if (owner instanceof Player) {
-					description = playerEffectDescription.split("#");
-				} else {
-					description = effectDescription.split("#");
-				}
-			} else {
-				if (owner instanceof Player) {
+	public void printDescription(String description) {
+		String[] descriptionArray = description.split("#");
 
-					description = playerRepeatEffectDescription.split("#");
-				} else {
-					description = repeatEffectDescription.split("#");
-				}
-			}
-		} else {
-			if (activateCount == 0) {
-				if (owner instanceof Player) {
-					description = playerResistEffectDescription.split("#");
-				} else {
-					description = resistEffectDescription.split("#");
-				}
-			} else {
-				if (owner instanceof Player) {
-					description = playerResistRepeatEffectDescription.split("#");
-				} else {
-					description = resistRepeatEffectDescription.split("#");
-				}
-			}
-		}
-
-		StringBuilder builder = new StringBuilder();
-
-		for (String string : description) {
+		for (String string : descriptionArray) {
 			switch (string) {
 			case "damageType":
 				Window.addToPane(Window.getInstance().getTextPane(), damageType);

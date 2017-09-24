@@ -3,13 +3,10 @@
  */
 package unamedGame.entities;
 
-import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -17,7 +14,6 @@ import org.dom4j.io.SAXReader;
 
 import unamedGame.Game;
 import unamedGame.effects.*;
-import unamedGame.entities.Entity.EquipmentIndex;
 import unamedGame.items.Item;
 import unamedGame.skills.Skill;
 import unamedGame.ui.Window;

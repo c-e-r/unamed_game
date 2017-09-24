@@ -3,16 +3,11 @@
  */
 package unamedGame.entities;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-
 import unamedGame.Game;
 import unamedGame.effects.Effect;
-import unamedGame.entities.Entity.EquipmentIndex;
 import unamedGame.input.InputEvent;
 import unamedGame.input.InputObserver;
 import unamedGame.items.Item;

@@ -3,7 +3,6 @@
  */
 package unamedGame.events;
 
-import java.awt.Color;
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +30,6 @@ import unamedGame.ui.Window;
  */
 public class EventReader {
 
-	private static Iterator<Element> iterator;
 	private static Element currentElement;
 	private static Element root;
 

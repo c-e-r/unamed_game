@@ -11,6 +11,10 @@ import unamedGame.util.Colors;
 
 public class InputEvent extends EventObject {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6677771066487284367L;
 	private final String text;
 
 	/**

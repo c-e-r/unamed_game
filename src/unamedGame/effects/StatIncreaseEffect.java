@@ -10,6 +10,7 @@ import unamedGame.util.Colors;
 
 /**
  * An Effect that increases one of the stats of an entity
+ * 
  * @author c-e-r
  *
  */
@@ -20,6 +21,7 @@ public class StatIncreaseEffect extends Effect {
 
 	/**
 	 * Creates a StatIncreaseEffect from the given parameters
+	 * 
 	 * @param effects
 	 *            the effects sub effects
 	 * @param name
@@ -57,17 +59,26 @@ public class StatIncreaseEffect extends Effect {
 	 * @param playerResistRepeatEffectDescription
 	 *            the description to be displayed when a player resists the effect
 	 *            when it triggers
-	 * @param stat the name of the stat to increase as a string
-	 * @param magnitude the amount to increase the given stat by
+	 * @param stat
+	 *            the name of the stat to increase as a string
+	 * @param magnitude
+	 *            the amount to increase the given stat by
 	 */
-	public StatIncreaseEffect(List<Effect> effects,String name, int duration, int baseAccuracy, String resistType, String repeatType,
-			boolean toSelf, String playerEffectDescription, String playerRepeatEffectDescription,
+	public StatIncreaseEffect(List<Effect> effects, String name, int duration, int baseAccuracy, String resistType,
+			String repeatType, boolean toSelf, String playerEffectDescription, String playerRepeatEffectDescription,
 			String effectDescription, String repeatEffectDescription, String resistEffectDescription,
 			String playerResistEffectDescription, String resistRepeatEffectDescription,
-			String playerResistRepeatEffectDescription, String stat, int magnitude) {
-		super(effects,name, duration, 0, baseAccuracy, resistType, repeatType, toSelf, playerEffectDescription,
+			String playerResistRepeatEffectDescription, String selfDestructTrigger, String selfDestructDescription,
+			String playerSelfDestructDescription, String specialEffectTrigger, String specialEffectDescription,
+			String playerSpecialEffectDescription, String specialResistEffectDescription,
+			String playerSpecialResistEffectDescription, String specialResistType, int specialAccuracyBonus,
+			String stat, int magnitude) {
+		super(effects, name, duration, 0, baseAccuracy, resistType, repeatType, toSelf, playerEffectDescription,
 				playerRepeatEffectDescription, effectDescription, repeatEffectDescription, resistEffectDescription,
-				playerResistEffectDescription, resistRepeatEffectDescription, playerResistRepeatEffectDescription);
+				playerResistEffectDescription, resistRepeatEffectDescription, playerResistRepeatEffectDescription,
+				selfDestructTrigger, selfDestructDescription, playerSelfDestructDescription, specialEffectTrigger,
+				specialEffectDescription, playerSpecialEffectDescription, specialResistEffectDescription,
+				playerSpecialResistEffectDescription, specialResistType, specialAccuracyBonus);
 		this.stat = stat;
 		this.magnitude = magnitude;
 	}
@@ -84,7 +95,17 @@ public class StatIncreaseEffect extends Effect {
 	public void firstActivate() {
 		applyEffect(owner);
 		owner.recalculateStats();
-		printDescription();
+		if (owner instanceof Player) {
+			printDescription(playerEffectDescription);
+		} else {
+			printDescription(effectDescription);
+		}
+	}
+
+	/**
+	 * Unused in this effect
+	 */
+	public void specialActivate() {
 
 	}
 
@@ -95,16 +116,11 @@ public class StatIncreaseEffect extends Effect {
 		owner.increaseModifier(stat, magnitude);
 	}
 
-
 	@Override
-	public void printDescription() {
-		String[] description = null;
+	public void printDescription(String description) {
+		String[] descriptionArray = description.split("#");
 
-		description = playerEffectDescription.split("#");
-
-		StringBuilder builder = new StringBuilder();
-
-		for (String string : description) {
+		for (String string : descriptionArray) {
 			switch (string) {
 			case "stat":
 				Window.addToPane(Window.getInstance().getTextPane(), stat);

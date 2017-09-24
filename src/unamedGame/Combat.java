@@ -7,7 +7,6 @@ import java.awt.Color;
 import java.util.List;
 
 import unamedGame.entities.Enemy;
-import unamedGame.entities.Entity;
 import unamedGame.entities.Player;
 import unamedGame.events.EventReader;
 import unamedGame.input.InputEvent;

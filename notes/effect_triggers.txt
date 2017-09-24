@@ -1,0 +1,1 @@
+'attacked'      when attacked by a regular attack before hit is calculated or any damage is dealt

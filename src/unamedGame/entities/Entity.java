@@ -5,6 +5,7 @@ package unamedGame.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import unamedGame.Dice;
 import unamedGame.Game;
@@ -18,7 +19,7 @@ import unamedGame.util.Colors;
  * @author c-e-r
  *
  */
-public class Entity {
+public class Entity extends Observable {
 
 	protected Item[] equipment;
 
@@ -131,6 +132,8 @@ public class Entity {
 		carryCapacity = strength * 5;
 
 	}
+	
+
 
 	/**
 	 * Calculates the total armor of equipped items and returns it
@@ -170,6 +173,9 @@ public class Entity {
 	public void getAttacked(Entity attacker) {
 		boolean attackHit = false;
 		Item weapon = attacker.getMainWeapon();
+
+		setChanged();
+		notifyObservers("attacked");
 
 		int weaponBaseDamage = 0;
 		int weaponVariableDamage = 1;
@@ -654,15 +660,18 @@ public class Entity {
 			}
 		}
 	}
-	
+
 	/**
-	 * Returns true if there is an effect of the same name as the one given in the entity's effects list
-	 * @param effect the effect to compare
+	 * Returns true if there is an effect of the same name as the one given in the
+	 * entity's effects list
+	 * 
+	 * @param effect
+	 *            the effect to compare
 	 * @return if an effect of the same name exists
 	 */
 	public boolean checkIfEffectExists(Effect effect) {
 		for (Effect effect2 : effects) {
-			if(effect2.getName().equals(effect.getName())) {
+			if (effect2.getName().equals(effect.getName())) {
 				return true;
 			}
 		}
@@ -1279,9 +1288,10 @@ public class Entity {
 		}
 
 	}
-	
+
 	/**
 	 * Returns true if the entity is at full health
+	 * 
 	 * @return if the entity is at full health
 	 */
 	public boolean isAtFullHealth() {
