@@ -174,9 +174,8 @@ public class Entity extends Observable {
 		boolean attackHit = false;
 		Item weapon = attacker.getMainWeapon();
 
-		setChanged();
-		notifyObservers("attacked");
-
+		triggerEffects("attacked");
+		
 		int weaponBaseDamage = 0;
 		int weaponVariableDamage = 1;
 		int weaponHitChance = 0;
@@ -295,6 +294,15 @@ public class Entity extends Observable {
 		target.getAttackedBySkill(combinedSkills.get(skillIndex), this);
 	}
 
+	/**
+	 * Trigger self-destruct or special effects on effects watching this entity
+	 * @param reason the reason effects are being triggered
+	 */
+	public void triggerEffects(String reason) {
+		setChanged();
+		notifyObservers((String) reason);
+	}
+	
 	/**
 	 * Get attacked by a skill
 	 * 
