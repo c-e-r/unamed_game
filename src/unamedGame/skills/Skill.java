@@ -113,7 +113,7 @@ public class Skill {
 		if (element.attributeValue("attackHitBonus") != null) {
 			attackHitBonus = Integer.parseInt(element.attributeValue("attackHitBonus"));
 		}
-		if (element.attributeValue("attackDamageBonus") != null) {
+		if (element.attributeValue("attackSpeedBonus") != null) {
 			attackSpeedBonus = Integer.parseInt(element.attributeValue("attackSpeedBonus"));
 		}
 

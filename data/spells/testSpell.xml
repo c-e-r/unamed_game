@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<spell
+    name='zap'
+    isAttack='true'
+    spellType='offensive'
+    attackHitBonus='0'
+    attackSpeedBonus='3'
+    staminaCost='0'
+    damageType='physical'
+    description='shoot lightning'
+    attackDescription='#userNameCapital# shoots lightning at you'
+    missDescription='#userNameCapital# shoots lightning at you but misses'
+    playerAttackDescription='You shoot lightning at #targetName#'
+    playerMissDescription='You you shoot lightning at #targetName# but miss.'
+    >
+    <hitEffect 
+        name='itemName' 
+        magnitude='1' 
+        damageType='physical' 
+        effectDescription='#targetNameCapital# takes #totalDamage# damage' 
+        playerEffectDescription='You take #totalDamage# damage' 
+    >damage</hitEffect>
+</spell>

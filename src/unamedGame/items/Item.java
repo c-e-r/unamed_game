@@ -20,6 +20,7 @@ import unamedGame.entities.Entity;
 import unamedGame.entities.Player;
 import unamedGame.skills.Skill;
 import unamedGame.ui.Window;
+import unamedGame.spells.Spell;
 
 /**
  * @author c-e-r
@@ -33,7 +34,11 @@ public class Item {
 	private List<Effect> permanantEffects;
 	private List<Effect> equipEffects;
 	private List<Effect> attackEffects;
+	private List<Effect> spellEffects;
+	protected List<Skill> equipSkills;
 	protected List<Skill> skills;
+	protected List<Spell> spells;
+	protected List<Spell> equipSpells;
 	private int uses;
 	private int maxUses;
 	private boolean battleUse;
@@ -53,6 +58,10 @@ public class Item {
 	private boolean equipped;
 	private String damageType;
 	private String itemType;
+	
+	private boolean spellFocus;
+	private int spellFocusHitChance;
+	private int spellFocusSpeed;
 
 	private int weaponHitChance;
 	private int weaponBaseDamage;
@@ -72,11 +81,14 @@ public class Item {
 		equipEffects = new ArrayList<Effect>();
 		attackEffects = new ArrayList<Effect>();
 		effects = new ArrayList<Effect>();
+		equipSkills = new ArrayList<Skill>();
+		spells = new ArrayList<Spell>();
 		skills = new ArrayList<Skill>();
+		equipSpells = new ArrayList<Spell>();
 
 		loadItemFromXML(itemName);
-		
-		if(uses == 0 && maxUses != 0) {
+
+		if (uses == 0 && maxUses != 0) {
 			uses = maxUses;
 		}
 
@@ -170,6 +182,9 @@ public class Item {
 			case "attackEffect":
 				addAttackEffect(Effect.buildEffect(element));
 				break;
+			case "spellEffect":
+				addSpellEffect(Effect.buildEffect(element));
+				break;
 			case "effect":
 
 				addEffect(Effect.buildEffect(element));
@@ -205,6 +220,15 @@ public class Item {
 			case "skill":
 				addSkill(new Skill(element.getText()));
 				break;
+			case "spell":
+				addSpell(new Spell(element.getText()));
+				break;
+			case "equipSkill":
+				addEquipSkill(new Skill(element.getText()));
+				break;
+			case "equipSpell":
+				addEquipSpell(new Spell(element.getText()));
+				break;
 			case "armorValue":
 				if (Game.isNumeric(element.getText())) {
 					armorValue = Integer.parseInt(element.getText());
@@ -224,10 +248,40 @@ public class Item {
 	}
 
 	/**
-	 * Adds a Skill to the items skills ArrayList
+	 * Adds a Skill to the items equipSkills ArrayList
 	 * 
 	 * @param skill
 	 *            the skill to add
+	 */
+	public void addEquipSkill(Skill skill) {
+		equipSkills.add(skill);
+	}
+
+	/**
+	 * Adds a Spell to the items spell's ArrayList
+	 * 
+	 * @param spell
+	 *            the spell to add
+	 */
+	public void addSpell(Spell spell) {
+		spells.add(spell);
+	}
+
+	/**
+	 * Adds a Spell to the items equipSpells ArrayList
+	 * 
+	 * @param skill
+	 *            the skill to add
+	 */
+	public void addEquipSpell(Spell spell) {
+		equipSpells.add(spell);
+	}
+
+	/**
+	 * Adds a Spell to the items spell's ArrayList
+	 * 
+	 * @param spell
+	 *            the spell to add
 	 */
 	public void addSkill(Skill skill) {
 		skills.add(skill);
@@ -240,6 +294,15 @@ public class Item {
 	 */
 	public void addAttackEffect(Effect effect) {
 		attackEffects.add(effect);
+	}
+	
+	/**
+	 * Adds an Effect to the items spellEffects ArrayList
+	 * 
+	 * @param effect
+	 */
+	public void addSpellEffect(Effect effect) {
+		spellEffects.add(effect);
 	}
 
 	/**
@@ -279,7 +342,6 @@ public class Item {
 	 */
 	public void use(Entity user, Entity target) {
 
-		
 		if (effects.size() != 0) {
 			for (Effect effect : effects) {
 				if (effect != null) {
@@ -294,6 +356,16 @@ public class Item {
 		if (permanantEffects.size() != 0) {
 			for (Effect permanantEffect : permanantEffects) {
 				Player.getInstance().addPermanantEffect(permanantEffect);
+			}
+		}
+		if (spells.size() != 0) {
+			for (Spell spell : spells) {
+				Player.getInstance().addKnownSpell(spell);
+			}
+		}
+		if (skills.size() != 0) {
+			for (Skill skill : skills) {
+				Player.getInstance().addInnateSkill(skill);
 			}
 		}
 		uses--;
@@ -526,7 +598,9 @@ public class Item {
 
 	/**
 	 * Sets if the weapon is equipped or not
-	 * @param equipped value to set equipped to
+	 * 
+	 * @param equipped
+	 *            value to set equipped to
 	 */
 	public void setEquipped(boolean equipped) {
 		this.equipped = equipped;
@@ -535,10 +609,37 @@ public class Item {
 	/**
 	 * Returns the list of skills granted by having the item equipped
 	 * 
+	 * @return the items equipSkills ArrayList
+	 */
+	public List<Skill> getEquipSkills() {
+		return equipSkills;
+	}
+
+	/**
+	 * Returns the list of skills granted by using the item
+	 * 
 	 * @return the items skills ArrayList
 	 */
 	public List<Skill> getSkills() {
 		return skills;
+	}
+
+	/**
+	 * Returns the list of spells granted by having the item equipped
+	 * 
+	 * @return the items equipSpells ArrayList
+	 */
+	public List<Spell> getEquipSpells() {
+		return equipSpells;
+	}
+
+	/**
+	 * Returns the list of spells granted by using the item
+	 * 
+	 * @return the items skills ArrayList
+	 */
+	public List<Spell> getSpells() {
+		return spells;
 	}
 
 	/**
@@ -548,6 +649,15 @@ public class Item {
 	 */
 	public List<Effect> getAttackEffects() {
 		return attackEffects;
+	}
+	
+	/**
+	 * Returns the list of effects imparted when a spell attack made with the item hits
+	 * 
+	 * @return the items attackEffects ArrayList
+	 */
+	public List<Effect> getSpellEffects() {
+		return spellEffects;
 	}
 
 	/**
@@ -602,6 +712,27 @@ public class Item {
 	 */
 	public String getPlayerAttackMissDescription() {
 		return playerAttackMissDescription;
+	}
+
+	/**
+	 * @return the spellFocus
+	 */
+	public boolean isSpellFocus() {
+		return spellFocus;
+	}
+
+	/**
+	 * @return the spellFocusHitChance
+	 */
+	public int getSpellFocusHitChance() {
+		return spellFocusHitChance;
+	}
+
+	/**
+	 * @return the spellFocusSpeed
+	 */
+	public int getSpellFocusSpeed() {
+		return spellFocusSpeed;
 	}
 
 	/**

@@ -13,6 +13,7 @@
     <battleUse>true</battleUse>
     <fieldUse>true</fieldUse>
     <equippable equipSlot='held'>true</equippable>
+    <spell>testSpell</spell>
     <effect
         toSelf='true'
         name='itemName' 

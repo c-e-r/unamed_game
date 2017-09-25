@@ -10,9 +10,9 @@
     <spirit>1</spirit>
     <luck>2</luck>
     
-    <attackChance>70</attackChance>
-    <spellChance>0</spellChance>
-    <skillChance>30</skillChance>
+    <attackChance>60</attackChance>
+    <spellChance>20</spellChance>
+    <skillChance>20</skillChance>
     <itemChance>0</itemChance>
     
     <buffChance>0</buffChance>
@@ -24,6 +24,7 @@
     <deathDescription>The raccon dies</deathDescription>
     <killDescription>The raccon kills you</killDescription>
     <innateSkill>testSkill</innateSkill>
+    <knownSpell>testSpell</knownSpell>
     <innateWeaponDamage>2</innateWeaponDamage>
     <innateWeaponVariableDamage>1</innateWeaponVariableDamage>
     <innateWeaponHitChance>5</innateWeaponHitChance>

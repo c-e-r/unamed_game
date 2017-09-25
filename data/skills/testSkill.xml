@@ -13,12 +13,12 @@
     playerAttackDescription='You bites #targetName# with your teeth and deal #damage#'
     playerMissDescription='You bites at #targetName# with your teeth butmiss.'
     >
-    <effect 
+    <alwaysEffect 
         name='itemName' 
         magnitude='1' 
         damageType='physical' 
         effectDescription='#targetNameCapital# takes #totalDamage# extra damage' 
         playerEffectDescription='You take #totalDamage# extra damage' 
-    >damage</effect>
+    >damage</alwaysEffect>
     <hitSkill>testSkill2</hitSkill>
 </skill>

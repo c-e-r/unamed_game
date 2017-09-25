@@ -16,6 +16,7 @@ import unamedGame.Game;
 import unamedGame.effects.*;
 import unamedGame.items.Item;
 import unamedGame.skills.Skill;
+import unamedGame.spells.Spell;
 import unamedGame.ui.Window;
 
 /**
@@ -49,6 +50,9 @@ public class Enemy extends Entity {
 		combinedSkills = new ArrayList<Skill>();
 		permanantEffects = new ArrayList<Effect>();
 		equipmentEffects = new ArrayList<Effect>();
+		spells = new ArrayList<Spell>();
+		knownSpells = new ArrayList<Spell>();
+		itemSpells = new ArrayList<Spell>();
 		effects = new ArrayList<Effect>();
 
 		loadEnemyFromXML(fileName);
@@ -94,7 +98,7 @@ public class Enemy extends Entity {
 		buffChance += debuffChance;
 		healChance += buffChance;
 	}
-	
+
 	/**
 	 * Prints the description for using the item depending on the user and target
 	 * and calls the items use method
@@ -271,6 +275,9 @@ public class Enemy extends Entity {
 				break;
 			case "innateSkill":
 				addInnateSkill(new Skill(element.getText()));
+				break;
+			case "knownSpell":
+				addKnownSpell(new Spell(element.getText()));
 				break;
 			case "innateWeaponDamage":
 				if (Game.isNumeric(element.getText())) {
@@ -486,22 +493,31 @@ public class Enemy extends Entity {
 		}
 
 	}
-	
-	public List<Skill> getSkillsOfType(String type){
+
+	public List<Skill> getSkillsOfType(String type) {
 		List<Skill> temp = new ArrayList<Skill>();
 		for (Skill skill : combinedSkills) {
-			if(skill.getSkillType().equals(type)) {
+			if (skill.getSkillType().equals(type)) {
 				temp.add(skill);
 			}
 		}
 		return temp;
 	}
 
+	public List<Spell> getSpellsOfType(String type) {
+		List<Spell> temp = new ArrayList<Spell>();
+		for (Spell spell : spells) {
+			if (spell.getSpellType().equals(type)) {
+				temp.add(spell);
+			}
+		}
+		return temp;
+	}
 
-	public List<Item> getItemsOfType(String type){
+	public List<Item> getItemsOfType(String type) {
 		List<Item> temp = new ArrayList<Item>();
 		for (Item item : inventory) {
-			if(item.getItemType().equals(type)) {
+			if (item.getItemType().equals(type)) {
 				temp.add(item);
 			}
 		}
@@ -563,7 +579,5 @@ public class Enemy extends Entity {
 	public int getHealChance() {
 		return healChance;
 	}
-	
-	
 
 }

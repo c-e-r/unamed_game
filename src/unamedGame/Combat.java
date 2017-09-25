@@ -13,6 +13,7 @@ import unamedGame.input.InputEvent;
 import unamedGame.input.InputObserver;
 import unamedGame.items.Item;
 import unamedGame.skills.Skill;
+import unamedGame.spells.Spell;
 import unamedGame.time.Time;
 import unamedGame.ui.Window;
 
@@ -87,6 +88,7 @@ public class Combat {
 						Window.getInstance().removeInputObsever(this);
 						break;
 					case 3: // magic
+						spellSelection();
 						Window.getInstance().removeInputObsever(this);
 						break;
 					case 4: // item
@@ -127,12 +129,43 @@ public class Combat {
 			player.useSkill(index, enemy);
 			break;
 		case 3: // spell
+			player.useSpell(index, enemy);
 			break;
 		case 4: // item
 			if (player.getInventoryItem(index).isOffensive()) {
 				enemy.applyItemEffects(player.getInventoryItem(index), player);
 			} else {
 				player.applyItemEffects(player.getInventoryItem(index), player);
+			}
+			break;
+		case 5: // escape
+			break;
+		default:
+			Window.addToPane(Window.getInstance().getTextPane(), "Invalid Command");
+			break;
+		}
+	}
+
+	/*
+	 * Does a specific action depended on the command and index given to it.
+	 */
+	private void enemyAction(int command, int index) {
+		switch (command) {
+		case 1: // attack
+			enemy.attack(player);
+
+			break;
+		case 2: // skill
+			enemy.useSkill(index, player);
+			break;
+		case 3: // spell
+			enemy.useSpell(index, player);
+			break;
+		case 4: // item
+			if (enemy.getInventoryItem(index).isOffensive()) {
+				player.applyItemEffects(enemy.getInventoryItem(index), enemy);
+			} else {
+				enemy.applyItemEffects(enemy.getInventoryItem(index), enemy);
 			}
 			break;
 		case 5: // escape
@@ -197,6 +230,59 @@ public class Combat {
 	}
 
 	/*
+	 * Prints choices and sets an observer to wait for player input.
+	 */
+	private void spellSelection() {
+		Window.clearPane(Window.getInstance().getSidePane());
+		Window.appendToPane(Window.getInstance().getSidePane(),
+				String.format("%-14s%6s%18s", "Name", "Cost", "Description"));
+		Window.appendToPane(Window.getInstance().getSidePane(), "------------------------------------------------");
+		Window.appendToPane(Window.getInstance().getSidePane(), String.format("0: Back"));
+		int i = 1;
+		for (Spell spell : Player.getInstance().getKnownSpells()) {
+			if (i % 2 != 0) {
+				Window.appendToPaneBackground(Window.getInstance().getSidePane(),
+						String.format("%-14s%5d%25s", i++ + ": " + Game.capitalizeFirstLetter(spell.getName()),
+								spell.getManaCost(), spell.getDescription()),
+						new Color(244, 244, 244));
+
+			} else {
+				Window.appendToPane(Window.getInstance().getSidePane(),
+						String.format("%-14s%5d%25s", i++ + ": " + Game.capitalizeFirstLetter(spell.getName()),
+								spell.getManaCost(), spell.getDescription()));
+
+			}
+
+		}
+		Window.getInstance().addInputObsever(new InputObserver() {
+			@Override
+			public void inputChanged(InputEvent evt) {
+				int spellIndex = -2;
+				if (Game.isNumeric(evt.getText())) {
+					spellIndex = Integer.parseInt(evt.getText()) - 1;
+				}
+				if (spellIndex >= 0 && spellIndex < Player.getInstance().getInventory().size()) {
+					if (player.getCurrentStamina() >= player.getCombinedSkills().get(spellIndex).getStaminaCost()) {
+
+						combatTurn(3, spellIndex);
+						Window.getInstance().removeInputObsever(this);
+					} else {
+
+						Window.appendToPane(Window.getInstance().getTextPane(), "Not enough mana");
+
+					}
+				} else if (spellIndex == -1) {
+					Window.getInstance().removeInputObsever(this);
+					getCombatInput();
+				} else {
+					Window.appendToPane(Window.getInstance().getTextPane(), "Invalid Input");
+
+				}
+			}
+		});
+	}
+
+	/*
 	 * Decides on the order of player and enemy turns and calls methods to do their
 	 * actions.
 	 */
@@ -205,18 +291,22 @@ public class Combat {
 		boolean playerLoss = false;
 		boolean playerWin = false;
 
-		if (player.speedCheck() > enemy.speedCheck()) {
+		int[] arr = decideEnemyAction();
+		int enemyCommand = arr[0];
+		int enemyIndex = arr[1];
+
+		if (player.speedCheck(command, index) > enemy.speedCheck(enemyCommand, enemyIndex)) {
 			playerAction(command, index);
 			playerLoss = player.isDead();
 			playerWin = enemy.isDead();
 			if (!playerWin && !playerLoss) {
-				enemyAction();
+				enemyAction(enemyCommand, enemyIndex);
 				playerLoss = player.isDead();
 				playerWin = enemy.isDead();
 			}
 
 		} else {
-			enemyAction();
+			enemyAction(enemyCommand, enemyIndex);
 			playerLoss = player.isDead();
 			playerWin = enemy.isDead();
 			if (!playerWin && !playerLoss) {
@@ -249,39 +339,54 @@ public class Combat {
 	}
 
 	/*
-	 * Makes the enemy take an action.
+	 * Makes the enemy decide what action to take
 	 */
-	private void enemyAction() {
+	private int[] decideEnemyAction() {
 		boolean failure = false;
 		enemy.reloadSkills();
 
+		int[] arr = new int[2];
+
 		if (failure == false) {
-			int die = Dice.roll(enemy.getItemChance());
+			int die = Dice.roll(100);
+			System.out.println(enemy.getSkillChance());
 
 			if (die <= enemy.getAttackChance()) {
 				enemy.attack(player);
+				arr[0] = 1;
 			} else if (die <= enemy.getSpellChance()) {
-
-			} else if (die <= enemy.getSkillChance()) {
+				arr[0] = 3;
 				String type = chooseActionType();
-				if (checkIfPossibleSkillExists()) {
-					while (enemy.getSkillsOfType(type).size() == 0) {
-						type = chooseActionType();
-					}
-					List<Skill> skills = enemy.getSkillsOfType(type);
-					enemy.useSkill(Dice.roll(skills.size() - 1), player);
+				while (enemy.getSpellsOfType(type).size() == 0) {
+					type = chooseActionType();
+				}
+				List<Spell> spells = enemy.getSpellsOfType(type);
+				if (spells != null && spells.size() > 0) {
+					arr[1] = Dice.roll(spells.size() - 1);
+				} else {
+					failure = true;
+				}
+			} else if (die <= enemy.getSkillChance()) {
+				arr[0] = 2;
+				String type = chooseActionType();
+				while (enemy.getSkillsOfType(type).size() == 0) {
+					type = chooseActionType();
+				}
+				List<Skill> skills = enemy.getSkillsOfType(type);
+				if (skills != null && skills.size() > 0) {
+					arr[1] = Dice.roll(skills.size() - 1);
 				} else {
 					failure = true;
 				}
 			} else if (die <= enemy.getItemChance()) {
+				arr[0] = 4;
 				String type = chooseActionType();
-				if (checkIfPossibleItemExists()) {
-					while (enemy.getSkillsOfType(type).size() == 0) {
-						type = chooseActionType();
-					}
-					List<Item> items = enemy.getItemsOfType(type);
-					enemy.useSkill(Dice.roll(items.size() - 1), player);
-
+				while (enemy.getSkillsOfType(type).size() == 0) {
+					type = chooseActionType();
+				}
+				List<Item> items = enemy.getItemsOfType(type);
+				if (items != null && items.size() > 0) {
+					arr[1] = Dice.roll(items.size() - 1);
 				} else {
 					failure = true;
 				}
@@ -291,15 +396,19 @@ public class Combat {
 		if (failure == true)
 
 		{
-			enemyAction();
+			decideEnemyAction();
 		}
+
+		return arr;
 	}
 
-	/*
-	 * choose a random action type
+	/**
+	 * Choose a random action type
+	 * 
+	 * @return a string representing an action type
 	 */
-	private String chooseActionType() {
-		int die = Dice.roll(enemy.getHealChance());
+	public String chooseActionType() {
+		int die = Dice.roll(100);
 
 		if (die <= enemy.getOffensiveChance()) {
 			return OFFENSIVE;
@@ -311,40 +420,6 @@ public class Combat {
 			return HEAL;
 		}
 		return null;
-	}
-
-	private boolean checkIfPossibleSkillExists() {
-		if (enemy.getOffensiveChance() > 0 && enemy.getSkillsOfType(OFFENSIVE).size() > 0) {
-			return true;
-		}
-		if (enemy.getDebuffChance() > enemy.getAttackChance() && enemy.getSkillsOfType(DEBUFF).size() > 0) {
-			return true;
-		}
-		if (enemy.getBuffChance() > enemy.getDebuffChance() && enemy.getSkillsOfType(BUFF).size() > 0) {
-			return true;
-		}
-		if (enemy.getHealChance() > enemy.getBuffChance() && enemy.getSkillsOfType(HEAL).size() > 0) {
-			return true;
-		}
-		return false;
-
-	}
-
-	private boolean checkIfPossibleItemExists() {
-		if (enemy.getOffensiveChance() > 0 && enemy.getItemsOfType(OFFENSIVE).size() > 0) {
-			return true;
-		}
-		if (enemy.getDebuffChance() > enemy.getAttackChance() && enemy.getItemsOfType(DEBUFF).size() > 0) {
-			return true;
-		}
-		if (enemy.getBuffChance() > enemy.getDebuffChance() && enemy.getItemsOfType(BUFF).size() > 0) {
-			return true;
-		}
-		if (enemy.getHealChance() > enemy.getBuffChance() && enemy.getItemsOfType(HEAL).size() > 0) {
-			return true;
-		}
-		return false;
-
 	}
 
 	/*

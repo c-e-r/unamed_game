@@ -8,15 +8,15 @@
     <useOnText>         [REQUIRED]                  the text displayed when a non-player entity uses the item on another entity
     <playerUseText>     [REQUIRED]                  the text displayed when the player uses the item on themself
     <playerUseOnText>   [REQUIRED]                  the text displayed when the player uses the item on another entity
-    <attackHitDescription> [REQUIRED for equippable as held]        the text displayed when a non-player entity attacks with the item and hits
-    <attackMissDescription> [REQUIRED for equippable as held]       the text displayed when a non-player entity attacks with the item and misses
-    <playerAttackHitDescription> [REQUIRED for equippable as held]  the text displayed when a player attacks with the item and hits
-    <playerAttackMissDescription> [REQUIRED for equippable as held] the text displayed when a player attacks with the item and misses
+    <attackHitDescription> [SITUATIONAL for equippable as held]        the text displayed when a non-player entity attacks with the item and hits
+    <attackMissDescription> [SITUATIONAL for equippable as held]       the text displayed when a non-player entity attacks with the item and misses
+    <playerAttackHitDescription> [SITUATIONAL for equippable as held]  the text displayed when a player attacks with the item and hits
+    <playerAttackMissDescription> [SITUATIONAL for equippable as held] the text displayed when a player attacks with the item and misses
     <battleUse>         [OPTIONAL: default false]                   if the item can be used in battle
     <fieldUse           [OPTIONAL: default false]                   if the item can be used outside of battle
     <offensive>         [OPTIONAL: default false]                   if when used in battle the item will be used on the opponent rather than self
     <equippable>        [OPTIONAL: default false]                   if the item can be equipped
-        equipSlot=''    [REQUIRED for equippable items]             the slot the item can be equipped in. valid options are "head", "body", "hand", "held", "neck", "feet"
+        equipSlot=''    [SITUATIONAL for equippable items]             the slot the item can be equipped in. valid options are "head", "body", "hand", "held", "neck", "feet"
    
     <attackEffect>      [OPTIONAL]                  the name of the effect that will apply when the weapon is used in an attack. Can have multiple. 
     <effect>            [OPTIONAL]                  the name of the effect that will apply when the weapon is used. Can have multiple. 
@@ -26,7 +26,13 @@
     <weaponBaseDamage>  [OPTIONAL: default 0]       the amount of bonus damage this weapon deals
     <weaponVariableDamage [OPTIONAL; default 0 ]    the amount of bonus variable damage this weapon deals
     <weaponSpeed>       [OPTIONAL: default 0]       the amount of bonus speed this weapon grants
-    <skill>             [OPTIONAL]                  the name of the skill granted to an entity equipping this item. Can have multiple.
+    <equipSkill>        [OPTIONAL]                  the name of the skill granted to an entity equipping this item. Can have multiple.
+    <equipSpell>        [OPTIONAL]                  the name of the spell granted to an entity equipping this item. Can have multiple.
+    <skill>             [OPTIONAL]                  the name of the skill granted to an entity who uses this item. Can have multiple.
+    <spell>             [OPTIONAL]                  the name of the spell granted to an entity who uses this item. Can have multiple.
     <armorValue>        [OPTIONAL: default 0]       the amount of armor granted by eqipping this item
-    <damageType>        [REQUIRED for equippable held] the type of damage this item deals when wielded as a weapon
-    <itemType>          [REQUIRED for usable items]                  used by ai to decide what to do. Valid options are "offensive","buff", "debuff", "heal"
+    <damageType>        [REQUIRED for equippable held]  the type of damage this item deals when wielded as a weapon
+    <itemType>          [REQUIRED for usable items]     used by ai to decide what to do. Valid options are "offensive","buff", "debuff", "heal"
+    <spellFocus>        [OPTIONAL: default 'false']     if the item can be uased as a spell focus
+    <spellFocusHitChance> [SITUATIONAL for spellFocus = 'true'] the bonus to spell attacks hit chance made while using this item as a mainhand weapon
+    <spellFocusSpeed> [SITUATIONAL for spellFocus = 'true']     the bonus to speed while casting a spell and using this item as a mainhand weapon

@@ -12,6 +12,7 @@ import unamedGame.input.InputEvent;
 import unamedGame.input.InputObserver;
 import unamedGame.items.Item;
 import unamedGame.skills.Skill;
+import unamedGame.spells.Spell;
 import unamedGame.time.Time;
 import unamedGame.ui.Window;
 import unamedGame.util.CubePoint;
@@ -58,6 +59,9 @@ public class Player extends Entity {
 		effects = new ArrayList<Effect>();
 		itemSkills = new ArrayList<Skill>();
 		combinedSkills = new ArrayList<Skill>();
+		spells = new ArrayList<Spell>();
+		knownSpells = new ArrayList<Spell>();
+		itemSpells = new ArrayList<Spell>();
 
 		innateWeaponDamageType = "physical";
 		innateWeaponHitDescription = "#userName# throws a punch at you dealing #damage# damage";

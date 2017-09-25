@@ -12,6 +12,7 @@ import unamedGame.Game;
 import unamedGame.effects.Effect;
 import unamedGame.items.Item;
 import unamedGame.skills.Skill;
+import unamedGame.spells.Spell;
 import unamedGame.ui.Window;
 import unamedGame.util.Colors;
 
@@ -32,6 +33,9 @@ public class Entity extends Observable {
 	protected List<Effect> equipmentEffects;
 	protected List<Effect> permanantEffects;
 	protected List<Effect> attackEffects;
+	protected List<Spell> spells;
+	protected List<Spell> knownSpells;
+	protected List<Spell> itemSpells;
 
 	protected String name;
 	protected String useName;
@@ -132,8 +136,6 @@ public class Entity extends Observable {
 		carryCapacity = strength * 5;
 
 	}
-	
-
 
 	/**
 	 * Calculates the total armor of equipped items and returns it
@@ -175,7 +177,7 @@ public class Entity extends Observable {
 		Item weapon = attacker.getMainWeapon();
 
 		triggerEffects("attacked");
-		
+
 		int weaponBaseDamage = 0;
 		int weaponVariableDamage = 1;
 		int weaponHitChance = 0;
@@ -295,14 +297,28 @@ public class Entity extends Observable {
 	}
 
 	/**
+	 * Use a spell on the given enemy
+	 * 
+	 * @param spellIndex
+	 *            the index of the spell to use
+	 * @param target
+	 *            the target of the spell
+	 */
+	public void useSpell(int spellIndex, Entity target) {
+		target.getAttackedBySpell(spells.get(spellIndex), this);
+	}
+
+	/**
 	 * Trigger self-destruct or special effects on effects watching this entity
-	 * @param reason the reason effects are being triggered
+	 * 
+	 * @param reason
+	 *            the reason effects are being triggered
 	 */
 	public void triggerEffects(String reason) {
 		setChanged();
 		notifyObservers((String) reason);
 	}
-	
+
 	/**
 	 * Get attacked by a skill
 	 * 
@@ -483,6 +499,162 @@ public class Entity extends Observable {
 	}
 
 	/**
+	 * Get attacked by a spell
+	 * 
+	 * @param spell
+	 *            the spell to be hit by
+	 * @param attacker
+	 *            the attacker
+	 */
+	public void getAttackedBySpell(Spell spell, Entity attacker) {
+		Item spellFocus = attacker.getMainWeapon();
+
+		int spellFocusHitChance = 0;
+
+		if (spellFocus != null) {
+			if (spellFocus.isSpellFocus()) {
+				spellFocusHitChance = spellFocus.getWeaponHitChance();
+			} else {
+				spellFocus = null;
+			}
+		}
+
+		boolean spellHit = false;
+
+		// Get weapon information of weapon if a weapon exists. Otherwise get innate
+		// weapon stats
+
+		String[] description = null;
+
+		int temp = Dice.roll(Dice.HIT_DIE);
+
+		if (spell.isAttack()) {
+			if (attacker.getEffectiveHit() + spellFocusHitChance + spell.getAttackHitBonus() + temp >= this
+					.getEffectiveDodge()) {
+				spellHit = true;
+
+				if (attacker instanceof Player) {
+					description = spell.getPlayerAttackDescription().split("#");
+				} else {
+					description = spell.getAttackDescription().split("#");
+				}
+
+			} else {
+				if (attacker instanceof Player) {
+					description = spell.getPlayerMissDescription().split("#");
+				} else {
+					description = spell.getMissDescription().split("#");
+				}
+
+			}
+		} else {
+			if (attacker instanceof Player) {
+				description = spell.getPlayerAttackDescription().split("#");
+
+			} else {
+				description = spell.getAttackDescription().split("#");
+			}
+		}
+		// Replace keywords in description with variables
+		for (String string : description) {
+			switch (string) {
+			case "userName":
+				Window.addToPane(Window.getInstance().getTextPane(), attacker.getUseName());
+				break;
+			case "userNameCapital":
+				Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(attacker.getUseName()));
+				break;
+			case "targetName":
+				Window.addToPane(Window.getInstance().getTextPane(), this.getUseName());
+				break;
+			case "targetNameCapital":
+				Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(this.getUseName()));
+				break;
+			case "spellFocusName":
+				Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(spellFocus.getName()));
+				break;
+			default:
+				Window.addToPane(Window.getInstance().getTextPane(), string);
+				break;
+
+			}
+
+		}
+		Window.appendToPane(Window.getInstance().getTextPane(), "");
+		// Apply weapon attack effects if weapon attack hit
+		if (spellFocus != null && spellHit) {
+			for (Effect effect : spellFocus.getSpellEffects()) {
+				if (effect != null) {
+					if (effect.isToSelf()) {
+						attacker.addEffect(effect, attacker);
+					} else {
+						addEffect(effect, attacker);
+					}
+				}
+			}
+		}
+		// Apply skills effects that happen on hit
+		if (spellHit) {
+			for (Effect effect : spell.getHitEffects()) {
+				if (effect != null) {
+					if (effect.isToSelf()) {
+						attacker.addEffect(effect, attacker);
+					} else {
+						addEffect(effect, attacker);
+					}
+				}
+
+			}
+		} else { // Apply skills effects that happen on miss
+			for (Effect effect : spell.getMissEffects()) {
+				if (effect != null) {
+					if (effect.isToSelf()) {
+						attacker.addEffect(effect, attacker);
+					} else {
+						addEffect(effect, attacker);
+					}
+				}
+
+			}
+		}
+		// Apply skills effects that happen always
+		for (Effect effect : spell.getAlwaysEffects()) {
+			if (effect != null) {
+				if (effect.isToSelf()) {
+					attacker.addEffect(effect, attacker);
+				} else {
+					addEffect(effect, attacker);
+				}
+			}
+
+		}
+		// Apply skills child skills that happen on hit
+		if (spellHit) {
+			for (Spell subSpell : spell.getHitSpells()) {
+				if (spell != null) {
+					getAttackedBySpell(subSpell, attacker);
+				}
+
+			}
+		} else { // Apply skills child skills that happen on miss
+			for (Spell subSpell : spell.getMissSpells()) {
+				if (spell != null) {
+					getAttackedBySpell(subSpell, attacker);
+				}
+
+			}
+		}
+		// Apply skills child skills that happen always
+		for (Spell subSpell : spell.getAlwaysSpells()) {
+			if (spell != null) {
+				getAttackedBySpell(subSpell, attacker);
+			}
+
+		}
+
+	}
+
+	/**
 	 * Apply resistances to the given damage value based on the damage type
 	 * 
 	 * @param damage
@@ -637,11 +809,30 @@ public class Entity extends Observable {
 	}
 
 	/**
-	 * Returns effective speed + a roll of the SPEED_DIE
+	 * Returns effective speed + a roll of the SPEED_DIE + the skill or speed bonus
+	 * 
+	 * @param command
+	 *            the command. 2 for skill and 3 for spell
+	 * @param index
+	 *            the index of the skill or spell
 	 * @return the speed to check
 	 */
-	public int speedCheck() {
-		return speed + speedMod + Dice.roll(Dice.SPEED_DIE);
+
+	public int speedCheck(int command, int index) {
+
+		int speedBonus = 0;
+		switch (command) {
+		case 2:
+			speedBonus = combinedSkills.get(index).getAttackSpeedBonus();
+			break;
+		case 3:
+			speedBonus = spells.get(index).getAttackSpeedBonus();
+			break;
+		default:
+			break;
+		}
+
+		return speed + speedMod + speedBonus + Dice.roll(Dice.SPEED_DIE);
 	}
 
 	/**
@@ -748,14 +939,31 @@ public class Entity extends Observable {
 		for (int i = 0; i < equipment.length; i++) {
 			Item item = equipment[i];
 			if (item != null) {
-				itemSkills.addAll(item.getSkills());
+				itemSkills.addAll(item.getEquipSkills());
 			}
 		}
 
 		combinedSkills = new ArrayList<Skill>();
 		combinedSkills.addAll(itemSkills);
 		combinedSkills.addAll(innateSkills);
+	}
 
+	/**
+	 * recreates the spells arrayList from the item and known spells ArrayLists
+	 */
+	public void reloadSpells() {
+		itemSpells = new ArrayList<Spell>();
+
+		for (int i = 0; i < equipment.length; i++) {
+			Item item = equipment[i];
+			if (item != null) {
+				itemSpells.addAll(item.getEquipSpells());
+			}
+		}
+
+		spells = new ArrayList<Spell>();
+		spells.addAll(itemSpells);
+		spells.addAll(knownSpells);
 	}
 
 	/**
@@ -908,6 +1116,17 @@ public class Entity extends Observable {
 	}
 
 	/**
+	 * Adds the given spell to the entity's known spells list
+	 * 
+	 * @param spell
+	 *            the spell to add
+	 */
+	public void addKnownSpell(Spell spell) {
+		knownSpells.add(spell);
+		reloadSpells();
+	}
+
+	/**
 	 * Returns the entity's equipment array
 	 * 
 	 * @return the equipment array
@@ -942,6 +1161,33 @@ public class Entity extends Observable {
 	 */
 	public List<Skill> getItemSkills() {
 		return itemSkills;
+	}
+
+	/**
+	 * Returns the entity's item spells List
+	 * 
+	 * @return the itemSpells List
+	 */
+	public List<Spell> getItemSpells() {
+		return itemSpells;
+	}
+
+	/**
+	 * Returns the entity's spells List
+	 * 
+	 * @return the spells List
+	 */
+	public List<Spell> getSpells() {
+		return spells;
+	}
+
+	/**
+	 * Returns the entity's knownSpells List
+	 * 
+	 * @return the knownSpells List
+	 */
+	public List<Spell> getKnownSpells() {
+		return knownSpells;
 	}
 
 	/**

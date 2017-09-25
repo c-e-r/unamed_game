@@ -27,4 +27,5 @@
     >heal</attackEffect>
     <skill>testSkill</skill>
     <skill>testSkill2</skill>
+    <equipSpell>testSpell</equipSpell>
 </item>

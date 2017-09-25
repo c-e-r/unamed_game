@@ -1,0 +1,19 @@
+<spell>
+    name=''                     [REQUIRED]                      the name of the spell
+    description=''              [REQUIRED]                      a description of the spell
+    attackDescription=''        [REQUIRED]                      a description displayed when a non-player entity uses the spell and hits
+    playerAttackDescription=''  [REQUIRED]                      a description displayed when a player uses the spell and hits
+    missDescription=''          [REQUIRED if isAttack='true']   a description displayed when a non-player entity uses the spell and misses
+    playerMissDescription=''    [REQUIRED if isAttacl='true']   a description displayed when a player uses the spell and misses
+    manaCost=''                 [OPTIONAL: default 0]       the amount of mana it costs to use the spell
+    isAttack=''                 [OPTIONAL: default false]   if the spell makes an attack roll to hit
+    attackHitBonus              [OPTIONAL: default 0]       the amount of bonus hit granted by the spell
+    attackSpeedBonus            [OPTIONAL: default 0]       the amount of bonus speed granted by the spell
+    spellType                   [REQUIRED]                  used by ai to decide what to do. Valid options are "offensive","buff", "debuff", "heal"
+    
+    <hitEffect>                 [OPTIONAL]      the name of an effect that will apply if the spell hits. Can have multiple
+    <missEffect>                [OPTIONAL]      the name of an effect that will apply if the spell misses. Can have multiple
+    <alwaysEffects>             [OPTIONAL]      the name of an effect that will always apply after the spell. Can have multiple
+    <hitSpell>                  [OPTIONAL]      the name of a spell that will be used if the spell hits. Can have multiple
+    <missSpell>                 [OPTIONAL]      the name of a spell that will be used if the spell misses. Can have multiple
+    <alwaysSpell>               [OPTIONAL]      the name of a spell that will always be used after the spell. Can have multiple
