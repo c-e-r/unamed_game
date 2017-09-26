@@ -13,6 +13,7 @@ import unamedGame.effects.Effect;
 import unamedGame.items.Item;
 import unamedGame.skills.Skill;
 import unamedGame.spells.Spell;
+import unamedGame.time.Time;
 import unamedGame.ui.Window;
 import unamedGame.util.Colors;
 
@@ -41,29 +42,40 @@ public class Entity extends Observable {
 	protected String useName;
 
 	protected int vitality;
-	protected int vitalityMod;
+	protected int vitalityBonus;
+	protected int vitalityPenalty;
 	protected int strength;
-	protected int strengthMod;
+	protected int strengthBonus;
+	protected int strengthPenalty;
 	protected int dexterity;
-	protected int dexterityMod;
+	protected int dexterityBonus;
+	protected int dexterityPenalty;
 	protected int intellect;
-	protected int intellectMod;
+	protected int intellectBonus;
+	protected int intellectPenalty;
 	protected int spirit;
-	protected int spiritMod;
+	protected int spiritBonus;
+	protected int spiritPenalty;
 	protected int luck;
-	protected int luckMod;
+	protected int luckBonus;
+	protected int luckPenalty;
 
 	protected int maxHealth;
-	protected int maxHealthMod;
+	protected int maxHealthBonus;
+	protected int maxHealthPenalty;
 	protected int maxStamina;
-	protected int maxStaminaMod;
+	protected int maxStaminaBonus;
+	protected int maxStaminaPenalty;
 	protected int maxMana;
-	protected int maxManaMod;
+	protected int maxManaBonus;
+	protected int maxManaPenalty;
 
 	protected int speed;
-	protected int speedMod;
+	protected int speedBonus;
+	protected int speedPenalty;
 	protected int dodge;
-	protected int dodgeMod;
+	protected int dodgeBonus;
+	protected int dodgePenalty;
 	protected int baseDodge = 20;
 
 	protected int slashingReduction;
@@ -85,47 +97,81 @@ public class Entity extends Observable {
 	protected int poisonReduction;
 	protected double poisonResistance = 1;
 
-	protected int slashingReductionMod;
-	protected double slashingResistanceMod;
-	protected int piercingReductionMod;
-	protected double piercingResistanceMod;
-	protected int bludgeoningReductionMod;
-	protected double bludgeoningResistanceMod;
-	protected int fireReductionMod;
-	protected double fireResistanceMod;
-	protected int coldReductionMod;
-	protected double coldResistanceMod;
-	protected int electricityReductionMod;
-	protected double electricityResistanceMod;
-	protected int sacredReductionMod;
-	protected double sacredResistanceMod;
-	protected int profaneReductionMod;
-	protected double profaneResistanceMod;
-	protected int poisonReductionMod;
-	protected double poisonResistanceMod;
+	protected int slashingReductionBonus;
+	protected int slashingReductionPenalty;
+	protected double slashingResistanceBonus;
+	protected double slashingResistancePenalty;
+	protected int piercingReductionBonus;
+	protected int piercingReductionPenalty;
+	protected double piercingResistanceBonus;
+	protected double piercingResistancePenalty;
+	protected int bludgeoningReductionBonus;
+	protected int bludgeoningReductionPenalty;
+	protected double bludgeoningResistanceBonus;
+	protected double bludgeoningResistancePenalty;
+	protected int fireReductionBonus;
+	protected int fireReductionPenalty;
+	protected double fireResistanceBonus;
+	protected double fireResistancePenalty;
+	protected int coldReductionBonus;
+	protected int coldReductionPenalty;
+	protected double coldResistanceBonus;
+	protected double coldResistancePenalty;
+	protected int electricityReductionBonus;
+	protected int electricityReductionPenalty;
+	protected double electricityResistanceBonus;
+	protected double electricityResistancePenalty;
+	protected int sacredReductionBonus;
+	protected int sacredReductionPenalty;
+	protected double sacredResistanceBonus;
+	protected double sacredResistancePenalty;
+	protected int profaneReductionBonus;
+	protected int profaneReductionPenalty;
+	protected double profaneResistanceBonus;
+	protected double profaneResistancePenalty;
+	protected int poisonReductionBonus;
+	protected int poisonReductionPenalty;
+	protected double poisonResistanceBonus;
+	protected double poisonResistancePenalty;
 
 	protected int mentalResistance;
-	protected int mentalResistanceMod;
+	protected int mentalResistanceBonus;
+	protected int mentalResistancePenalty;
 	protected int baseMentalResistance = 20;
 	protected int physicalResistance;
-	protected int physicalResistanceMod;
+	protected int physicalResistanceBonus;
+	protected int physicalResistancePenalty;
 	protected int basePhysicalResistance = 20;
 
 	protected int mentalChanceMult = 1;
+	protected int mentalChanceMultBonus;
+	protected int mentalChanceMultPenalty;
 	protected int physicalChanceMult = 1;
+	protected int physicalChanceMultBonus;
+	protected int physicalChanceMultPenalty;
 
 	protected int hit;
-	protected int hitMod;
+	protected int hitBonus;
+	protected int hitPenalty;
 	protected double hitMult = 1;
+	protected double hitMultBonus;
+	protected double hitMultPenalty;
 	protected int damageMod;
+	protected int damagePenalty;
 	protected double damageMult = 1;
+	protected double damageMultBonus;
+	protected double damageMultPenalty;
 	protected int healMod;
+	protected int healModPenalty;
 	protected double healMult = 1;
+	protected double healMultBonus;
+	protected double healMultPenalty;
 	protected int effectMod;
-	protected double effectMult = 1;
+	protected int effectModPenalty;
 
 	protected int carryCapacity;
-	protected int carryCapacityMod;
+	protected int carryCapacityBonus;
+	protected int carryCapacityPenalty;
 
 	protected int currentHealth;
 	protected int currentStamina;
@@ -141,6 +187,8 @@ public class Entity extends Observable {
 	protected String innateWeaponMissDescription;
 	protected String innatePlayerWeaponHitDescription;
 	protected String innatePlayerWeaponMissDescription;
+
+	protected int equipSpeedPenalty;
 
 	/**
 	 * Restores health to the Entity
@@ -183,15 +231,16 @@ public class Entity extends Observable {
 
 		for (Item item : equipment) {
 			if (item != null) {
-				piercingReductionMod += item.getPiercingReduction();
-				slashingReductionMod += item.getSlashingReduction();
-				bludgeoningReductionMod += item.getBludgeoningReduction();
-				fireReductionMod += item.getFireReduction();
-				coldReductionMod += item.getColdReduction();
-				electricityReductionMod += item.getElectricityReduction();
-				sacredReductionMod += item.getSacredReduction();
-				profaneReductionMod += item.getProfaneReduction();
-				poisonReductionMod += item.getPoisonReduction();
+				piercingReductionBonus += item.getPiercingReduction();
+				slashingReductionBonus += item.getSlashingReduction();
+				bludgeoningReductionBonus += item.getBludgeoningReduction();
+				fireReductionBonus += item.getFireReduction();
+				coldReductionBonus += item.getColdReduction();
+				electricityReductionBonus += item.getElectricityReduction();
+				sacredReductionBonus += item.getSacredReduction();
+				profaneReductionBonus += item.getProfaneReduction();
+				poisonReductionBonus += item.getPoisonReduction();
+				equipSpeedPenalty -= item.getSpeedPenalty();
 			}
 		}
 	}
@@ -707,23 +756,30 @@ public class Entity extends Observable {
 	public int applyResistances(int damage, String damageType) {
 		switch (damageType) {
 		case "slashing":
-			return (int) ((damage - slashingReduction - slashingReductionMod) * (slashingResistance + slashingResistanceMod));
+			return (int) ((damage - slashingReduction - slashingReductionBonus)
+					* (slashingResistance + slashingResistanceBonus));
 		case "piercing":
-			return (int) ((damage - piercingReduction - piercingReductionMod) * (piercingResistance + piercingResistanceMod));
+			return (int) ((damage - piercingReduction - piercingReductionBonus)
+					* (piercingResistance + piercingResistanceBonus));
 		case "bludgeoning":
-			return (int) ((damage - bludgeoningReduction - bludgeoningReductionMod) * (bludgeoningResistance + bludgeoningResistanceMod));
+			return (int) ((damage - bludgeoningReduction - bludgeoningReductionBonus)
+					* (bludgeoningResistance + bludgeoningResistanceBonus));
 		case "fire":
-			return (int) ((damage - fireReduction - fireReductionMod) * (fireResistance + fireResistanceMod));
+			return (int) ((damage - fireReduction - fireReductionBonus) * (fireResistance + fireResistanceBonus));
 		case "cold":
-			return (int) ((damage - coldReduction - coldReductionMod) * (coldResistance + coldResistanceMod));
+			return (int) ((damage - coldReduction - coldReductionBonus) * (coldResistance + coldResistanceBonus));
 		case "electricity":
-			return (int) ((damage - electricityReduction - electricityReductionMod) * (electricityResistance + electricityResistanceMod));
+			return (int) ((damage - electricityReduction - electricityReductionBonus)
+					* (electricityResistance + electricityResistanceBonus));
 		case "sacred":
-			return (int) ((damage - sacredReduction - sacredReductionMod) * (sacredResistance + sacredResistanceMod));
+			return (int) ((damage - sacredReduction - sacredReductionBonus)
+					* (sacredResistance + sacredResistanceBonus));
 		case "profane":
-			return (int) ((damage - profaneReduction - profaneReductionMod) * (profaneResistance + profaneResistanceMod));
+			return (int) ((damage - profaneReduction - profaneReductionBonus)
+					* (profaneResistance + profaneResistanceBonus));
 		case "poison":
-			return (int) ((damage - poisonReduction - poisonReductionMod) * (poisonResistance + poisonResistanceMod));
+			return (int) ((damage - poisonReduction - poisonReductionBonus)
+					* (poisonResistance + poisonResistanceBonus));
 		case "unresistable":
 			return damage;
 
@@ -762,6 +818,22 @@ public class Entity extends Observable {
 	}
 
 	/**
+	 * Checks if an effect of that name already exists in the effects List
+	 * 
+	 * @param effect
+	 *            the effect to check
+	 * @return if an effect of the name exists
+	 */
+	public boolean ifEffectExists(Effect effect) {
+		for (Effect effect2 : effects) {
+			if (effect.getName().equals(effect2.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Increases the given stat by the given modifier
 	 * 
 	 * @param stat
@@ -772,43 +844,193 @@ public class Entity extends Observable {
 	public void increaseModifier(String stat, int modifier) {
 		switch (stat) {
 		case "vitality":
-			if (modifier > vitalityMod) {
-				vitalityMod = modifier;
+			if (modifier > vitalityBonus) {
+				vitalityBonus = modifier;
 			}
 			break;
 		case "strength":
-			if (modifier > strengthMod) {
-				strengthMod = modifier;
+			if (modifier > strengthBonus) {
+				strengthBonus = modifier;
 			}
 			break;
 		case "dexterity":
-			if (modifier > dexterityMod) {
-				dexterityMod = modifier;
+			if (modifier > dexterityBonus) {
+				dexterityBonus = modifier;
 			}
 			break;
 		case "intellect":
-			if (modifier > intellectMod) {
-				intellectMod = modifier;
+			if (modifier > intellectBonus) {
+				intellectBonus = modifier;
 			}
 			break;
 		case "spirit":
-			if (modifier > spiritMod) {
-				spiritMod = modifier;
+			if (modifier > spiritBonus) {
+				spiritBonus = modifier;
 			}
 			break;
 		case "luck":
-			if (modifier > luckMod) {
-				luckMod = modifier;
+			if (modifier > luckBonus) {
+				luckBonus = modifier;
 			}
 			break;
 		case "health":
-			if (modifier > maxHealthMod) {
-				maxHealthMod += modifier;
+			if (modifier > maxHealthBonus) {
+				maxHealthBonus = modifier;
+			}
+			break;
+		case "stamina":
+			if (modifier > maxStaminaBonus) {
+				maxStaminaBonus = modifier;
+			}
+			break;
+		case "mana":
+			if (modifier > maxManaBonus) {
+				maxManaBonus = modifier;
 			}
 			break;
 		case "speed":
-			if (modifier > speedMod) {
-				speedMod = modifier;
+			if (modifier > speedBonus) {
+				speedBonus = modifier;
+			}
+			break;
+		case "hit":
+			if (modifier > hitBonus) {
+				hitBonus = modifier;
+			}
+			break;
+		case "dodge":
+			if (modifier > dodgeBonus) {
+				dodgeBonus = modifier;
+			}
+			break;
+		case "slashingReduction":
+			if (modifier > slashingReductionBonus) {
+				slashingReductionBonus = modifier;
+			}
+			break;
+		case "piercingReduction":
+			if (modifier > piercingReductionBonus) {
+				piercingReductionBonus = modifier;
+			}
+			break;
+		case "bludgeoningReduction":
+			if (modifier > bludgeoningReductionBonus) {
+				bludgeoningReductionBonus = modifier;
+			}
+			break;
+		case "fireReduction":
+			if (modifier > fireReductionBonus) {
+				fireReductionBonus = modifier;
+			}
+			break;
+		case "coldReduction":
+			if (modifier > coldReductionBonus) {
+				coldReductionBonus = modifier;
+			}
+			break;
+		case "electricityReduction":
+			if (modifier > electricityReductionBonus) {
+				electricityReductionBonus = modifier;
+			}
+			break;
+		case "sacredReduction":
+			if (modifier > sacredReductionBonus) {
+				sacredReductionBonus = modifier;
+			}
+			break;
+		case "profaneReduction":
+			if (modifier > profaneReductionBonus) {
+				profaneReductionBonus = modifier;
+			}
+			break;
+		case "poisonReduction":
+			if (modifier > poisonReductionBonus) {
+				poisonReductionBonus = modifier;
+			}
+			break;
+		case "slashingResistance":
+			if (modifier > slashingResistanceBonus) {
+				slashingResistanceBonus = modifier;
+			}
+			break;
+		case "piercingResistance":
+			if (modifier > piercingResistanceBonus) {
+				piercingResistanceBonus = modifier;
+			}
+			break;
+		case "bludgeoningResistance":
+			if (modifier > bludgeoningResistanceBonus) {
+				bludgeoningResistanceBonus = modifier;
+			}
+			break;
+		case "fireResistance":
+			if (modifier > fireResistanceBonus) {
+				fireResistanceBonus = modifier;
+			}
+			break;
+		case "coldResitance":
+			if (modifier > coldResistanceBonus) {
+				coldResistanceBonus = modifier;
+			}
+			break;
+		case "electricityResistance":
+			if (modifier > electricityResistanceBonus) {
+				electricityResistanceBonus = modifier;
+			}
+			break;
+		case "sacredResistance":
+			if (modifier > sacredResistanceBonus) {
+				sacredResistanceBonus = modifier;
+			}
+			break;
+		case "profaneResistance":
+			if (modifier > profaneResistanceBonus) {
+				profaneResistanceBonus = modifier;
+			}
+			break;
+		case "poisonResistance":
+			if (modifier > poisonResistanceBonus) {
+				poisonResistanceBonus = modifier;
+			}
+			break;
+		case "hitMult":
+			if (modifier > hitMultBonus) {
+				hitMultBonus = modifier;
+			}
+			break;
+		case "damageMult":
+			if (modifier > damageMultBonus) {
+				damageMultBonus = modifier;
+			}
+			break;
+		case "healMult":
+			if (modifier > healMultBonus) {
+				healMultBonus = modifier;
+			}
+			break;
+		case "carryCapacitys":
+			if (modifier > carryCapacityBonus) {
+				carryCapacityBonus = modifier;
+			}
+			break;
+		case "mentalChanceMult":
+			if (modifier > mentalChanceMultBonus) {
+				mentalChanceMultBonus = modifier;
+			}
+			break;
+		case "physicalChanceMult":
+			if (modifier > physicalChanceMultBonus) {
+				physicalChanceMultBonus = modifier;
+			}
+			break;
+		case "mentalResistance":
+			if (modifier > mentalResistanceBonus) {
+				mentalResistanceBonus = modifier;
+			}
+			break;
+		case "physicalResistance":
+			if (modifier > physicalResistanceBonus) {
+				physicalResistanceBonus = modifier;
 			}
 			break;
 		default:
@@ -826,11 +1048,195 @@ public class Entity extends Observable {
 	 */
 	public void decreaseModifier(String stat, int modifier) {
 		switch (stat) {
+		case "vitality":
+			if (modifier > vitalityPenalty) {
+				vitalityPenalty = modifier;
+			}
+			break;
+		case "strength":
+			if (modifier > strengthPenalty) {
+				strengthPenalty = modifier;
+			}
+			break;
+		case "dexterity":
+			if (modifier > dexterityPenalty) {
+				dexterityPenalty = modifier;
+			}
+			break;
+		case "intellect":
+			if (modifier > intellectPenalty) {
+				intellectPenalty = modifier;
+			}
+			break;
+		case "spirit":
+			if (modifier > spiritPenalty) {
+				spiritPenalty = modifier;
+			}
+			break;
+		case "luck":
+			if (modifier > luckPenalty) {
+				luckPenalty = modifier;
+			}
+			break;
 		case "health":
-			maxHealthMod -= modifier;
+			if (modifier > maxHealthPenalty) {
+				maxHealthPenalty += modifier;
+			}
+			break;
+		case "stamina":
+			if (modifier > maxStaminaPenalty) {
+				maxStaminaPenalty += modifier;
+			}
+			break;
+		case "mana":
+			if (modifier > maxManaPenalty) {
+				maxManaPenalty += modifier;
+			}
 			break;
 		case "speed":
-			speedMod -= modifier;
+			if (modifier > speedPenalty) {
+				speedPenalty = modifier;
+			}
+			break;
+		case "hit":
+			if (modifier > hitPenalty) {
+				hitPenalty = modifier;
+			}
+			break;
+		case "dodge":
+			if (modifier > dodgePenalty) {
+				dodgePenalty = modifier;
+			}
+			break;
+		case "slashingReduction":
+			if (modifier > slashingReductionPenalty) {
+				slashingReductionPenalty = modifier;
+			}
+			break;
+		case "piercingReduction":
+			if (modifier > piercingReductionPenalty) {
+				piercingReductionPenalty = modifier;
+			}
+			break;
+		case "bludgeoningReduction":
+			if (modifier > bludgeoningReductionPenalty) {
+				bludgeoningReductionPenalty = modifier;
+			}
+			break;
+		case "fireReduction":
+			if (modifier > fireReductionPenalty) {
+				fireReductionPenalty = modifier;
+			}
+			break;
+		case "coldReduction":
+			if (modifier > coldReductionPenalty) {
+				coldReductionPenalty = modifier;
+			}
+			break;
+		case "electricityReduction":
+			if (modifier > electricityReductionPenalty) {
+				electricityReductionPenalty = modifier;
+			}
+			break;
+		case "sacredReduction":
+			if (modifier > sacredReductionPenalty) {
+				sacredReductionPenalty = modifier;
+			}
+			break;
+		case "profaneReduction":
+			if (modifier > profaneReductionPenalty) {
+				profaneReductionPenalty = modifier;
+			}
+			break;
+		case "poisonReduction":
+			if (modifier > poisonReductionPenalty) {
+				poisonReductionPenalty = modifier;
+			}
+			break;
+		case "slashingResistance":
+			if (modifier > slashingResistancePenalty) {
+				slashingResistancePenalty = modifier;
+			}
+			break;
+		case "piercingResistance":
+			if (modifier > piercingResistancePenalty) {
+				piercingResistancePenalty = modifier;
+			}
+			break;
+		case "bludgeoningResistance":
+			if (modifier > bludgeoningResistanceBonus) {
+				bludgeoningResistancePenalty = modifier;
+			}
+			break;
+		case "fireResistance":
+			if (modifier > fireResistancePenalty) {
+				fireResistancePenalty = modifier;
+			}
+			break;
+		case "coldResitance":
+			if (modifier > coldResistancePenalty) {
+				coldResistancePenalty = modifier;
+			}
+			break;
+		case "electricityResistance":
+			if (modifier > electricityResistancePenalty) {
+				electricityResistancePenalty = modifier;
+			}
+			break;
+		case "sacredResistance":
+			if (modifier > sacredResistancePenalty) {
+				sacredResistancePenalty = modifier;
+			}
+			break;
+		case "profaneResistance":
+			if (modifier > profaneResistancePenalty) {
+				profaneResistancePenalty = modifier;
+			}
+			break;
+		case "poisonResistance":
+			if (modifier > poisonResistancePenalty) {
+				poisonResistancePenalty = modifier;
+			}
+			break;
+		case "hitMult":
+			if (modifier > hitMultPenalty) {
+				hitMultPenalty = modifier;
+			}
+			break;
+		case "damageMult":
+			if (modifier > damageMultPenalty) {
+				damageMultPenalty = modifier;
+			}
+			break;
+		case "healMult":
+			if (modifier > healMultPenalty) {
+				healMultPenalty = modifier;
+			}
+			break;
+		case "carryCapacitys":
+			if (modifier > carryCapacityPenalty) {
+				carryCapacityPenalty = modifier;
+			}
+			break;
+		case "mentalChanceMult":
+			if (modifier > mentalChanceMultPenalty) {
+				mentalChanceMultPenalty = modifier;
+			}
+			break;
+		case "physicalChanceMult":
+			if (modifier > physicalChanceMultPenalty) {
+				physicalChanceMultPenalty = modifier;
+			}
+			break;
+		case "mentalResistance":
+			if (modifier > mentalResistancePenalty) {
+				mentalResistancePenalty = modifier;
+			}
+			break;
+		case "physicalResistance":
+			if (modifier > physicalResistancePenalty) {
+				physicalResistancePenalty = modifier;
+			}
 			break;
 		default:
 			break;
@@ -851,37 +1257,90 @@ public class Entity extends Observable {
 	 * Reset all modifier to 0
 	 */
 	private void resetModifiers() {
-		vitalityMod = 0;
-		strengthMod = 0;
-		dexterityMod = 0;
-		intellectMod = 0;
-		spiritMod = 0;
-		luckMod = 0;
-		maxHealthMod = 0;
-		maxStaminaMod = 0;
-		maxManaMod = 0;
-		speedMod = 0;
-		hitMod = 0;
-		dodgeMod = 0;
+		vitalityBonus = 0;
+		strengthBonus = 0;
+		dexterityBonus = 0;
+		intellectBonus = 0;
+		spiritBonus = 0;
+		luckBonus = 0;
+		maxHealthBonus = 0;
+		maxStaminaBonus = 0;
+		maxManaBonus = 0;
+		speedBonus = 0;
+		hitBonus = 0;
+		dodgeBonus = 0;
 
-		slashingReductionMod = 0;
-		slashingResistanceMod = 0;
-		piercingReductionMod = 0;
-		piercingResistanceMod = 0;
-		bludgeoningReductionMod = 0;
-		bludgeoningResistanceMod = 0;
-		fireReductionMod = 0;
-		fireResistanceMod = 0;
-		coldReductionMod = 0;
-		coldResistanceMod = 0;
-		electricityReductionMod = 0;
-		electricityResistanceMod = 0;
-		sacredReductionMod = 0;
-		sacredResistanceMod = 0;
-		profaneReductionMod = 0;
-		profaneResistanceMod = 0;
-		poisonReductionMod = 0;
-		poisonResistanceMod = 0;
+		vitalityPenalty = 0;
+		strengthPenalty = 0;
+		dexterityPenalty = 0;
+		intellectPenalty = 0;
+		spiritPenalty = 0;
+		luckPenalty = 0;
+		maxHealthPenalty = 0;
+		maxStaminaPenalty = 0;
+		maxManaPenalty = 0;
+		speedPenalty = 0;
+		hitPenalty = 0;
+		dodgePenalty = 0;
+
+		slashingReductionBonus = 0;
+		slashingResistanceBonus = 0;
+		piercingReductionBonus = 0;
+		piercingResistanceBonus = 0;
+		bludgeoningReductionBonus = 0;
+		bludgeoningResistanceBonus = 0;
+		fireReductionBonus = 0;
+		fireResistanceBonus = 0;
+		coldReductionBonus = 0;
+		coldResistanceBonus = 0;
+		electricityReductionBonus = 0;
+		electricityResistanceBonus = 0;
+		sacredReductionBonus = 0;
+		sacredResistanceBonus = 0;
+		profaneReductionBonus = 0;
+		profaneResistanceBonus = 0;
+		poisonReductionBonus = 0;
+		poisonResistanceBonus = 0;
+
+		slashingReductionPenalty = 0;
+		slashingResistancePenalty = 0;
+		piercingReductionPenalty = 0;
+		piercingResistancePenalty = 0;
+		bludgeoningReductionPenalty = 0;
+		bludgeoningResistancePenalty = 0;
+		fireReductionPenalty = 0;
+		fireResistancePenalty = 0;
+		coldReductionPenalty = 0;
+		coldResistancePenalty = 0;
+		electricityReductionPenalty = 0;
+		electricityResistancePenalty = 0;
+		sacredReductionPenalty = 0;
+		sacredResistancePenalty = 0;
+		profaneReductionPenalty = 0;
+		profaneResistancePenalty = 0;
+		poisonReductionPenalty = 0;
+		poisonResistancePenalty = 0;
+
+		hitMultBonus = 0;
+		hitMultPenalty = 0;
+		damageMultBonus = 0;
+		damageMultPenalty = 0;
+		healMultBonus = 0;
+		healMultPenalty = 0;
+
+		carryCapacityBonus = 0;
+		carryCapacityPenalty = 0;
+		mentalChanceMultBonus = 0;
+		mentalChanceMultPenalty = 0;
+		physicalChanceMultBonus = 0;
+		physicalChanceMultPenalty = 0;
+
+		mentalResistanceBonus = 0;
+		mentalResistancePenalty = 0;
+		physicalResistanceBonus = 0;
+		physicalResistancePenalty = 0;
+
+		equipSpeedPenalty = 0;
 
 	}
 
@@ -897,19 +1356,19 @@ public class Entity extends Observable {
 
 	public int speedCheck(int command, int index) {
 
-		int speedBonus = 0;
+		int tempSpeedBonus = 0;
 		switch (command) {
 		case 2:
-			speedBonus = combinedSkills.get(index).getAttackSpeedBonus();
+			tempSpeedBonus = combinedSkills.get(index).getAttackSpeedBonus();
 			break;
 		case 3:
-			speedBonus = spells.get(index).getAttackSpeedBonus();
+			tempSpeedBonus = spells.get(index).getAttackSpeedBonus();
 			break;
 		default:
 			break;
 		}
 
-		return speed + speedMod + speedBonus + Dice.roll(Dice.SPEED_DIE);
+		return speed + speedBonus - equipSpeedPenalty + tempSpeedBonus + Dice.roll(Dice.SPEED_DIE);
 	}
 
 	/**
@@ -931,7 +1390,7 @@ public class Entity extends Observable {
 	 */
 	public void applyEffects() {
 		for (Effect effect : effects) {
-			if (!effect.getRepeatType().equals("noRepeat")) {
+			if (effect.getRepeatType().equals("noRepeat")) {
 				effect.applyEffect(this);
 			}
 		}
@@ -986,7 +1445,7 @@ public class Entity extends Observable {
 	 */
 	public int takeDamage(int damage, String damageType) {
 		damage = applyResistances(damage, damageType);
-		if(damage < 0 ) {
+		if (damage < 0) {
 			damage = 0;
 		}
 		currentHealth -= damage;
@@ -1057,17 +1516,68 @@ public class Entity extends Observable {
 	 *            the creator of the effect
 	 */
 	public void addEffect(Effect effect, Entity creator) {
-		if (effect.getDuration() != 0) {
-			effects.add(effect);
-		}
-		effect.instantiate(this, creator);
-		recalculateStats();
-
-		if (effect.getEffects().size() > 0) {
-			for (Effect effect2 : effect.getEffects()) {
-				if (effect2 != null)
-					addEffect(effect2, creator);
+		if (!ifEffectExists(effect)) {
+			if (effect.getDuration() != 0) {
+				effects.add(effect);
 			}
+			effect.instantiate(this, creator);
+			recalculateStats();
+
+			if (effect.getEffects().size() > 0) {
+				for (Effect effect2 : effect.getEffects()) {
+					if (effect2 != null)
+						addEffect(effect2, creator);
+				}
+			}
+		} else {
+			updateEffectDuration(effect);
+
+		}
+
+	}
+
+	/*
+	 * Increases the duration of effects of the same name as the given effect if its
+	 * lower than the given effect.
+	 */
+	private void updateEffectDuration(Effect effect) {
+		if (effect.getDuration() != -1) {
+
+			for (Effect effect2 : effects) {
+				System.out.println(effect.getEndTime() > effect2.getEndTime());
+				System.out.println(effect.getEndTime());
+				System.out.println(effect2.getEndTime());
+
+				if (effect.getName().equals(effect2.getName())
+						&& effect.getDuration() + Time.getInstance().getTime() > effect2.getEndTime()) {
+					effect2.setEndTime(effect.getDuration() + Time.getInstance().getTime());
+					System.out.println(effect2.getEndTime());
+					if (this instanceof Player) {
+						Window.appendToPane(Window.getInstance().getTextPane(),
+								Game.capitalizeFirstLetter("You are already under the effects of " + effect2.getName())
+										+ ", duration increased");
+
+					} else {
+						Window.appendToPane(Window.getInstance().getTextPane(),
+								Game.capitalizeFirstLetter(Game.capitalizeFirstLetter(useName)
+										+ " is already under the effects of " + effect2.getName())
+										+ ", duration increased");
+
+					}
+
+				}
+			}
+		} else {
+			if (this instanceof Player) {
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter("You are already under the effects of " + effect.getName()));
+
+			} else {
+				Window.appendToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(
+						Game.capitalizeFirstLetter(useName) + " is already under the effects of " + effect.getName()));
+
+			}
+
 		}
 	}
 
@@ -1124,7 +1634,7 @@ public class Entity extends Observable {
 	 * @return the effective max health
 	 */
 	public int getEffectiveMaxHealth() {
-		return maxHealth + maxHealthMod;
+		return maxHealth + maxHealthBonus;
 	}
 
 	/**
@@ -1133,7 +1643,7 @@ public class Entity extends Observable {
 	 * @return the effective speed
 	 */
 	public int getEffectiveSpeed() {
-		return speed + speedMod;
+		return speed + speedBonus - equipSpeedPenalty;
 	}
 
 	/**
@@ -1287,7 +1797,7 @@ public class Entity extends Observable {
 	 * @return the effective vitality
 	 */
 	public int getEffectiveVitality() {
-		return vitality + vitalityMod;
+		return vitality + vitalityBonus;
 	}
 
 	/**
@@ -1305,7 +1815,7 @@ public class Entity extends Observable {
 	 * @return the effective strength
 	 */
 	public int getEffectiveStrength() {
-		return strength + strengthMod;
+		return strength + strengthBonus;
 	}
 
 	/**
@@ -1323,7 +1833,7 @@ public class Entity extends Observable {
 	 * @return the effective strength
 	 */
 	public int getEffectiveDexterity() {
-		return dexterity + dexterityMod;
+		return dexterity + dexterityBonus;
 	}
 
 	/**
@@ -1341,7 +1851,7 @@ public class Entity extends Observable {
 	 * @return the effective intellect
 	 */
 	public int getEffectiveIntellect() {
-		return intellect + intellectMod;
+		return intellect + intellectBonus;
 	}
 
 	/**
@@ -1359,7 +1869,7 @@ public class Entity extends Observable {
 	 * @return the effective spirit
 	 */
 	public int getEffectiveSpirit() {
-		return spirit + spiritMod;
+		return spirit + spiritBonus;
 	}
 
 	/**
@@ -1377,7 +1887,7 @@ public class Entity extends Observable {
 	 * @return the effective luck
 	 */
 	public int getEffectiveLuck() {
-		return luck + luckMod;
+		return luck + luckBonus;
 	}
 
 	/**
@@ -1395,7 +1905,7 @@ public class Entity extends Observable {
 	 * @return the effective maximum stamina
 	 */
 	public int getEffectiveStamina() {
-		return maxStamina + maxStaminaMod;
+		return maxStamina + maxStaminaBonus;
 	}
 
 	/**
@@ -1413,7 +1923,7 @@ public class Entity extends Observable {
 	 * @return the effective maximum mana
 	 */
 	public int getEffectiveMana() {
-		return maxMana + maxManaMod;
+		return maxMana + maxManaBonus;
 	}
 
 	/**
@@ -1431,7 +1941,7 @@ public class Entity extends Observable {
 	 * @return the effective dodge stat
 	 */
 	public int getEffectiveDodge() {
-		return dodge + dodgeMod;
+		return dodge + dodgeBonus;
 	}
 
 	/**
@@ -1449,7 +1959,7 @@ public class Entity extends Observable {
 	 * @return
 	 */
 	public int getEffectiveHit() {
-		return (int) ((hit + hitMod) * hitMult);
+		return (int) ((hit + hitBonus) * hitMult);
 	}
 
 	/**
@@ -1502,8 +2012,8 @@ public class Entity extends Observable {
 	 * 
 	 * @return the carryCapacityMod
 	 */
-	public int getCarryCapacityMod() {
-		return carryCapacityMod;
+	public int getCarryCapacityBonus() {
+		return carryCapacityBonus;
 	}
 
 	/**
@@ -1566,7 +2076,7 @@ public class Entity extends Observable {
 	 * @return the effective mental distance
 	 */
 	public int getEffectiveMentalResistance() {
-		return mentalResistance + mentalResistanceMod;
+		return mentalResistance + mentalResistanceBonus;
 	}
 
 	/**
@@ -1575,7 +2085,7 @@ public class Entity extends Observable {
 	 * @return the effective physical resistance
 	 */
 	public int getEffectivePhysicalResistance() {
-		return physicalResistance + physicalResistanceMod;
+		return physicalResistance + physicalResistanceBonus;
 	}
 
 	/**

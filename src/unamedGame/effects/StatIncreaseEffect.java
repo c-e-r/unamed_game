@@ -22,43 +22,9 @@ public class StatIncreaseEffect extends Effect {
 	/**
 	 * Creates a StatIncreaseEffect from the given parameters
 	 * 
-	 * @param effects
-	 *            the effects sub effects
-	 * @param name
-	 *            the name of the effect
-	 * @param duration
-	 *            the duration of the effect in turns
-	 * @param baseAccuracy
-	 *            the base chance for the effect to happen
-	 * @param resistType
-	 *            the stat that resists the effect
-	 * @param repeatType
-	 *            if and how the effect will repeat
-	 * @param toSelf
-	 *            if the effect will always apply to the user
-	 * @param playerEffectDescription
-	 *            the description to be displayed when the player gains the effect
-	 * @param playerRepeatEffectDescription
-	 *            the description to be displayed when the effect triggers on the
-	 *            player
-	 * @param effectDescription
-	 *            the description to be displayed when a non-player Entity gains the
-	 *            effect
-	 * @param repeatEffectDescription
-	 *            the description to be displayed when the effect triggers on a
-	 *            non-player entity
-	 * @param resistEffectDescription
-	 *            the description to be displayed when a non-player entity resist
-	 *            the effect when they gain it
-	 * @param playerResistEffectDescription
-	 *            the description to be displayed when the player resists the effect
-	 *            when they gain it
-	 * @param resistRepeatEffectDescription
-	 *            the description to be displayed when a non-player Entity resists
-	 *            the effect when it triggers
-	 * @param playerResistRepeatEffectDescription
-	 *            the description to be displayed when a player resists the effect
-	 *            when it triggers
+	 * @see Effect#Effect(List, String, int, int, int, String, String, boolean,
+	 *      String, String, String, String, String, String, String, String, String,
+	 *      String, String, String, String, String, String, String, String, int)
 	 * @param stat
 	 *            the name of the stat to increase as a string
 	 * @param magnitude

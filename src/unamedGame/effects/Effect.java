@@ -666,6 +666,20 @@ public abstract class Effect {
 		return name;
 	}
 
+	/**
+	 * @return the endTime
+	 */
+	public int getEndTime() {
+		return endTime;
+	}
+
+	/**
+	 * @param endTime the endTime to set
+	 */
+	public void setEndTime(int endTime) {
+		this.endTime = endTime;
+	}
+
 	@Override
 	public String toString() {
 		return "LongEffect [startTime=" + startTime + ", endTime=" + endTime + ", increment=" + increment

@@ -16,7 +16,7 @@
     <spell>testSpell</spell>
     <effect
         toSelf='true'
-        name='itemName' 
+        name='itemNameHeal' 
         magnitude="7"
         baseAccuracy='-1'
         effectDescription='#targetNameCapital# healed for #totalHeal# health' 
@@ -24,16 +24,16 @@
     >heal</effect>
     <effect
         toSelf='true'
-        name='itemName' 
+        name='itemNameHeal2' 
         magnitude="7"
         baseAccuracy='-1'
         effectDescription='#targetNameCapital# healed for #totalHeal# health' 
         playerEffectDescription='You are healed for #totalHeal#'
     >heal</effect>
     <effect 
-        name='itemName' 
+        name='itemNameDamage' 
         magnitude='2' 
-        duration='-1'
+        duration='10000'
         increment='1'
         damageType='sacred' 
         resistType='physical'
@@ -64,10 +64,10 @@
         
     
     <effect
-        name='itemName'
+        name='itemNameStrength'
         magnitude='15'
-        length='-1'
-        baseAccuracy='-1'
+        duration='-1'
+        repeatType='noRepeat'
         stat='strength'
         effectDescription='strength +15 enemy'
         playerEffectDescription='strength +15 you'

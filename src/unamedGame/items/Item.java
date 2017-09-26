@@ -78,6 +78,8 @@ public class Item {
 	private int profaneReduction;
 	private int poisonReduction;
 
+	private int speedPenalty;
+
 	/**
 	 * Builds an Item from the given filename
 	 * 
@@ -281,6 +283,11 @@ public class Item {
 			case "poisonReduction":
 				if (Game.isNumeric(element.getText())) {
 					poisonReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "speedPenalty":
+				if (Game.isNumeric(element.getText())) {
+					speedPenalty = Integer.parseInt(element.getText());
 				}
 				break;
 			case "damageType":
@@ -837,6 +844,13 @@ public class Item {
 	 */
 	public int getSpellFocusSpeed() {
 		return spellFocusSpeed;
+	}
+
+	/**
+	 * @return the speedPenalty
+	 */
+	public int getSpeedPenalty() {
+		return speedPenalty;
 	}
 
 	/**
