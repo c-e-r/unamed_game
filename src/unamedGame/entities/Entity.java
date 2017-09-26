@@ -65,7 +65,44 @@ public class Entity extends Observable {
 	protected int dodge;
 	protected int dodgeMod;
 	protected int baseDodge = 20;
-	protected int armorMod;
+
+	protected int slashingReduction;
+	protected double slashingResistance = 1;
+	protected int piercingReduction;
+	protected double piercingResistance = 1;
+	protected int bludgeoningReduction;
+	protected double bludgeoningResistance = 1;
+	protected int fireReduction;
+	protected double fireResistance = 1;
+	protected int coldReduction;
+	protected double coldResistance = 1;
+	protected int electricityReduction;
+	protected double electricityResistance = 1;
+	protected int sacredReduction;
+	protected double sacredResistance = 1;
+	protected int profaneReduction;
+	protected double profaneResistance = 1;
+	protected int poisonReduction;
+	protected double poisonResistance = 1;
+
+	protected int slashingReductionMod;
+	protected double slashingResistanceMod;
+	protected int piercingReductionMod;
+	protected double piercingResistanceMod;
+	protected int bludgeoningReductionMod;
+	protected double bludgeoningResistanceMod;
+	protected int fireReductionMod;
+	protected double fireResistanceMod;
+	protected int coldReductionMod;
+	protected double coldResistanceMod;
+	protected int electricityReductionMod;
+	protected double electricityResistanceMod;
+	protected int sacredReductionMod;
+	protected double sacredResistanceMod;
+	protected int profaneReductionMod;
+	protected double profaneResistanceMod;
+	protected int poisonReductionMod;
+	protected double poisonResistanceMod;
 
 	protected int mentalResistance;
 	protected int mentalResistanceMod;
@@ -142,15 +179,21 @@ public class Entity extends Observable {
 	 * 
 	 * @return the total armor of all equipped items
 	 */
-	public int calculateArmor() {
-		int armor = 0;
+	public void calculateEquipmentDefences() {
+
 		for (Item item : equipment) {
 			if (item != null) {
-				armor += item.getArmorValue();
-
+				piercingReductionMod += item.getPiercingReduction();
+				slashingReductionMod += item.getSlashingReduction();
+				bludgeoningReductionMod += item.getBludgeoningReduction();
+				fireReductionMod += item.getFireReduction();
+				coldReductionMod += item.getColdReduction();
+				electricityReductionMod += item.getElectricityReduction();
+				sacredReductionMod += item.getSacredReduction();
+				profaneReductionMod += item.getProfaneReduction();
+				poisonReductionMod += item.getPoisonReduction();
 			}
 		}
-		return armor;
 	}
 
 	/**
@@ -212,7 +255,6 @@ public class Entity extends Observable {
 
 		int damage = (int) (((attacker.getEffectiveStrength() + weaponBaseDamage + Dice.roll(weaponVariableDamage)
 				+ attacker.getDamageMod()) * attacker.getDamageMult()));
-		damage = applyResistances(damage, weaponDamageType);
 		// Prevent damage from going below 0
 		if (damage < 0) {
 			damage = 0;
@@ -222,7 +264,7 @@ public class Entity extends Observable {
 
 		if (attacker.getEffectiveHit() + weaponHitChance + temp >= this.getEffectiveDodge()) {
 			attackHit = true;
-			this.takeDamage(damage, weaponDamageType);
+			damage = this.takeDamage(damage, weaponDamageType);
 
 			if (attacker instanceof Player) {
 				description = playerWeaponAttackHitDescription.split("#");
@@ -356,7 +398,6 @@ public class Entity extends Observable {
 				+ attacker.getDamageMod() + skill.getAttackDamageBonus()
 				+ Dice.roll(skill.getAttackVariableDamageBonus()))
 				* (attacker.getDamageMult() + skill.getAttackDamageMult())));
-		damage = applyResistances(damage, weaponDamageType);
 		// Prevent damage from going below 0
 		if (damage < 0) {
 			damage = 0;
@@ -368,7 +409,7 @@ public class Entity extends Observable {
 			if (attacker.getEffectiveHit() + weaponHitChance + skill.getAttackHitBonus() + temp >= this
 					.getEffectiveDodge()) {
 				attackHit = true;
-				this.takeDamage(damage, weaponDamageType);
+				damage = this.takeDamage(damage, weaponDamageType);
 
 				if (attacker instanceof Player) {
 					description = skill.getPlayerAttackDescription().split("#");
@@ -665,8 +706,26 @@ public class Entity extends Observable {
 	 */
 	public int applyResistances(int damage, String damageType) {
 		switch (damageType) {
-		case "physical":
-			return damage - calculateArmor();
+		case "slashing":
+			return (int) ((damage - slashingReduction - slashingReductionMod) * (slashingResistance + slashingResistanceMod));
+		case "piercing":
+			return (int) ((damage - piercingReduction - piercingReductionMod) * (piercingResistance + piercingResistanceMod));
+		case "bludgeoning":
+			return (int) ((damage - bludgeoningReduction - bludgeoningReductionMod) * (bludgeoningResistance + bludgeoningResistanceMod));
+		case "fire":
+			return (int) ((damage - fireReduction - fireReductionMod) * (fireResistance + fireResistanceMod));
+		case "cold":
+			return (int) ((damage - coldReduction - coldReductionMod) * (coldResistance + coldResistanceMod));
+		case "electricity":
+			return (int) ((damage - electricityReduction - electricityReductionMod) * (electricityResistance + electricityResistanceMod));
+		case "sacred":
+			return (int) ((damage - sacredReduction - sacredReductionMod) * (sacredResistance + sacredResistanceMod));
+		case "profane":
+			return (int) ((damage - profaneReduction - profaneReductionMod) * (profaneResistance + profaneResistanceMod));
+		case "poison":
+			return (int) ((damage - poisonReduction - poisonReductionMod) * (poisonResistance + poisonResistanceMod));
+		case "unresistable":
+			return damage;
 
 		default:
 			return 0;
@@ -788,10 +847,10 @@ public class Entity extends Observable {
 		}
 	}
 
-	/**
+	/*
 	 * Reset all modifier to 0
 	 */
-	public void resetModifiers() {
+	private void resetModifiers() {
 		vitalityMod = 0;
 		strengthMod = 0;
 		dexterityMod = 0;
@@ -804,7 +863,25 @@ public class Entity extends Observable {
 		speedMod = 0;
 		hitMod = 0;
 		dodgeMod = 0;
-		armorMod = 0;
+
+		slashingReductionMod = 0;
+		slashingResistanceMod = 0;
+		piercingReductionMod = 0;
+		piercingResistanceMod = 0;
+		bludgeoningReductionMod = 0;
+		bludgeoningResistanceMod = 0;
+		fireReductionMod = 0;
+		fireResistanceMod = 0;
+		coldReductionMod = 0;
+		coldResistanceMod = 0;
+		electricityReductionMod = 0;
+		electricityResistanceMod = 0;
+		sacredReductionMod = 0;
+		sacredResistanceMod = 0;
+		profaneReductionMod = 0;
+		profaneResistanceMod = 0;
+		poisonReductionMod = 0;
+		poisonResistanceMod = 0;
 
 	}
 
@@ -840,9 +917,12 @@ public class Entity extends Observable {
 	 */
 	public void recalculateStats() {
 		resetModifiers();
+		calculateEquipmentDefences();
 		applyEffects();
 		applyEquipmentEffects();
 		calculateDerivedStats();
+		reloadSkills();
+		reloadSpells();
 		checkHealth();
 	}
 
@@ -851,9 +931,7 @@ public class Entity extends Observable {
 	 */
 	public void applyEffects() {
 		for (Effect effect : effects) {
-			if (effect.getRepeatType().equals("noRepeat")) {
-
-			} else {
+			if (!effect.getRepeatType().equals("noRepeat")) {
 				effect.applyEffect(this);
 			}
 		}
@@ -906,7 +984,11 @@ public class Entity extends Observable {
 	 *            the type of damage to take
 	 * @return the amount of damage taken
 	 */
-	public int takeDamage(int damage, String type) {
+	public int takeDamage(int damage, String damageType) {
+		damage = applyResistances(damage, damageType);
+		if(damage < 0 ) {
+			damage = 0;
+		}
 		currentHealth -= damage;
 		return damage;
 	}
@@ -1488,7 +1570,7 @@ public class Entity extends Observable {
 	}
 
 	/**
-	 * Returns the entity's effectiev physical resistance
+	 * Returns the entity's effective physical resistance
 	 * 
 	 * @return the effective physical resistance
 	 */
@@ -1597,9 +1679,6 @@ public class Entity extends Observable {
 		builder.append("\n");
 		builder.append("Speed: ");
 		builder.append(getEffectiveSpeed());
-		builder.append("\n");
-		builder.append("Armor: ");
-		builder.append(calculateArmor());
 		builder.append("\n");
 
 		builder.append("\n");

@@ -6,7 +6,7 @@
     attackHitBonus='0'
     attackSpeedBonus='3'
     staminaCost='0'
-    damageType='physical'
+    damageType='piercing'
     description='A bite'
     attackDescription='#userNameCapital# bites #targetName# with its teeth dealing #damage# damage'
     missDescription='#userNameCapital# bites at #targetName# with its teeth but misses'
@@ -16,7 +16,7 @@
     <alwaysEffect 
         name='itemName' 
         magnitude='1' 
-        damageType='physical' 
+        damageType='piercing' 
         effectDescription='#targetNameCapital# takes #totalDamage# extra damage' 
         playerEffectDescription='You take #totalDamage# extra damage' 
     >damage</alwaysEffect>

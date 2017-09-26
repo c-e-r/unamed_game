@@ -58,7 +58,7 @@ public class Item {
 	private boolean equipped;
 	private String damageType;
 	private String itemType;
-	
+
 	private boolean spellFocus;
 	private int spellFocusHitChance;
 	private int spellFocusSpeed;
@@ -68,7 +68,15 @@ public class Item {
 	private int weaponVariableDamage;
 	private int weaponSpeed;
 
-	private int armorValue;
+	private int piercingReduction;
+	private int slashingReduction;
+	private int bludgeoningReduction;
+	private int fireReduction;
+	private int coldReduction;
+	private int electricityReduction;
+	private int sacredReduction;
+	private int profaneReduction;
+	private int poisonReduction;
 
 	/**
 	 * Builds an Item from the given filename
@@ -229,9 +237,50 @@ public class Item {
 			case "equipSpell":
 				addEquipSpell(new Spell(element.getText()));
 				break;
-			case "armorValue":
+
+			case "piercingReduction":
 				if (Game.isNumeric(element.getText())) {
-					armorValue = Integer.parseInt(element.getText());
+					piercingReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "slashingReduction":
+				if (Game.isNumeric(element.getText())) {
+					slashingReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "bludgeoningReduction":
+				if (Game.isNumeric(element.getText())) {
+					bludgeoningReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "fireReduction":
+				if (Game.isNumeric(element.getText())) {
+					fireReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "coldReduction":
+				if (Game.isNumeric(element.getText())) {
+					coldReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "electricityReduction":
+				if (Game.isNumeric(element.getText())) {
+					electricityReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "sacredReduction":
+				if (Game.isNumeric(element.getText())) {
+					sacredReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "profaneReduction":
+				if (Game.isNumeric(element.getText())) {
+					profaneReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "poisonReduction":
+				if (Game.isNumeric(element.getText())) {
+					poisonReduction = Integer.parseInt(element.getText());
 				}
 				break;
 			case "damageType":
@@ -295,7 +344,7 @@ public class Item {
 	public void addAttackEffect(Effect effect) {
 		attackEffects.add(effect);
 	}
-	
+
 	/**
 	 * Adds an Effect to the items spellEffects ArrayList
 	 * 
@@ -650,9 +699,10 @@ public class Item {
 	public List<Effect> getAttackEffects() {
 		return attackEffects;
 	}
-	
+
 	/**
-	 * Returns the list of effects imparted when a spell attack made with the item hits
+	 * Returns the list of effects imparted when a spell attack made with the item
+	 * hits
 	 * 
 	 * @return the items attackEffects ArrayList
 	 */
@@ -667,15 +717,6 @@ public class Item {
 	 */
 	public String getDamageType() {
 		return damageType;
-	}
-
-	/**
-	 * Returns the armor value of the item
-	 * 
-	 * @return the armor value of the item
-	 */
-	public int getArmorValue() {
-		return armorValue;
 	}
 
 	/**
@@ -712,6 +753,69 @@ public class Item {
 	 */
 	public String getPlayerAttackMissDescription() {
 		return playerAttackMissDescription;
+	}
+
+	/**
+	 * @return the piercingReduction
+	 */
+	public int getPiercingReduction() {
+		return piercingReduction;
+	}
+
+	/**
+	 * @return the slashingReduction
+	 */
+	public int getSlashingReduction() {
+		return slashingReduction;
+	}
+
+	/**
+	 * @return the bludgeoningReduction
+	 */
+	public int getBludgeoningReduction() {
+		return bludgeoningReduction;
+	}
+
+	/**
+	 * @return the fireReduction
+	 */
+	public int getFireReduction() {
+		return fireReduction;
+	}
+
+	/**
+	 * @return the coldReduction
+	 */
+	public int getColdReduction() {
+		return coldReduction;
+	}
+
+	/**
+	 * @return the electricityReduction
+	 */
+	public int getElectricityReduction() {
+		return electricityReduction;
+	}
+
+	/**
+	 * @return the sacredReduction
+	 */
+	public int getSacredReduction() {
+		return sacredReduction;
+	}
+
+	/**
+	 * @return the profaneReduction
+	 */
+	public int getProfaneReduction() {
+		return profaneReduction;
+	}
+
+	/**
+	 * @return the poisonReduction
+	 */
+	public int getPoisonReduction() {
+		return poisonReduction;
 	}
 
 	/**

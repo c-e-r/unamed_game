@@ -18,21 +18,29 @@
     <equippable>        [OPTIONAL: default false]                   if the item can be equipped
         equipSlot=''    [SITUATIONAL for equippable items]             the slot the item can be equipped in. valid options are "head", "body", "hand", "held", "neck", "feet"
    
-    <attackEffect>      [OPTIONAL]                  the name of the effect that will apply when the weapon is used in an attack. Can have multiple. 
-    <effect>            [OPTIONAL]                  the name of the effect that will apply when the weapon is used. Can have multiple. 
-    <permanantEffect>   [OPTIONAL]                  the name of the permanant effect that will apply when the weapon is used. Can have multiple. 
-    <equipEffect>       [OPTIONAL]                  the name of the effect imparted on an entity equipping this item. Can have multiple. 
-    <weaponHitChance>   [OPTIONAL: default 0]       the amount of bonus hit change this weapon grants
-    <weaponBaseDamage>  [OPTIONAL: default 0]       the amount of bonus damage this weapon deals
-    <weaponVariableDamage [OPTIONAL; default 0 ]    the amount of bonus variable damage this weapon deals
-    <weaponSpeed>       [OPTIONAL: default 0]       the amount of bonus speed this weapon grants
-    <equipSkill>        [OPTIONAL]                  the name of the skill granted to an entity equipping this item. Can have multiple.
-    <equipSpell>        [OPTIONAL]                  the name of the spell granted to an entity equipping this item. Can have multiple.
-    <skill>             [OPTIONAL]                  the name of the skill granted to an entity who uses this item. Can have multiple.
-    <spell>             [OPTIONAL]                  the name of the spell granted to an entity who uses this item. Can have multiple.
-    <armorValue>        [OPTIONAL: default 0]       the amount of armor granted by eqipping this item
-    <damageType>        [REQUIRED for equippable held]  the type of damage this item deals when wielded as a weapon
-    <itemType>          [REQUIRED for usable items]     used by ai to decide what to do. Valid options are "offensive","buff", "debuff", "heal"
-    <spellFocus>        [OPTIONAL: default 'false']     if the item can be uased as a spell focus
-    <spellFocusHitChance> [SITUATIONAL for spellFocus = 'true'] the bonus to spell attacks hit chance made while using this item as a mainhand weapon
-    <spellFocusSpeed> [SITUATIONAL for spellFocus = 'true']     the bonus to speed while casting a spell and using this item as a mainhand weapon
+    <attackEffect>          [OPTIONAL]                  the name of the effect that will apply when the weapon is used in an attack. Can have multiple. 
+    <effect>                [OPTIONAL]                  the name of the effect that will apply when the weapon is used. Can have multiple. 
+    <permanantEffect>       [OPTIONAL]                  the name of the permanant effect that will apply when the weapon is used. Can have multiple. 
+    <equipEffect>           [OPTIONAL]                  the name of the effect imparted on an entity equipping this item. Can have multiple. 
+    <weaponHitChance>       [OPTIONAL: default 0]       the amount of bonus hit change this weapon grants
+    <weaponBaseDamage>      [OPTIONAL: default 0]       the amount of bonus damage this weapon deals
+    <weaponVariableDamage   [OPTIONAL; default 0 ]    the amount of bonus variable damage this weapon deals
+    <weaponSpeed>           [OPTIONAL: default 0]       the amount of bonus speed this weapon grants
+    <equipSkill>            [OPTIONAL]                  the name of the skill granted to an entity equipping this item. Can have multiple.
+    <equipSpell>            [OPTIONAL]                  the name of the spell granted to an entity equipping this item. Can have multiple.
+    <skill>                 [OPTIONAL]                  the name of the skill granted to an entity who uses this item. Can have multiple.
+    <spell>                 [OPTIONAL]                  the name of the spell granted to an entity who uses this item. Can have multiple.
+    <damageType>            [REQUIRED for equippable held]  the type of damage this item deals when wielded as a weapon
+    <itemType>              [REQUIRED for usable items]     used by ai to decide what to do. Valid options are "offensive","buff", "debuff", "heal"
+    <spellFocus>            [OPTIONAL: default 'false']     if the item can be uased as a spell focus
+    <spellFocusHitChance>   [SITUATIONAL for spellFocus = 'true'] the bonus to spell attacks hit chance made while using this item as a mainhand weapon
+    <spellFocusSpeed>       [SITUATIONAL for spellFocus = 'true']     the bonus to speed while casting a spell and using this item as a mainhand weapon
+    <slashingReduction>     [OPTIONAL: default 1]        the amount of slashing reduction granted by having this item equipped
+    <piercingReduction>     [OPTIONAL: default 1]        the amount of piercing reduction granted by having this item equipped
+    <bludgeoningReduction>  [OPTIONAL: default 1]        the amount of bludgeoning reduction granted by having this item equipped
+    <fireReduction>         [OPTIONAL: default 1]        the amount of fire reduction granted by having this item equipped
+    <coldReduction>         [OPTIONAL: default 1]        the amount of cold reduction granted by having this item equipped
+    <electricityReduction>  [OPTIONAL: default 1]        the amount of electric reduction granted by having this item equipped
+    <sacredReduction>       [OPTIONAL: default 1]        the amount of sacred reduction granted by having this item equipped
+    <profaneReduction>      [OPTIONAL: default 1]        the amount of profane reduction granted by having this item equipped
+    <poisonReduction>       [OPTIONAL: default 1]        the amount of poison reduction granted by having this item equipped

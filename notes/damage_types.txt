@@ -1,2 +1,11 @@
 VALID DAMAGE TYPES
-"physical"
+"slashing"         
+"piercing"         
+"bludgeoning"      
+"fire"
+"cold"
+"lightning"
+"sacred"
+"profane"
+"poison"
+"unresistible"

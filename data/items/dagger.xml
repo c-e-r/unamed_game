@@ -6,13 +6,14 @@
     <weaponVariableDamage>3</weaponVariableDamage>
     <weaponSpeed>3</weaponSpeed>
     <damageType>physical</damageType>
+    <piercingReduction>10</piercingReduction>
     <attackHitDescription>The #userName# attacks you with it's dagger dealing #damage#</attackHitDescription>
     <attackMissDescription>The #userName# attacks you with it's dagger but misses</attackMissDescription>
     <playerAttackHitDescription>You attack #targetName# with your dagger and deal #damage# damage</playerAttackHitDescription>
     <playerAttackMissDescription>You attack #targetName# with your dagger but miss</playerAttackMissDescription>
     <description>this is a test item</description>
     <weight>3</weight>
-    <armorValue>4</armorValue>
+    
     <maxUses>0</maxUses>
     <equippable equipSlot='held'>true</equippable>
     <equipEffect

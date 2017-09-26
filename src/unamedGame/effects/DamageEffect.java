@@ -137,7 +137,14 @@ public class DamageEffect extends Effect {
 				Window.addToPane(Window.getInstance().getTextPane(), damageType);
 				break;
 			case "totalDamage":
-				Window.addToPane(Window.getInstance().getTextPane(), Integer.toString(totalDamage), Colors.DAMAGE);
+				if (totalDamage == 0) {
+					Window.addToPane(Window.getInstance().getTextPane(), Integer.toString(totalDamage),
+							Colors.DAMAGE_BLOCK);
+
+				} else {
+					Window.addToPane(Window.getInstance().getTextPane(), Integer.toString(totalDamage), Colors.DAMAGE);
+
+				}
 				break;
 			default:
 				if (!printSharedDescription(string)) {

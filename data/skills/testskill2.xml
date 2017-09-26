@@ -11,7 +11,7 @@
     <alwaysEffect 
         name='itemName' 
         magnitude='1' 
-        damageType='physical' 
+        damageType='bludgeoning' 
         effectDescription='#targetNameCapital# takes #totalDamage# extra damage' 
         playerEffectDescription='You take #totalDamage# extra damage' 
     >damage</alwaysEffect>

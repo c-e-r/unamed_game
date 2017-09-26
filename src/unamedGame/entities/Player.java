@@ -63,7 +63,7 @@ public class Player extends Entity {
 		knownSpells = new ArrayList<Spell>();
 		itemSpells = new ArrayList<Spell>();
 
-		innateWeaponDamageType = "physical";
+		innateWeaponDamageType = "bludgeoning";
 		innateWeaponHitDescription = "#userName# throws a punch at you dealing #damage# damage";
 		innateWeaponMissDescription = "#userName# throws a punch at you but you avoid the attack";
 		innatePlayerWeaponHitDescription = "You throw a punch at #targetName# dealing #damage# damage";
@@ -480,7 +480,6 @@ public class Player extends Entity {
 						Game.inventory();
 					}
 				}
-				reloadSkills();
 
 			}
 		});

@@ -6,7 +6,6 @@
     attackHitBonus='0'
     attackSpeedBonus='3'
     staminaCost='0'
-    damageType='physical'
     description='shoot lightning'
     attackDescription='#userNameCapital# shoots lightning at you'
     missDescription='#userNameCapital# shoots lightning at you but misses'
@@ -16,7 +15,7 @@
     <hitEffect 
         name='itemName' 
         magnitude='1' 
-        damageType='physical' 
+        damageType='electricity' 
         effectDescription='#targetNameCapital# takes #totalDamage# damage' 
         playerEffectDescription='You take #totalDamage# damage' 
     >damage</hitEffect>

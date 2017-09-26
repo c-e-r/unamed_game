@@ -352,7 +352,6 @@ public class Combat {
 			System.out.println(enemy.getSkillChance());
 
 			if (die <= enemy.getAttackChance()) {
-				enemy.attack(player);
 				arr[0] = 1;
 			} else if (die <= enemy.getSpellChance()) {
 				arr[0] = 3;

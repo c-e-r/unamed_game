@@ -29,7 +29,7 @@
     <innateWeaponVariableDamage>1</innateWeaponVariableDamage>
     <innateWeaponHitChance>5</innateWeaponHitChance>
     <innateWeaponSpeed>2</innateWeaponSpeed>
-    <innateWeaponDamageType>physical</innateWeaponDamageType>
+    <innateWeaponDamageType>piercing</innateWeaponDamageType>
     <innateWeaponHitDescription>#userNameCapital# scratches #targetName# with its claws dealing #damage# damage</innateWeaponHitDescription>
     <innateWeaponMissDescription>#userNameCapital# scratches #targetName# with its claws but misses</innateWeaponMissDescription>
     <innatePlayerWeaponHitDescription>You scratch #targetName# dealing #damage# damage</innatePlayerWeaponHitDescription>
