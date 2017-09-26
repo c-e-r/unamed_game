@@ -291,6 +291,16 @@ public class Game {
 		return str.matches("\\d+");
 
 	}
+	
+	/**
+	 * Returns true if the given string contains only numeric characters and a decimal point.
+	 * @param str the string to check
+	 * @return if the string contains only numeric characters
+	 */
+	public static boolean isDoubleNumeric(String str) {
+		return str.matches("\\d+.\\d+");
+
+	}
 
 	/**
 	 * Accepts a string and return the string with the first letter capitalized

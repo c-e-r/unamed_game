@@ -18,6 +18,11 @@
     <buffChance>      | Default to 0
     <healChance>      |
                      /
+    
+    
+    <#DAMAGETYPE#Reduction>         [OPTIONAL: default 0]       the amount of reduction the enemy has of the damage type
+    <#DAMAGETYPE#Resistance>        [OPTIONAL: default 1]       the amount of resistance the enemy has of the damage type. 1 is normal damage. 0.5 is takes half. 2 is takes double
+    
     <description>                   [REQUIRED]              a description of the enemy
     <deathDescription>              [REQUIRED]              the description shown when the enemy dies
     <killDescription>               [REQUIRED]              the description shown then the player kills the enemy

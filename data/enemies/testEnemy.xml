@@ -9,6 +9,7 @@
     <intellect>1</intellect>
     <spirit>1</spirit>
     <luck>2</luck>
+    <electricityReduction>1</electricityReduction>
     
     <attackChance>60</attackChance>
     <spellChance>20</spellChance>

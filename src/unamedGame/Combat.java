@@ -349,7 +349,6 @@ public class Combat {
 
 		if (failure == false) {
 			int die = Dice.roll(100);
-			System.out.println(enemy.getSkillChance());
 
 			if (die <= enemy.getAttackChance()) {
 				arr[0] = 1;

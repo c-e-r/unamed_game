@@ -263,7 +263,96 @@ public class Enemy extends Entity {
 					healChance = Integer.parseInt(element.getText());
 				}
 				break;
-
+			case "piercingReduction":
+				if (Game.isNumeric(element.getText())) {
+					piercingReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "slashingReduction":
+				if (Game.isNumeric(element.getText())) {
+					slashingReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "bludgeoningReduction":
+				if (Game.isNumeric(element.getText())) {
+					bludgeoningReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "fireReduction":
+				if (Game.isNumeric(element.getText())) {
+					fireReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "coldReduction":
+				if (Game.isNumeric(element.getText())) {
+					coldReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "electricityReduction":
+				if (Game.isNumeric(element.getText())) {
+					electricityReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "sacredReduction":
+				if (Game.isNumeric(element.getText())) {
+					sacredReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "profaneReduction":
+				if (Game.isNumeric(element.getText())) {
+					profaneReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "poisonReduction":
+				if (Game.isNumeric(element.getText())) {
+					poisonReduction = Integer.parseInt(element.getText());
+				}
+				break;
+			case "piercingResistance":
+				if (Game.isDoubleNumeric(element.getText())) {
+					piercingResistance = Double.parseDouble(element.getText());
+				}
+				break;
+			case "slashingResistance":
+				if (Game.isDoubleNumeric(element.getText())) {
+					slashingResistance = Double.parseDouble(element.getText());
+				}
+				break;
+			case "bludgeoningResistance":
+				if (Game.isDoubleNumeric(element.getText())) {
+					bludgeoningResistance = Double.parseDouble(element.getText());
+				}
+				break;
+			case "fireResistance":
+				if (Game.isDoubleNumeric(element.getText())) {
+					fireResistance = Double.parseDouble(element.getText());
+				}
+				break;
+			case "coldResistance":
+				if (Game.isDoubleNumeric(element.getText())) {
+					coldResistance = Double.parseDouble(element.getText());
+				}
+				break;
+			case "electricityResistance":
+				if (Game.isDoubleNumeric(element.getText())) {
+					electricityResistance = Double.parseDouble(element.getText());
+				}
+				break;
+			case "sacredResistance":
+				if (Game.isDoubleNumeric(element.getText())) {
+					sacredResistance = Double.parseDouble(element.getText());
+				}
+				break;
+			case "profaneReistance":
+				if (Game.isDoubleNumeric(element.getText())) {
+					profaneResistance = Double.parseDouble(element.getText());
+				}
+				break;
+			case "poisonResistance":
+				if (Game.isDoubleNumeric(element.getText())) {
+					poisonResistance = Double.parseDouble(element.getText());
+				}
+				break;
 			case "description":
 				description = element.getText();
 				break;

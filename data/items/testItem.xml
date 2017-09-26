@@ -35,7 +35,7 @@
         magnitude='2' 
         duration='-1'
         increment='1'
-        damageType='physical' 
+        damageType='sacred' 
         resistType='physical'
         repeatType='persistant'
         baseAccuracy='130'
