@@ -156,12 +156,12 @@ public class Entity extends Observable {
 	protected double hitMult = 1;
 	protected double hitMultBonus;
 	protected double hitMultPenalty;
-	protected int damageMod;
+	protected int damageBonus;
 	protected int damagePenalty;
 	protected double damageMult = 1;
 	protected double damageMultBonus;
 	protected double damageMultPenalty;
-	protected int healMod;
+	protected int healBonus;
 	protected int healModPenalty;
 	protected double healMult = 1;
 	protected double healMultBonus;
@@ -260,7 +260,7 @@ public class Entity extends Observable {
 	}
 
 	/**
-	 * Recieve a standard attack from the attacker
+	 * Receive a standard attack from the attacker
 	 * 
 	 * @param attacker
 	 */
@@ -303,7 +303,7 @@ public class Entity extends Observable {
 		String[] description = null;
 
 		int damage = (int) (((attacker.getEffectiveStrength() + weaponBaseDamage + Dice.roll(weaponVariableDamage)
-				+ attacker.getDamageMod()) * attacker.getDamageMult()));
+				+ attacker.getEffectiveDamageBonus()) * attacker.getEffectiveDamageMult()));
 		// Prevent damage from going below 0
 		if (damage < 0) {
 			damage = 0;
@@ -444,9 +444,9 @@ public class Entity extends Observable {
 		String[] description = null;
 
 		int damage = (int) (((attacker.getEffectiveStrength() + weaponBaseDamage + Dice.roll(weaponVariableDamage)
-				+ attacker.getDamageMod() + skill.getAttackDamageBonus()
+				+ attacker.getEffectiveDamageBonus() + skill.getAttackDamageBonus()
 				+ Dice.roll(skill.getAttackVariableDamageBonus()))
-				* (attacker.getDamageMult() + skill.getAttackDamageMult())));
+				* (attacker.getEffectiveDamageMult() + skill.getAttackDamageMult())));
 		// Prevent damage from going below 0
 		if (damage < 0) {
 			damage = 0;
@@ -1634,7 +1634,7 @@ public class Entity extends Observable {
 	 * @return the effective max health
 	 */
 	public int getEffectiveMaxHealth() {
-		return maxHealth + maxHealthBonus;
+		return maxHealth + maxHealthBonus - maxHealthPenalty;
 	}
 
 	/**
@@ -1643,7 +1643,7 @@ public class Entity extends Observable {
 	 * @return the effective speed
 	 */
 	public int getEffectiveSpeed() {
-		return speed + speedBonus - equipSpeedPenalty;
+		return speed + speedBonus - speedPenalty - equipSpeedPenalty;
 	}
 
 	/**
@@ -1797,7 +1797,7 @@ public class Entity extends Observable {
 	 * @return the effective vitality
 	 */
 	public int getEffectiveVitality() {
-		return vitality + vitalityBonus;
+		return vitality + vitalityBonus - vitalityPenalty;
 	}
 
 	/**
@@ -1815,7 +1815,7 @@ public class Entity extends Observable {
 	 * @return the effective strength
 	 */
 	public int getEffectiveStrength() {
-		return strength + strengthBonus;
+		return strength + strengthBonus - strengthPenalty;
 	}
 
 	/**
@@ -1833,7 +1833,7 @@ public class Entity extends Observable {
 	 * @return the effective strength
 	 */
 	public int getEffectiveDexterity() {
-		return dexterity + dexterityBonus;
+		return dexterity + dexterityBonus - dexterityPenalty;
 	}
 
 	/**
@@ -1851,7 +1851,7 @@ public class Entity extends Observable {
 	 * @return the effective intellect
 	 */
 	public int getEffectiveIntellect() {
-		return intellect + intellectBonus;
+		return intellect + intellectBonus - intellectPenalty;
 	}
 
 	/**
@@ -1869,7 +1869,7 @@ public class Entity extends Observable {
 	 * @return the effective spirit
 	 */
 	public int getEffectiveSpirit() {
-		return spirit + spiritBonus;
+		return spirit + spiritBonus - spiritPenalty;
 	}
 
 	/**
@@ -1887,7 +1887,7 @@ public class Entity extends Observable {
 	 * @return the effective luck
 	 */
 	public int getEffectiveLuck() {
-		return luck + luckBonus;
+		return luck + luckBonus - luckPenalty;
 	}
 
 	/**
@@ -1905,7 +1905,7 @@ public class Entity extends Observable {
 	 * @return the effective maximum stamina
 	 */
 	public int getEffectiveStamina() {
-		return maxStamina + maxStaminaBonus;
+		return maxStamina + maxStaminaBonus -maxStaminaPenalty;
 	}
 
 	/**
@@ -1923,7 +1923,7 @@ public class Entity extends Observable {
 	 * @return the effective maximum mana
 	 */
 	public int getEffectiveMana() {
-		return maxMana + maxManaBonus;
+		return maxMana + maxManaBonus - maxManaPenalty;
 	}
 
 	/**
@@ -1941,7 +1941,7 @@ public class Entity extends Observable {
 	 * @return the effective dodge stat
 	 */
 	public int getEffectiveDodge() {
-		return dodge + dodgeBonus;
+		return dodge + dodgeBonus - dodgePenalty;
 	}
 
 	/**
@@ -1959,7 +1959,7 @@ public class Entity extends Observable {
 	 * @return
 	 */
 	public int getEffectiveHit() {
-		return (int) ((hit + hitBonus) * hitMult);
+		return (int) ((hit + hitBonus - hitPenalty) * hitMult + hitMultBonus - hitMultPenalty);
 	}
 
 	/**
@@ -1967,8 +1967,24 @@ public class Entity extends Observable {
 	 * 
 	 * @return the damage stat
 	 */
-	public int getDamageMod() {
-		return damageMod;
+	public int getDamageBonus() {
+		return damageBonus;
+	}
+	
+	/**
+	 * Return the enemies effective damage bonus
+	 * @return the effective damage bonus
+	 */
+	public int getEffectiveDamageBonus() {
+		return damageBonus - damagePenalty;
+	}
+	
+	/**
+	 * Return the enemies effective damage bonus
+	 * @return the effective damage bonus
+	 */
+	public double getEffectiveDamageMult() {
+		return damageMult - damageMultPenalty;
 	}
 
 	/**
@@ -1985,8 +2001,8 @@ public class Entity extends Observable {
 	 * 
 	 * @return the healMod
 	 */
-	public int getHealMod() {
-		return healMod;
+	public int getHealBonus() {
+		return healBonus;
 	}
 
 	/**
@@ -2076,7 +2092,7 @@ public class Entity extends Observable {
 	 * @return the effective mental distance
 	 */
 	public int getEffectiveMentalResistance() {
-		return mentalResistance + mentalResistanceBonus;
+		return mentalResistance + mentalResistanceBonus - mentalResistancePenalty;
 	}
 
 	/**
@@ -2085,7 +2101,7 @@ public class Entity extends Observable {
 	 * @return the effective physical resistance
 	 */
 	public int getEffectivePhysicalResistance() {
-		return physicalResistance + physicalResistanceBonus;
+		return physicalResistance + physicalResistanceBonus - physicalResistancePenalty;
 	}
 
 	/**
@@ -2096,6 +2112,15 @@ public class Entity extends Observable {
 	public int getMentalChanceMult() {
 		return mentalChanceMult;
 	}
+	
+	/**
+	 * Returns the entity's effective physical chance multiplier
+	 * 
+	 * @return the effective physical chance multiplier
+	 */
+	public int getEffectivePhysicalChanceMult() {
+		return physicalChanceMult + physicalChanceMultBonus - physicalChanceMultPenalty;
+	}
 
 	/**
 	 * Returns the entity's physical effect chance multiplier
@@ -2105,7 +2130,16 @@ public class Entity extends Observable {
 	public int getPhysicalChanceMult() {
 		return physicalChanceMult;
 	}
-
+	
+	/**
+	 * Returns the entity's effective mental chance multiplier
+	 * 
+	 * @return the effective mental chance multiplier
+	 */
+	public int getEffectiveMentalChanceMult() {
+		return mentalChanceMult + mentalChanceMultBonus - mentalChanceMultPenalty;
+	}
+	
 	/**
 	 * @return the effects
 	 */
