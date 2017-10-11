@@ -42,7 +42,9 @@ public class Game {
 		Player.getInstance().addInnateSkill(new Skill("testSkill"));
 		Window.getInstance().getFrame().setVisible(true);
 
+		Player.getInstance().gainExp(1500);
 		openExplorationMenu();
+		
 
 	}
 

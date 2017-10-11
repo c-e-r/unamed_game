@@ -35,6 +35,11 @@ public class Player extends Entity {
 	}
 
 	private Point location;
+	private int level;
+	private int exp;
+	private int expMult = 1;
+	private int expToNextLevel = 100;
+	private int statPoints;
 
 	private Player() {
 		vitality = 3;
@@ -43,6 +48,8 @@ public class Player extends Entity {
 		intellect = 3;
 		spirit = 3;
 		luck = 3;
+		expToNextLevel = 100;
+		level = 1;
 
 		calculateDerivedStats();
 
@@ -115,6 +122,40 @@ public class Player extends Entity {
 		default:
 			break;
 		}
+
+	}
+
+	public void gainExp(int expGain) {
+
+		int expToGain = 0;
+		int expRemainder = 0;
+		expGain *= expMult;
+		while (expGain > 0) {
+			if (exp + expGain > expToNextLevel) {
+				expRemainder = exp + expGain - expToNextLevel;
+				expToGain = expGain - expRemainder;
+				expGain = expRemainder;
+
+			} else {
+				expToGain = expGain;
+				expGain = 0;
+			}
+			exp += expToGain;
+			if (exp >= expToNextLevel) {
+				increaseLevel();
+			}
+		}
+		System.out.println(exp);
+
+	}
+
+	private void increaseLevel() {
+		level++;
+		statPoints += 3;
+		expToNextLevel += (level * level) * 100;
+		System.out.println("level increased to " + level);
+		System.out.println("you have " + statPoints + " stat points to spend");
+		System.out.println("next level at " + expToNextLevel);
 
 	}
 
@@ -325,8 +366,11 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * Prompts the player to select which hand to equip the given item in and equips it
-	 * @param toEquip the item to equip
+	 * Prompts the player to select which hand to equip the given item in and equips
+	 * it
+	 * 
+	 * @param toEquip
+	 *            the item to equip
 	 */
 	public void getHandChoice(Item toEquip) {
 		Window.clearPane(Window.getInstance().getSidePane());
@@ -407,8 +451,11 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * Prompts the player to select which hand to hold the given item in and equips it
-	 * @param toEquip the item to equip
+	 * Prompts the player to select which hand to hold the given item in and equips
+	 * it
+	 * 
+	 * @param toEquip
+	 *            the item to equip
 	 */
 	public void getHeldChoice(Item toEquip) {
 		Window.clearPane(Window.getInstance().getSidePane());
@@ -488,7 +535,9 @@ public class Player extends Entity {
 
 	/**
 	 * Add all equip effects from the given list to the equipmentEffects List
-	 * @param list the List of effects to add
+	 * 
+	 * @param list
+	 *            the List of effects to add
 	 */
 	public void addEquipEffects(List<Effect> list) {
 		equipmentEffects.addAll(list);
@@ -496,8 +545,11 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * Remove all equip effects that are in the given list from the equipmentEffects List
-	 * @param list the List of effects to remove
+	 * Remove all equip effects that are in the given list from the equipmentEffects
+	 * List
+	 * 
+	 * @param list
+	 *            the List of effects to remove
 	 */
 	public void removeEquipEffects(List<Effect> list) {
 		equipmentEffects.removeAll(list);
