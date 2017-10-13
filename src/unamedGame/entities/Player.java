@@ -6,6 +6,7 @@ package unamedGame.entities;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+
 import unamedGame.Game;
 import unamedGame.effects.Effect;
 import unamedGame.input.InputEvent;
@@ -35,6 +36,19 @@ public class Player extends Entity {
 	}
 
 	private Point location;
+	private int level;
+	private int exp;
+	private int expMult = 1;
+	private int expToNextLevel = 100;
+	private int statPoints;
+	
+	private int newVitality;
+	private int newStrength;
+	private int newDexterity;
+	private int newIntellect;
+	private int newSpirit;
+	private int newLuck;
+	private int newStatPoints;
 
 	private Player() {
 		vitality = 3;
@@ -43,6 +57,8 @@ public class Player extends Entity {
 		intellect = 3;
 		spirit = 3;
 		luck = 3;
+		expToNextLevel = 100;
+		level = 1;
 
 		calculateDerivedStats();
 
@@ -115,6 +131,40 @@ public class Player extends Entity {
 		default:
 			break;
 		}
+
+	}
+
+	public void gainExp(int expGain) {
+
+		int expToGain = 0;
+		int expRemainder = 0;
+		expGain *= expMult;
+		while (expGain > 0) {
+			if (exp + expGain > expToNextLevel) {
+				expRemainder = exp + expGain - expToNextLevel;
+				expToGain = expGain - expRemainder;
+				expGain = expRemainder;
+
+			} else {
+				expToGain = expGain;
+				expGain = 0;
+			}
+			exp += expToGain;
+			if (exp >= expToNextLevel) {
+				increaseLevel();
+			}
+		}
+		System.out.println(exp);
+
+	}
+
+	private void increaseLevel() {
+		level++;
+		statPoints += 3;
+		expToNextLevel += (level * level) * 100;
+		System.out.println("level increased to " + level);
+		System.out.println("you have " + statPoints + " stat points to spend");
+		System.out.println("next level at " + expToNextLevel);
 
 	}
 
@@ -325,8 +375,11 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * Prompts the player to select which hand to equip the given item in and equips it
-	 * @param toEquip the item to equip
+	 * Prompts the player to select which hand to equip the given item in and equips
+	 * it
+	 * 
+	 * @param toEquip
+	 *            the item to equip
 	 */
 	public void getHandChoice(Item toEquip) {
 		Window.clearPane(Window.getInstance().getSidePane());
@@ -407,8 +460,11 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * Prompts the player to select which hand to hold the given item in and equips it
-	 * @param toEquip the item to equip
+	 * Prompts the player to select which hand to hold the given item in and equips
+	 * it
+	 * 
+	 * @param toEquip
+	 *            the item to equip
 	 */
 	public void getHeldChoice(Item toEquip) {
 		Window.clearPane(Window.getInstance().getSidePane());
@@ -488,7 +544,9 @@ public class Player extends Entity {
 
 	/**
 	 * Add all equip effects from the given list to the equipmentEffects List
-	 * @param list the List of effects to add
+	 * 
+	 * @param list
+	 *            the List of effects to add
 	 */
 	public void addEquipEffects(List<Effect> list) {
 		equipmentEffects.addAll(list);
@@ -496,12 +554,127 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * Remove all equip effects that are in the given list from the equipmentEffects List
-	 * @param list the List of effects to remove
+	 * Remove all equip effects that are in the given list from the equipmentEffects
+	 * List
+	 * 
+	 * @param list
+	 *            the List of effects to remove
 	 */
 	public void removeEquipEffects(List<Effect> list) {
 		equipmentEffects.removeAll(list);
 		recalculateStats();
+	}
+
+	/**
+	 * @return the statPoints
+	 */
+	public int getStatPoints() {
+		return statPoints;
+	}
+
+	/**
+	 * @param statPoints the statPoints to set
+	 */
+	public void setStatPoints(int statPoints) {
+		this.statPoints = statPoints;
+	}
+
+	/**
+	 * @return the newVitality
+	 */
+	public int getNewVitality() {
+		return newVitality;
+	}
+
+	/**
+	 * @param newVitality the newVitality to set
+	 */
+	public void setNewVitality(int newVitality) {
+		this.newVitality = newVitality;
+	}
+
+	/**
+	 * @return the newStrength
+	 */
+	public int getNewStrength() {
+		return newStrength;
+	}
+
+	/**
+	 * @param newStrength the newStrength to set
+	 */
+	public void setNewStrength(int newStrength) {
+		this.newStrength = newStrength;
+	}
+
+	/**
+	 * @return the newDexterity
+	 */
+	public int getNewDexterity() {
+		return newDexterity;
+	}
+
+	/**
+	 * @param newDexterity the newDexterity to set
+	 */
+	public void setNewDexterity(int newDexterity) {
+		this.newDexterity = newDexterity;
+	}
+
+	/**
+	 * @return the newIntellect
+	 */
+	public int getNewIntellect() {
+		return newIntellect;
+	}
+
+	/**
+	 * @param newIntellect the newIntellect to set
+	 */
+	public void setNewIntellect(int newIntellect) {
+		this.newIntellect = newIntellect;
+	}
+
+	/**
+	 * @return the newSpirit
+	 */
+	public int getNewSpirit() {
+		return newSpirit;
+	}
+
+	/**
+	 * @param newSpirit the newSpirit to set
+	 */
+	public void setNewSpirit(int newSpirit) {
+		this.newSpirit = newSpirit;
+	}
+
+	/**
+	 * @return the newLuck
+	 */
+	public int getNewLuck() {
+		return newLuck;
+	}
+
+	/**
+	 * @param newLuck the newLuck to set
+	 */
+	public void setNewLuck(int newLuck) {
+		this.newLuck = newLuck;
+	}
+
+	/**
+	 * @return the newStatPoints
+	 */
+	public int getNewStatPoints() {
+		return newStatPoints;
+	}
+
+	/**
+	 * @param newStatPoints the newStatPoints to set
+	 */
+	public void setNewStatPoints(int newStatPoints) {
+		this.newStatPoints = newStatPoints;
 	}
 
 }

@@ -126,6 +126,7 @@ public class Window {
 		textPane.setEditable(false);
 		textScrollPane.setViewportView(textPane);
 		panel.add(splitPane, BorderLayout.CENTER);
+		textPane.setFont(new Font("Courier New", Font.PLAIN, 12));
 
 		/*
 		 * A mouse listener to put focus on textField when textPane is clicked
@@ -185,6 +186,7 @@ public class Window {
 	/**
 	 * Swap the mapPane and playerPane
 	 */
+	@Deprecated
 	public void swapMapPane() {
 		if (mapState) {
 			mapScrollPane.setViewportView(playerPane);
@@ -196,7 +198,28 @@ public class Window {
 	}
 
 	/**
+	 * Swaps to the player pane if not already on the player pane
+	 */
+	public void swapToPlayerPane() {
+		if (mapState) {
+			mapScrollPane.setViewportView(playerPane);
+			mapState = false;
+		}
+	}
+
+	/**
+	 * Swaps to the map pane if not already on the map pane
+	 */
+	public void swapToMapPane() {
+		if (!mapState) {
+			mapScrollPane.setViewportView(mapPane);
+			mapState = true;
+		}
+	}
+
+	/**
 	 * Clears the given field
+	 * 
 	 * @param field
 	 */
 	public static void clearField(JTextField field) {
@@ -205,9 +228,13 @@ public class Window {
 
 	/**
 	 * Adds the given string to the given pane with the given color
-	 * @param pane the pane to add the string to
-	 * @param msg the string to add
-	 * @param c the color of the string text
+	 * 
+	 * @param pane
+	 *            the pane to add the string to
+	 * @param msg
+	 *            the string to add
+	 * @param c
+	 *            the color of the string text
 	 */
 	public static void addToPane(JTextPane pane, String msg, Color c) {
 		StyledDocument doc = pane.getStyledDocument();
@@ -225,8 +252,11 @@ public class Window {
 
 	/**
 	 * Adds the given string to the given pane
-	 * @param pane the pane to add the string to
-	 * @param msg the string to add
+	 * 
+	 * @param pane
+	 *            the pane to add the string to
+	 * @param msg
+	 *            the string to add
 	 */
 	public static void addToPane(JTextPane pane, String msg) {
 		StyledDocument doc = pane.getStyledDocument();
@@ -243,10 +273,15 @@ public class Window {
 	}
 
 	/**
-	 * Adds the given string to the given pane with the given color and add a newline character
-	 * @param pane the pane to add the string to
-	 * @param msg the string to add
-	 * @param c the color of the string text
+	 * Adds the given string to the given pane with the given color and add a
+	 * newline character
+	 * 
+	 * @param pane
+	 *            the pane to add the string to
+	 * @param msg
+	 *            the string to add
+	 * @param c
+	 *            the color of the string text
 	 */
 	public static void appendToPane(JTextPane pane, String msg, Color c) {
 		StyledDocument doc = pane.getStyledDocument();
@@ -263,10 +298,15 @@ public class Window {
 	}
 
 	/**
-	 * Adds the given string to the given pane with a background of the given color with a newline character
-	 * @param pane the pane to add the string to
-	 * @param msg the string to add
-	 * @param c the color of the string background
+	 * Adds the given string to the given pane with a background of the given color
+	 * with a newline character
+	 * 
+	 * @param pane
+	 *            the pane to add the string to
+	 * @param msg
+	 *            the string to add
+	 * @param c
+	 *            the color of the string background
 	 */
 	public static void appendToPaneBackground(JTextPane pane, String msg, Color c) {
 		StyledDocument doc = pane.getStyledDocument();
@@ -284,8 +324,11 @@ public class Window {
 
 	/**
 	 * Adds the given string to the given pane with a newline character
-	 * @param pane the pane to add the string to
-	 * @param msg the string to add
+	 * 
+	 * @param pane
+	 *            the pane to add the string to
+	 * @param msg
+	 *            the string to add
 	 */
 	public static void appendToPane(JTextPane pane, String msg) {
 		StyledDocument doc = pane.getStyledDocument();
@@ -303,7 +346,9 @@ public class Window {
 
 	/**
 	 * Clear the the given pane orf all text.
-	 * @param pane the pane to clear
+	 * 
+	 * @param pane
+	 *            the pane to clear
 	 */
 	public static void clearPane(JTextPane pane) {
 		StyledDocument doc = pane.getStyledDocument();
@@ -317,6 +362,7 @@ public class Window {
 
 	/**
 	 * Returns the mapPane
+	 * 
 	 * @return the mapPane
 	 */
 	public JPanel getMapPane() {
@@ -325,6 +371,7 @@ public class Window {
 
 	/**
 	 * Returns the sidePane
+	 * 
 	 * @return the sidePane
 	 */
 	public JTextPane getSidePane() {
@@ -333,6 +380,7 @@ public class Window {
 
 	/**
 	 * Returns the textPane
+	 * 
 	 * @return the textPane
 	 */
 	public JTextPane getTextPane() {
@@ -341,6 +389,7 @@ public class Window {
 
 	/**
 	 * Returns the playerPane
+	 * 
 	 * @return the playerPane
 	 */
 	public JTextPane getPlayerPane() {
@@ -349,6 +398,7 @@ public class Window {
 
 	/**
 	 * Return the frame
+	 * 
 	 * @return the frame
 	 */
 	public JFrame getFrame() {
@@ -357,6 +407,7 @@ public class Window {
 
 	/**
 	 * Return the textField
+	 * 
 	 * @return the textField
 	 */
 	public JTextField getTextField() {

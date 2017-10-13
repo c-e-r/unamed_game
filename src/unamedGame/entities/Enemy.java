@@ -36,6 +36,7 @@ public class Enemy extends Entity {
 	private int debuffChance;
 	private int offensiveChance;
 	private int healChance;
+	private int expValue;
 
 	/**
 	 * Creates an enemy from an xml with the given filename
@@ -430,6 +431,11 @@ public class Enemy extends Entity {
 				}
 				reloadSkills();
 				break;
+			case "expValue":
+				if (Game.isNumeric(element.getText())) {
+					expValue = Integer.parseInt(element.getText());
+				}
+				break;
 			default:
 				System.out.println("Error unrecognized element name: " + element.getName());
 				break;
@@ -667,6 +673,13 @@ public class Enemy extends Entity {
 	 */
 	public int getHealChance() {
 		return healChance;
+	}
+
+	/**
+	 * @return the expValue
+	 */
+	public int getExpValue() {
+		return expValue;
 	}
 
 }

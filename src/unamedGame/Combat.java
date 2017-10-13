@@ -433,6 +433,7 @@ public class Combat {
 	 * Ends the combat as a victory.
 	 */
 	private void endCombatWin() {
+		player.gainExp(enemy.getExpValue());
 		Window.clearPane(Window.getInstance().getSidePane());
 		Window.appendToPane(Window.getInstance().getTextPane(), enemy.getDeathDescription());
 		backToEvent();
