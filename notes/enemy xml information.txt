@@ -1,5 +1,6 @@
 <enemy> root element
     <name>                          [OPTIONAL: default 0]   the name of the enemy
+    <expValue>                      [OPTIONAL: default 0]   the amount of experience granted for defeating the enemy
     <vitality>                      [OPTIONAL: default 0]   the enemy's vitality stat
     <strength>                      [OPTIONAL: default 0]   the enemy's strength stat
     <dexterity>                     [OPTIONAL: default 0]   the enemy's dexterity stat

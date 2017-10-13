@@ -2,6 +2,7 @@
 <enemy>
     <name>racoon</name>
     <useName>the raccon</useName>
+    <expValue>1000</expValue>
     
     <vitality>2</vitality>
     <strength>1</strength>
