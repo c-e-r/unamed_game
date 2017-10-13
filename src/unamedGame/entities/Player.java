@@ -6,6 +6,7 @@ package unamedGame.entities;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+
 import unamedGame.Game;
 import unamedGame.effects.Effect;
 import unamedGame.input.InputEvent;
@@ -40,6 +41,14 @@ public class Player extends Entity {
 	private int expMult = 1;
 	private int expToNextLevel = 100;
 	private int statPoints;
+	
+	private int newVitality;
+	private int newStrength;
+	private int newDexterity;
+	private int newIntellect;
+	private int newSpirit;
+	private int newLuck;
+	private int newStatPoints;
 
 	private Player() {
 		vitality = 3;
@@ -554,6 +563,118 @@ public class Player extends Entity {
 	public void removeEquipEffects(List<Effect> list) {
 		equipmentEffects.removeAll(list);
 		recalculateStats();
+	}
+
+	/**
+	 * @return the statPoints
+	 */
+	public int getStatPoints() {
+		return statPoints;
+	}
+
+	/**
+	 * @param statPoints the statPoints to set
+	 */
+	public void setStatPoints(int statPoints) {
+		this.statPoints = statPoints;
+	}
+
+	/**
+	 * @return the newVitality
+	 */
+	public int getNewVitality() {
+		return newVitality;
+	}
+
+	/**
+	 * @param newVitality the newVitality to set
+	 */
+	public void setNewVitality(int newVitality) {
+		this.newVitality = newVitality;
+	}
+
+	/**
+	 * @return the newStrength
+	 */
+	public int getNewStrength() {
+		return newStrength;
+	}
+
+	/**
+	 * @param newStrength the newStrength to set
+	 */
+	public void setNewStrength(int newStrength) {
+		this.newStrength = newStrength;
+	}
+
+	/**
+	 * @return the newDexterity
+	 */
+	public int getNewDexterity() {
+		return newDexterity;
+	}
+
+	/**
+	 * @param newDexterity the newDexterity to set
+	 */
+	public void setNewDexterity(int newDexterity) {
+		this.newDexterity = newDexterity;
+	}
+
+	/**
+	 * @return the newIntellect
+	 */
+	public int getNewIntellect() {
+		return newIntellect;
+	}
+
+	/**
+	 * @param newIntellect the newIntellect to set
+	 */
+	public void setNewIntellect(int newIntellect) {
+		this.newIntellect = newIntellect;
+	}
+
+	/**
+	 * @return the newSpirit
+	 */
+	public int getNewSpirit() {
+		return newSpirit;
+	}
+
+	/**
+	 * @param newSpirit the newSpirit to set
+	 */
+	public void setNewSpirit(int newSpirit) {
+		this.newSpirit = newSpirit;
+	}
+
+	/**
+	 * @return the newLuck
+	 */
+	public int getNewLuck() {
+		return newLuck;
+	}
+
+	/**
+	 * @param newLuck the newLuck to set
+	 */
+	public void setNewLuck(int newLuck) {
+		this.newLuck = newLuck;
+	}
+
+	/**
+	 * @return the newStatPoints
+	 */
+	public int getNewStatPoints() {
+		return newStatPoints;
+	}
+
+	/**
+	 * @param newStatPoints the newStatPoints to set
+	 */
+	public void setNewStatPoints(int newStatPoints) {
+		this.newStatPoints = newStatPoints;
 	}
 
 }

@@ -2141,6 +2141,48 @@ public class Entity extends Observable {
 	}
 	
 	/**
+	 * @param vitality the vitality to set
+	 */
+	public void setVitality(int vitality) {
+		this.vitality = vitality;
+	}
+
+	/**
+	 * @param strength the strength to set
+	 */
+	public void setStrength(int strength) {
+		this.strength = strength;
+	}
+
+	/**
+	 * @param dexterity the dexterity to set
+	 */
+	public void setDexterity(int dexterity) {
+		this.dexterity = dexterity;
+	}
+
+	/**
+	 * @param intellect the intellect to set
+	 */
+	public void setIntellect(int intellect) {
+		this.intellect = intellect;
+	}
+
+	/**
+	 * @param spirit the spirit to set
+	 */
+	public void setSpirit(int spirit) {
+		this.spirit = spirit;
+	}
+
+	/**
+	 * @param luck the luck to set
+	 */
+	public void setLuck(int luck) {
+		this.luck = luck;
+	}
+
+	/**
 	 * @return the effects
 	 */
 	public List<Effect> getEffects() {
