@@ -13,14 +13,14 @@
     <playerAttackMissDescription>You attack #targetName# with your dagger but miss</playerAttackMissDescription>
     <description>this is a test item</description>
     <weight>3</weight>
-    <speedPenalty>50</speedPenalty>
+    <speedPenalty>0</speedPenalty>
     
     <maxUses>0</maxUses>
     <equippable equipSlot='held'>true</equippable>
     <equipEffect
         stat='speed'
         length='-1'
-        magnitude='50'
+        magnitude='5'
     >increaseStat</equipEffect>
     <attackEffect
         magnitude='1'

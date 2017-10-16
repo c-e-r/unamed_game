@@ -231,9 +231,10 @@ public class Entity extends Observable {
 	 */
 	public void calculateEquipmentDefences() {
 
-		for (Item item : equipment) {
+		for (int i = 0; i < equipment.length; i++) {
+			Item item = equipment[i];
 			if (item != null) {
-				if(!(isWieldingTwoHanded() && item == getMainWeapon())) {
+				if(!(isWieldingTwoHanded() && i == 3)) {
 					piercingReductionBonus += item.getPiercingReduction();
 					slashingReductionBonus += item.getSlashingReduction();
 					bludgeoningReductionBonus += item.getBludgeoningReduction();
@@ -244,6 +245,7 @@ public class Entity extends Observable {
 					profaneReductionBonus += item.getProfaneReduction();
 					poisonReductionBonus += item.getPoisonReduction();
 					equipSpeedPenalty += item.getSpeedPenalty();
+					System.out.println("Help");
 				}
 			}
 		}
@@ -286,9 +288,15 @@ public class Entity extends Observable {
 	 * 
 	 * @param attacker
 	 */
-	public void getAttacked(Entity attacker) {
+	public void getAttacked(Entity attacker, boolean usingOffhandWeapon) {
 		boolean attackHit = false;
-		Item weapon = attacker.getMainWeapon();
+		Item weapon;
+		
+		if(usingOffhandWeapon) {
+			weapon = attacker.getMainWeapon();
+		} else {
+			weapon = attacker.getOffhandWeapon();
+		}
 
 		triggerEffects("attacked");
 
@@ -843,7 +851,30 @@ public class Entity extends Observable {
 	 *            the target to attack
 	 */
 	public void attack(Entity target) {
-		target.getAttacked(this);
+		int temp = getEffectiveSpeed();
+		target.getAttacked(this, false);
+
+		if(temp >= 5) {
+			target.getAttacked(this, true);
+		}
+		if(temp >= 10) {
+			target.getAttacked(this, false);
+		}
+		if(temp >= 15) {
+			target.getAttacked(this, true);
+		}
+		if(temp >= 20) {
+			target.getAttacked(this, false);
+		}
+		if(temp >= 25) {
+			target.getAttacked(this, true);
+		}
+		if(temp >= 30) {
+			target.getAttacked(this, false);
+		}
+		if(temp >= 35) {
+			target.getAttacked(this, true);
+		}
 
 	}
 
