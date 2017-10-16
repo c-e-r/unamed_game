@@ -314,8 +314,7 @@ public class Entity extends Observable {
 
 		String[] description = null;
 
-		int damage = Calculate.calculateAttackDamage(attacker, weaponBaseDamage,
-				weaponVariableDamage);
+		int damage = Calculate.calculateAttackDamage(attacker, weapon);
 		// Prevent damage from going below 0
 		if (damage < 0) {
 			damage = 0;
@@ -833,13 +832,13 @@ public class Entity extends Observable {
 		int temp = getEffectiveSpeed();
 		target.getAttacked(this, false);
 
-		if (temp >= 10) {
+		if (temp >= 10 && getOffhandWeapon() != null) {
 			target.getAttacked(this, true);
 		}
 		if (temp >= 20) {
 			target.getAttacked(this, false);
 		}
-		if (temp >= 30) {
+		if (temp >= 30 && getOffhandWeapon() != null) {
 			target.getAttacked(this, true);
 		}
 		if (temp >= 40) {

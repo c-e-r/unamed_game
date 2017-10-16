@@ -26,12 +26,15 @@ public class Dice {
 	 * @return the random number
 	 */
 	public static int roll(int d) {
+		int result;
 		if (d == 0) {
 		return 0;
 		}
-		d = rand.nextInt(d) + 1;
+		result = rand.nextInt(d) + 1;
+		System.out.println(d);
 
-		return d;
+		System.out.println(result);
+		return result;
 	}
 
 }

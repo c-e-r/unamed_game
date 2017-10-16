@@ -78,6 +78,8 @@ public class Item {
 	private int profaneReduction;
 	private int poisonReduction;
 
+	private int strRequirement;
+	
 	private int speedPenalty;
 
 	/**
@@ -303,6 +305,11 @@ public class Item {
 			case "speedPenalty":
 				if (Game.isNumeric(element.getText())) {
 					speedPenalty = Integer.parseInt(element.getText());
+				}
+				break;
+			case "strRequirement":
+				if (Game.isNumeric(element.getText())) {
+					strRequirement = Integer.parseInt(element.getText());
 				}
 				break;
 			case "damageType":
@@ -871,6 +878,13 @@ public class Item {
 	 */
 	public int getSpeedPenalty() {
 		return speedPenalty;
+	}
+
+	/**
+	 * @return the strRequirement
+	 */
+	public int getStrRequirement() {
+		return strRequirement;
 	}
 
 	/**

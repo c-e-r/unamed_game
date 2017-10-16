@@ -14,6 +14,7 @@
     <description>this is a test item</description>
     <weight>3</weight>
     <speedPenalty>0</speedPenalty>
+    <strRequirement>4</strRequirement>
     
     <maxUses>0</maxUses>
     <equippable equipSlot='held'>true</equippable>
