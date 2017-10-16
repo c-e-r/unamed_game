@@ -5,7 +5,7 @@
     <weaponBaseDamage>5</weaponBaseDamage>
     <weaponVariableDamage>3</weaponVariableDamage>
     <weaponSpeed>3</weaponSpeed>
-    <damageType>physical</damageType>
+    <damageType>slashing</damageType>
     <piercingReduction>10</piercingReduction>
     <attackHitDescription>The #userName# attacks you with it's dagger dealing #damage#</attackHitDescription>
     <attackMissDescription>The #userName# attacks you with it's dagger but misses</attackMissDescription>

@@ -41,7 +41,7 @@ public class Player extends Entity {
 	private int expMult = 1;
 	private int expToNextLevel = 100;
 	private int statPoints;
-	
+
 	private int newVitality;
 	private int newStrength;
 	private int newDexterity;
@@ -478,6 +478,7 @@ public class Player extends Entity {
 			Window.addToPane(Window.getInstance().getSidePane(),
 					" - " + equipment[EquipmentIndex.RIGHT_HELD.getValue()].getName());
 		}
+		Window.addToPane(Window.getInstance().getSidePane(), "\n3: Both");
 		Window.appendToPane(Window.getInstance().getTextPane(), "Hold in which hand?");
 		Window.getInstance().addInputObsever(new InputObserver() {
 			@Override
@@ -495,17 +496,19 @@ public class Player extends Entity {
 							Window.appendToPane(Window.getInstance().getTextPane(),
 									"You equipped your " + toEquip.getName());
 						} else {
-							equipment[EquipmentIndex.LEFT_HELD.getValue()].setEquipped(false);
+							if (equipment[EquipmentIndex.LEFT_HELD.getValue()] != equipment[EquipmentIndex.RIGHT_HELD
+									.getValue()]) {
+								equipment[EquipmentIndex.LEFT_HELD.getValue()].setEquipped(false);
+							}
+
 							Player.getInstance().removeEquipEffects(
 									equipment[EquipmentIndex.LEFT_HELD.getValue()].getEquipEffects());
-							Window.addToPane(Window.getInstance().getTextPane(),
-									"You removed your " + equipment[EquipmentIndex.LEFT_HELD.getValue()].getName());
 							equipment[EquipmentIndex.LEFT_HELD.getValue()] = toEquip;
 							toEquip.setEquipped(true);
 							Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
 
 							Window.appendToPane(Window.getInstance().getTextPane(),
-									" and equipped your " + toEquip.getName() + " in your left hand");
+									"You and equipped your " + toEquip.getName() + " in your left hand");
 						}
 						Window.getInstance().removeInputObsever(this);
 						Game.inventory();
@@ -519,19 +522,48 @@ public class Player extends Entity {
 							Window.appendToPane(Window.getInstance().getTextPane(),
 									"You equipped your " + toEquip.getName() + " in your right hand");
 						} else {
+							if (equipment[EquipmentIndex.RIGHT_HELD.getValue()] != equipment[EquipmentIndex.LEFT_HELD
+									.getValue()]) {
+								equipment[EquipmentIndex.LEFT_HELD.getValue()].setEquipped(false);
+							}
 							equipment[EquipmentIndex.RIGHT_HELD.getValue()].setEquipped(false);
 							Player.getInstance().removeEquipEffects(
 									equipment[EquipmentIndex.RIGHT_HELD.getValue()].getEquipEffects());
-							Window.addToPane(Window.getInstance().getTextPane(),
-									"You removed your " + equipment[EquipmentIndex.RIGHT_HELD.getValue()].getName());
 							equipment[EquipmentIndex.RIGHT_HELD.getValue()] = toEquip;
 							toEquip.setEquipped(true);
 							Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
 
 							Window.appendToPane(Window.getInstance().getTextPane(),
-									" and equipped your " + toEquip.getName());
+									"You equipped your " + toEquip.getName());
 
 						}
+						Window.getInstance().removeInputObsever(this);
+						Game.inventory();
+					} else if (hand == 3) {
+						if (equipment[EquipmentIndex.RIGHT_HELD.getValue()] == null) {
+							equipment[EquipmentIndex.RIGHT_HELD.getValue()] = toEquip;
+							toEquip.setEquipped(true);
+						} else {
+							equipment[EquipmentIndex.RIGHT_HELD.getValue()].setEquipped(false);
+							Player.getInstance().removeEquipEffects(
+									equipment[EquipmentIndex.RIGHT_HELD.getValue()].getEquipEffects());
+							equipment[EquipmentIndex.RIGHT_HELD.getValue()] = toEquip;
+							toEquip.setEquipped(true);
+						}
+						if (equipment[EquipmentIndex.LEFT_HELD.getValue()] == null) {
+							equipment[EquipmentIndex.LEFT_HELD.getValue()] = toEquip;
+							toEquip.setEquipped(true);
+						} else {
+							equipment[EquipmentIndex.LEFT_HELD.getValue()].setEquipped(false);
+							Player.getInstance().removeEquipEffects(
+									equipment[EquipmentIndex.LEFT_HELD.getValue()].getEquipEffects());
+							equipment[EquipmentIndex.LEFT_HELD.getValue()] = toEquip;
+							toEquip.setEquipped(true);
+						}
+						Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
+						Window.appendToPane(Window.getInstance().getTextPane(),
+								"You equipped your " + toEquip.getName() + " in both hands");
+
 						Window.getInstance().removeInputObsever(this);
 						Game.inventory();
 					}
@@ -573,7 +605,8 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * @param statPoints the statPoints to set
+	 * @param statPoints
+	 *            the statPoints to set
 	 */
 	public void setStatPoints(int statPoints) {
 		this.statPoints = statPoints;
@@ -587,7 +620,8 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * @param newVitality the newVitality to set
+	 * @param newVitality
+	 *            the newVitality to set
 	 */
 	public void setNewVitality(int newVitality) {
 		this.newVitality = newVitality;
@@ -601,7 +635,8 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * @param newStrength the newStrength to set
+	 * @param newStrength
+	 *            the newStrength to set
 	 */
 	public void setNewStrength(int newStrength) {
 		this.newStrength = newStrength;
@@ -615,7 +650,8 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * @param newDexterity the newDexterity to set
+	 * @param newDexterity
+	 *            the newDexterity to set
 	 */
 	public void setNewDexterity(int newDexterity) {
 		this.newDexterity = newDexterity;
@@ -629,7 +665,8 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * @param newIntellect the newIntellect to set
+	 * @param newIntellect
+	 *            the newIntellect to set
 	 */
 	public void setNewIntellect(int newIntellect) {
 		this.newIntellect = newIntellect;
@@ -643,7 +680,8 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * @param newSpirit the newSpirit to set
+	 * @param newSpirit
+	 *            the newSpirit to set
 	 */
 	public void setNewSpirit(int newSpirit) {
 		this.newSpirit = newSpirit;
@@ -657,7 +695,8 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * @param newLuck the newLuck to set
+	 * @param newLuck
+	 *            the newLuck to set
 	 */
 	public void setNewLuck(int newLuck) {
 		this.newLuck = newLuck;
@@ -671,7 +710,8 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * @param newStatPoints the newStatPoints to set
+	 * @param newStatPoints
+	 *            the newStatPoints to set
 	 */
 	public void setNewStatPoints(int newStatPoints) {
 		this.newStatPoints = newStatPoints;

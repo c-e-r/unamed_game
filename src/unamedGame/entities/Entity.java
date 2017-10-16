@@ -260,6 +260,24 @@ public class Entity extends Observable {
 		}
 		return null;
 	}
+	
+	/**
+	 * Returns the off-hand hand weapon
+	 * 
+	 * @return the off-hand hand weapon
+	 */
+	public Item getOffhandWeapon() {
+
+		if (equipment[EquipmentIndex.LEFT_HELD.getValue()] != null) {
+			return equipment[EquipmentIndex.LEFT_HELD.getValue()];
+
+		}
+		return null;
+	}
+	
+	public boolean isWieldingTwoHanded() {
+		return getMainWeapon() == getOffhandWeapon();
+	}
 
 	/**
 	 * Receive a standard attack from the attacker
@@ -312,6 +330,8 @@ public class Entity extends Observable {
 		if (damage < 0) {
 			damage = 0;
 		}
+		
+		System.out.println(damage);
 
 		if (Calculate.calculateAttackHitChance(attacker,
 				weaponHitChance) >= this.getEffectiveDodge()) {
