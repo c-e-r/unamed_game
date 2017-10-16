@@ -45,6 +45,7 @@ public class Skill {
 	private int attackHitBonus;
 	private int attackSpeedBonus;
 	private int staminaCost;
+	private boolean offhandSkill;
 
 	/**
 	 * Create a skill from an xml file
@@ -86,35 +87,44 @@ public class Skill {
 		damageType = element.attributeValue("damageType");
 		description = element.attributeValue("description");
 		attackDescription = element.attributeValue("attackDescription");
-		playerAttackDescription = element.attributeValue("playerAttackDescription");
+		playerAttackDescription = element
+				.attributeValue("playerAttackDescription");
 		missDescription = element.attributeValue("missDescription");
 		playerMissDescription = element.attributeValue("playerMissDescription");
 		skillType = element.attributeValue("skillType");
+		offhandSkill = Boolean
+				.parseBoolean(element.attributeValue("offhandSkill"));
 
 		if (element.attributeValue("staminaCost") != null) {
-			staminaCost = Integer.parseInt(element.attributeValue("staminaCost"));
+			staminaCost = Integer
+					.parseInt(element.attributeValue("staminaCost"));
 		}
 
 		isAttack = Boolean.parseBoolean(element.attributeValue("isAttack"));
 
 		if (element.attributeValue("attackDamageMult") != null) {
-			attackDamageMult = Double.parseDouble(element.attributeValue("attackDamageMult"));
+			attackDamageMult = Double
+					.parseDouble(element.attributeValue("attackDamageMult"));
 			if (attackDamageMult == 0)
 				attackDamageMult = 1;
 		}
 
 		if (element.attributeValue("attackDamageBonus") != null) {
-			attackDamageBonus = Integer.parseInt(element.attributeValue("attackDamageBonus"));
+			attackDamageBonus = Integer
+					.parseInt(element.attributeValue("attackDamageBonus"));
 		}
 
 		if (element.attributeValue("attackVariableDamageBonus") != null) {
-			attackVariableDamageBonus = Integer.parseInt(element.attributeValue("attackVariableDamageBonus"));
+			attackVariableDamageBonus = Integer.parseInt(
+					element.attributeValue("attackVariableDamageBonus"));
 		}
 		if (element.attributeValue("attackHitBonus") != null) {
-			attackHitBonus = Integer.parseInt(element.attributeValue("attackHitBonus"));
+			attackHitBonus = Integer
+					.parseInt(element.attributeValue("attackHitBonus"));
 		}
 		if (element.attributeValue("attackSpeedBonus") != null) {
-			attackSpeedBonus = Integer.parseInt(element.attributeValue("attackSpeedBonus"));
+			attackSpeedBonus = Integer
+					.parseInt(element.attributeValue("attackSpeedBonus"));
 		}
 
 		hitEffects = new ArrayList<Effect>();
@@ -243,8 +253,8 @@ public class Skill {
 	}
 
 	/**
-	 * Returns the description to be displayed if the skill is used by a non-player
-	 * and hits
+	 * Returns the description to be displayed if the skill is used by a
+	 * non-player and hits
 	 * 
 	 * @return the skills attackDescription
 	 */
@@ -253,8 +263,8 @@ public class Skill {
 	}
 
 	/**
-	 * Returns the description to be displayed if the skill is used by a player and
-	 * hits
+	 * Returns the description to be displayed if the skill is used by a player
+	 * and hits
 	 * 
 	 * @return the skills playerAttackDescription
 	 */
@@ -313,8 +323,8 @@ public class Skill {
 	}
 
 	/**
-	 * Returns the description to be displayed if a non-player Entity uses the skill
-	 * and misses
+	 * Returns the description to be displayed if a non-player Entity uses the
+	 * skill and misses
 	 * 
 	 * @return the skills missDescription
 	 */
@@ -394,12 +404,19 @@ public class Skill {
 	public List<Skill> getMissSkills() {
 		return missSkills;
 	}
-	
+
 	/**
 	 * @return the skillType
 	 */
 	public String getSkillType() {
 		return skillType;
+	}
+
+	/**
+	 * @return the offhandSkill
+	 */
+	public boolean isOffhandSkill() {
+		return offhandSkill;
 	}
 
 	/*
@@ -409,13 +426,19 @@ public class Skill {
 	 */
 	@Override
 	public String toString() {
-		return "Skill [hitSkills=" + hitSkills + ", alwaysSkills=" + alwaysSkills + ", missSkills=" + missSkills
-				+ ", hitEffects=" + hitEffects + ", alwaysEffects=" + alwaysEffects + ", missEffects=" + missEffects
-				+ ", name=" + name + ", isAttack=" + isAttack + ", damageType=" + damageType + ", description="
-				+ description + ", attackDescription=" + attackDescription + ", playerAttackDescription="
-				+ playerAttackDescription + ", missDescription=" + missDescription + ", playerMissDescription="
-				+ playerMissDescription + ", attackDamageBounus=" + attackDamageMult + ", attackHitBonus="
-				+ attackHitBonus + ", attackSpeedBonus=" + attackSpeedBonus + ", staminaCost=" + staminaCost + "]";
+		return "Skill [hitSkills=" + hitSkills + ", alwaysSkills="
+				+ alwaysSkills + ", missSkills=" + missSkills + ", hitEffects="
+				+ hitEffects + ", alwaysEffects=" + alwaysEffects
+				+ ", missEffects=" + missEffects + ", name=" + name
+				+ ", isAttack=" + isAttack + ", damageType=" + damageType
+				+ ", description=" + description + ", attackDescription="
+				+ attackDescription + ", playerAttackDescription="
+				+ playerAttackDescription + ", missDescription="
+				+ missDescription + ", playerMissDescription="
+				+ playerMissDescription + ", attackDamageBounus="
+				+ attackDamageMult + ", attackHitBonus=" + attackHitBonus
+				+ ", attackSpeedBonus=" + attackSpeedBonus + ", staminaCost="
+				+ staminaCost + "]";
 	}
 
 }

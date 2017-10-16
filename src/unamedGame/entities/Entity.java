@@ -403,7 +403,8 @@ public class Entity extends Observable {
 	 *            the target of the skill
 	 */
 	public void useSkill(int skillIndex, Entity target) {
-		target.getAttackedBySkill(combinedSkills.get(skillIndex), this, false);
+		Skill skill = combinedSkills.get(skillIndex);
+		target.getAttackedBySkill(skill, this, skill.isOffhandSkill());
 	}
 
 	/**
