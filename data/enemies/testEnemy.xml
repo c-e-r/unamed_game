@@ -27,14 +27,18 @@
     <killDescription>The raccon kills you</killDescription>
     <innateSkill>testSkill</innateSkill>
     <knownSpell>testSpell</knownSpell>
-    <innateWeaponDamage>2</innateWeaponDamage>
-    <innateWeaponVariableDamage>1</innateWeaponVariableDamage>
-    <innateWeaponHitChance>5</innateWeaponHitChance>
-    <innateWeaponSpeed>2</innateWeaponSpeed>
-    <innateWeaponDamageType>piercing</innateWeaponDamageType>
-    <innateWeaponHitDescription>#userNameCapital# scratches #targetName# with its claws dealing #damage# damage</innateWeaponHitDescription>
-    <innateWeaponMissDescription>#userNameCapital# scratches #targetName# with its claws but misses</innateWeaponMissDescription>
-    <innatePlayerWeaponHitDescription>You scratch #targetName# dealing #damage# damage</innatePlayerWeaponHitDescription>
-    <innatePlayerWeaponMissDescription>You scratch at #targetName# but miss</innatePlayerWeaponMissDescription>
+    <innateWeapon>
+        <name>raccon claws</name>
+        <weaponHitChance>0</weaponHitChance>
+        <weaponBaseDamage>1</weaponBaseDamage>
+        <weaponVariableDamage>2</weaponVariableDamage>
+        <weaponSpeed>0</weaponSpeed>
+        <damageType>slashing</damageType>
+        <attackHitDescription>!The #userName# attacks you with it's claws dealing #damage# damage</attackHitDescription>
+        <attackMissDescription>!The #userName# attacks you with it's claws but misses</attackMissDescription>
+        <playerAttackHitDescription>You attack #targetName# with your claws and deal #damage# damage</playerAttackHitDescription>
+        <playerAttackMissDescription>You attack #targetName# with your claws but miss</playerAttackMissDescription>
+        <description>this is a test innateWeapon</description>
+    </innateWeapon>
 
 </enemy>

@@ -78,12 +78,8 @@ public class Player extends Entity {
 		spells = new ArrayList<Spell>();
 		knownSpells = new ArrayList<Spell>();
 		itemSpells = new ArrayList<Spell>();
-
-		innateWeaponDamageType = "bludgeoning";
-		innateWeaponHitDescription = "#userName# throws a punch at you dealing #damage# damage";
-		innateWeaponMissDescription = "#userName# throws a punch at you but you avoid the attack";
-		innatePlayerWeaponHitDescription = "You throw a punch at #targetName# dealing #damage# damage";
-		innatePlayerWeaponMissDescription = "You throw a punch at #targetName# but miss because your bad";
+		
+		innateWeapon = new Item("default");
 
 		reloadSkills();
 
