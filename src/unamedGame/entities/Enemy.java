@@ -108,8 +108,7 @@ public class Enemy extends Entity {
 	 *            the item to apply
 	 * @param user
 	 *            the character who used the item
-	 * @return item 
-	 * 			  the item that had its effect applied
+	 * @return item the item that had its effect applied
 	 */
 	public Item applyItemEffects(Item item, Entity user) {
 		String[] itemDescription;
@@ -376,44 +375,7 @@ public class Enemy extends Entity {
 			case "knownSpell":
 				addKnownSpell(new Spell(element.getText()));
 				break;
-			case "innateWeaponDamage":
-				if (Game.isNumeric(element.getText())) {
-					innateWeaponDamage = Integer.parseInt(element.getText());
-				}
-				break;
-			case "innateWeaponVariableDamage":
-				if (Game.isNumeric(element.getText())) {
-					innateWeaponVariableDamage = Integer
-							.parseInt(element.getText());
-				}
-				break;
-			case "innateWeaponHitChance":
-				if (Game.isNumeric(element.getText())) {
-					innateWeaponHitChance = Integer.parseInt(element.getText());
-				}
-				break;
-			case "innateWeaponSpeed":
-				if (Game.isNumeric(element.getText())) {
-					innateWeaponSpeed = Integer.parseInt(element.getText());
-				}
-				break;
-			case "innateWeaponDamageType":
-				innateWeaponDamageType = element.getText();
-				break;
-			case "innateWeaponHitDescription":
-				innateWeaponHitDescription = element.getText();
-				break;
-			case "innateWeaponMissDescription":
-				innateWeaponMissDescription = element.getText();
-				break;
-			case "innatePlayerWeaponHitDescription":
-				innatePlayerWeaponHitDescription = element.getText();
-				break;
-			case "innatePlayerWeaponMissDescription":
-				innatePlayerWeaponMissDescription = element.getText();
-				break;
 			case "item":
-
 				addItemToInventory(new Item(element.getText()));
 				if (element.attributeValue("equip").equals("true")) {
 
@@ -447,6 +409,9 @@ public class Enemy extends Entity {
 				if (Game.isNumeric(element.getText())) {
 					expValue = Integer.parseInt(element.getText());
 				}
+				break;
+			case "innateWeapon":
+				innateWeapon = new Item(element);
 				break;
 			default:
 				System.out.println("Error unrecognized element name: "

@@ -104,6 +104,21 @@ public class Item {
 
 	}
 
+	public Item(Element element) {
+		permanantEffects = new ArrayList<Effect>();
+		equipEffects = new ArrayList<Effect>();
+		attackEffects = new ArrayList<Effect>();
+		effects = new ArrayList<Effect>();
+		equipSkills = new ArrayList<Skill>();
+		spells = new ArrayList<Spell>();
+		skills = new ArrayList<Skill>();
+		equipSpells = new ArrayList<Spell>();
+
+		Iterator<Element> iterator = element.elementIterator();
+		parseItemXML(iterator);
+
+	}
+
 	/*
 	 * loads the xml and calls the method to parse it
 	 */

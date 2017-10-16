@@ -178,17 +178,8 @@ public class Entity extends Observable {
 	protected int currentStamina;
 	protected int currentMana;
 
-	protected int innateWeaponDamage;
-	protected int innateWeaponVariableDamage = 1;
-	protected int innateWeaponHitChance;
-	protected int innateWeaponSpeed;
-	protected String innateWeaponDamageType;
-
-	protected String innateWeaponHitDescription;
-	protected String innateWeaponMissDescription;
-	protected String innatePlayerWeaponHitDescription;
-	protected String innatePlayerWeaponMissDescription;
-
+	protected Item innateWeapon;
+	
 	protected int equipSpeedPenalty;
 
 	/**
@@ -234,7 +225,7 @@ public class Entity extends Observable {
 		for (int i = 0; i < equipment.length; i++) {
 			Item item = equipment[i];
 			if (item != null) {
-				if(!(isWieldingTwoHanded() && i == 3)) {
+				if (!(isWieldingTwoHanded() && i == 3)) {
 					piercingReductionBonus += item.getPiercingReduction();
 					slashingReductionBonus += item.getSlashingReduction();
 					bludgeoningReductionBonus += item.getBludgeoningReduction();
@@ -245,7 +236,6 @@ public class Entity extends Observable {
 					profaneReductionBonus += item.getProfaneReduction();
 					poisonReductionBonus += item.getPoisonReduction();
 					equipSpeedPenalty += item.getSpeedPenalty();
-					System.out.println("Help");
 				}
 			}
 		}
@@ -261,10 +251,13 @@ public class Entity extends Observable {
 		if (equipment[EquipmentIndex.RIGHT_HELD.getValue()] != null) {
 			return equipment[EquipmentIndex.RIGHT_HELD.getValue()];
 
+		} else if (innateWeapon != null) {
+
+			return innateWeapon;
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns the off-hand hand weapon
 	 * 
@@ -274,11 +267,10 @@ public class Entity extends Observable {
 
 		if (equipment[EquipmentIndex.LEFT_HELD.getValue()] != null) {
 			return equipment[EquipmentIndex.LEFT_HELD.getValue()];
-
 		}
 		return null;
 	}
-	
+
 	public boolean isWieldingTwoHanded() {
 		return getMainWeapon() == getOffhandWeapon();
 	}
@@ -291,11 +283,11 @@ public class Entity extends Observable {
 	public void getAttacked(Entity attacker, boolean usingOffhandWeapon) {
 		boolean attackHit = false;
 		Item weapon;
-		
-		if(usingOffhandWeapon) {
-			weapon = attacker.getMainWeapon();
-		} else {
+
+		if (usingOffhandWeapon) {
 			weapon = attacker.getOffhandWeapon();
+		} else {
+			weapon = attacker.getMainWeapon();
 		}
 
 		triggerEffects("attacked");
@@ -309,29 +301,17 @@ public class Entity extends Observable {
 		String playerWeaponAttackHitDescription;
 		String playerWeaponAttackMissDescription;
 
-		// Set weapon variables to weapon if it exists and innate weapon if not
-		if (weapon == null) {
-			weaponBaseDamage = attacker.innateWeaponDamage;
-			weaponHitChance = attacker.innateWeaponHitChance;
-			weaponVariableDamage = attacker.innateWeaponVariableDamage;
-			weaponDamageType = attacker.innateWeaponDamageType;
-			weaponAttackHitDescription = attacker.innateWeaponHitDescription;
-			weaponAttackMissDescription = attacker.innateWeaponMissDescription;
-			playerWeaponAttackHitDescription = attacker.innatePlayerWeaponHitDescription;
-			playerWeaponAttackMissDescription = attacker.innatePlayerWeaponMissDescription;
+		weaponBaseDamage = weapon.getWeaponBaseDamage();
+		weaponHitChance = weapon.getWeaponHitChance();
+		weaponVariableDamage = weapon.getWeaponVariableDamage();
+		weaponDamageType = weapon.getDamageType();
+		weaponAttackHitDescription = weapon.getAttackHitDescription();
+		weaponAttackMissDescription = weapon.getAttackMissDescription();
+		playerWeaponAttackHitDescription = weapon
+				.getPlayerAttackHitDescription();
+		playerWeaponAttackMissDescription = weapon
+				.getPlayerAttackMissDescription();
 
-		} else {
-			weaponBaseDamage = weapon.getWeaponBaseDamage();
-			weaponHitChance = weapon.getWeaponHitChance();
-			weaponVariableDamage = weapon.getWeaponVariableDamage();
-			weaponDamageType = weapon.getDamageType();
-			weaponAttackHitDescription = weapon.getAttackHitDescription();
-			weaponAttackMissDescription = weapon.getAttackMissDescription();
-			playerWeaponAttackHitDescription = weapon
-					.getPlayerAttackHitDescription();
-			playerWeaponAttackMissDescription = weapon
-					.getPlayerAttackMissDescription();
-		}
 		String[] description = null;
 
 		int damage = Calculate.calculateAttackDamage(attacker, weaponBaseDamage,
@@ -340,8 +320,7 @@ public class Entity extends Observable {
 		if (damage < 0) {
 			damage = 0;
 		}
-		
-		System.out.println(damage);
+
 
 		if (Calculate.calculateAttackHitChance(attacker,
 				weaponHitChance) >= this.getEffectiveDodge()) {
@@ -425,7 +404,7 @@ public class Entity extends Observable {
 	 *            the target of the skill
 	 */
 	public void useSkill(int skillIndex, Entity target) {
-		target.getAttackedBySkill(combinedSkills.get(skillIndex), this);
+		target.getAttackedBySkill(combinedSkills.get(skillIndex), this, false);
 	}
 
 	/**
@@ -459,7 +438,8 @@ public class Entity extends Observable {
 	 * @param attacker
 	 *            the attacker
 	 */
-	public void getAttackedBySkill(Skill skill, Entity attacker) {
+	public void getAttackedBySkill(Skill skill, Entity attacker,
+			boolean usingOffhandWeapon) {
 		Item weapon = attacker.getMainWeapon();
 		boolean attackHit = false;
 
@@ -471,18 +451,17 @@ public class Entity extends Observable {
 		// Get weapon information of weapon if a weapon exists. Otherwise get
 		// innate
 		// weapon stats
-		if (weapon == null) {
-			weaponBaseDamage = attacker.innateWeaponDamage;
-			weaponHitChance = attacker.innateWeaponHitChance;
-			weaponVariableDamage = attacker.innateWeaponVariableDamage;
-			weaponDamageType = attacker.innateWeaponDamageType;
-
+		if (usingOffhandWeapon) {
+			weapon = attacker.getOffhandWeapon();
 		} else {
-			weaponBaseDamage = weapon.getWeaponBaseDamage();
-			weaponHitChance = weapon.getWeaponHitChance();
-			weaponVariableDamage = weapon.getWeaponVariableDamage();
-			weaponDamageType = weapon.getDamageType();
+			weapon = attacker.getMainWeapon();
 		}
+
+		weaponBaseDamage = weapon.getWeaponBaseDamage();
+		weaponHitChance = weapon.getWeaponHitChance();
+		weaponVariableDamage = weapon.getWeaponVariableDamage();
+		weaponDamageType = weapon.getDamageType();
+
 		String[] description = null;
 
 		int damage = Calculate.calculateSkillAttackDamage(attacker, skill,
@@ -611,14 +590,14 @@ public class Entity extends Observable {
 		if (attackHit) {
 			for (Skill subSkill : skill.getHitSkills()) {
 				if (skill != null) {
-					getAttackedBySkill(subSkill, attacker);
+					getAttackedBySkill(subSkill, attacker, false);
 				}
 
 			}
 		} else { // Apply skills child skills that happen on miss
 			for (Skill subSkill : skill.getMissSkills()) {
 				if (skill != null) {
-					getAttackedBySkill(subSkill, attacker);
+					getAttackedBySkill(subSkill, attacker, false);
 				}
 
 			}
@@ -626,7 +605,7 @@ public class Entity extends Observable {
 		// Apply skills child skills that happen always
 		for (Skill subSkill : skill.getAlwaysSkills()) {
 			if (skill != null) {
-				getAttackedBySkill(subSkill, attacker);
+				getAttackedBySkill(subSkill, attacker, false);
 			}
 
 		}
@@ -854,26 +833,17 @@ public class Entity extends Observable {
 		int temp = getEffectiveSpeed();
 		target.getAttacked(this, false);
 
-		if(temp >= 5) {
+		if (temp >= 10) {
 			target.getAttacked(this, true);
 		}
-		if(temp >= 10) {
+		if (temp >= 20) {
 			target.getAttacked(this, false);
 		}
-		if(temp >= 15) {
+		if (temp >= 30) {
 			target.getAttacked(this, true);
 		}
-		if(temp >= 20) {
+		if (temp >= 40) {
 			target.getAttacked(this, false);
-		}
-		if(temp >= 25) {
-			target.getAttacked(this, true);
-		}
-		if(temp >= 30) {
-			target.getAttacked(this, false);
-		}
-		if(temp >= 35) {
-			target.getAttacked(this, true);
 		}
 
 	}
@@ -1625,17 +1595,13 @@ public class Entity extends Observable {
 		if (effect.getDuration() != -1) {
 
 			for (Effect effect2 : effects) {
-				System.out.println(effect.getEndTime() > effect2.getEndTime());
-				System.out.println(effect.getEndTime());
-				System.out.println(effect2.getEndTime());
-
+	
 				if (effect.getName().equals(effect2.getName())
 						&& effect.getDuration()
 								+ Time.getInstance().getTime() > effect2
 										.getEndTime()) {
 					effect2.setEndTime(effect.getDuration()
 							+ Time.getInstance().getTime());
-					System.out.println(effect2.getEndTime());
 					if (this instanceof Player) {
 						Window.appendToPane(Window.getInstance().getTextPane(),
 								Game.capitalizeFirstLetter(
@@ -2144,33 +2110,6 @@ public class Entity extends Observable {
 	 */
 	public int getCurrentMana() {
 		return currentMana;
-	}
-
-	/**
-	 * Returns the entity's innate weapon damage
-	 * 
-	 * @return the innateWeaponDamage
-	 */
-	public int getInnateWeaponDamage() {
-		return innateWeaponDamage;
-	}
-
-	/**
-	 * Returns the entity's innate weapon hit change
-	 * 
-	 * @return
-	 */
-	public int getInnateWeaponHitChance() {
-		return innateWeaponHitChance;
-	}
-
-	/**
-	 * Returns the entity's innate weapon speed
-	 * 
-	 * @return the inanteWeaponSpeed
-	 */
-	public int getInnateWeaponSpeed() {
-		return innateWeaponSpeed;
 	}
 
 	/**

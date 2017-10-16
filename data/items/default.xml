@@ -1,0 +1,10 @@
+<innateWeapon>
+    <damageType>slashing</damageType>
+    <weaponBaseDamage>1</weaponBaseDamage>
+    <weaponVariableDamage>1</weaponVariableDamage>
+    <attackHitDescription>The #userName# attacks you with it's default dealing #damage#</attackHitDescription>
+    <attackMissDescription>The #userName# attacks you with it's default but misses</attackMissDescription>
+    <playerAttackHitDescription>You attack #targetName# with your default and deal #damage# damage</playerAttackHitDescription>
+    <playerAttackMissDescription>You attack #targetName# with your default but miss</playerAttackMissDescription>
+    <description>this is a default weapon</description>
+</innateWeapon>
