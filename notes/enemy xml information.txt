@@ -27,14 +27,7 @@
     <description>                   [REQUIRED]              a description of the enemy
     <deathDescription>              [REQUIRED]              the description shown when the enemy dies
     <killDescription>               [REQUIRED]              the description shown then the player kills the enemy
-    <innateSkill>                   [OPTIONAL]              the name of a skill xml file. will add the skill to the enemy's innate skills 
-    <innateWeaponDamage>            [OPTIONAL: default 0]   the enemy's innate weappon damage 
-    <innateWeaponVariableDamage>    [OPTIONAL: default 0]   the enemy's innate weapon variable damage upper limit 
-    <innateWeaponHitChance>         [OPTIONAL: default 0]   the hit chance of the enemy's innate weapon 
-    <innateWeaponSpeed>             [OPTIONAL: default 0]   the speed of the enemy's innate weapon 
-    <innateWeaponDamageType>        [REQUIRED]              the damage type of the enemy's natural weapon. See damage_types.txt for a list of types
-    <innateWeaponHitDescription>    [REQUIRED]              the text to be displayed when the enemy hits with its innate weapon
-    <innateWeaponMissDescription>   [REQUIRED]              the text to be displayed when the enemy misses with its innate weapon
+    <innateWeapon>                  [REQUIRED]              the innate weapon the enemy will have. Functions as an item and has the same formatting within it as items
     <item>                          [OPTIONAL]              the name of an item xml file. add the item to the enemy's inventory 
       item ATTRUIBUTES:
         equip=''                    [OPTIONAL]              if the equip attribute is true the enemy will equip the item [OPTIONAL]
