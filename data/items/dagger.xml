@@ -2,8 +2,8 @@
 <item>
     <name>dagger</name>
     <weaponHitChance>10</weaponHitChance>
-    <weaponBaseDamage>5</weaponBaseDamage>
-    <weaponVariableDamage>3</weaponVariableDamage>
+    <weaponBaseDamage>2</weaponBaseDamage>
+    <weaponVariableDamage>2</weaponVariableDamage>
     <weaponSpeed>3</weaponSpeed>
     <damageType>slashing</damageType>
     <piercingReduction>10</piercingReduction>

@@ -233,16 +233,18 @@ public class Entity extends Observable {
 
 		for (Item item : equipment) {
 			if (item != null) {
-				piercingReductionBonus += item.getPiercingReduction();
-				slashingReductionBonus += item.getSlashingReduction();
-				bludgeoningReductionBonus += item.getBludgeoningReduction();
-				fireReductionBonus += item.getFireReduction();
-				coldReductionBonus += item.getColdReduction();
-				electricityReductionBonus += item.getElectricityReduction();
-				sacredReductionBonus += item.getSacredReduction();
-				profaneReductionBonus += item.getProfaneReduction();
-				poisonReductionBonus += item.getPoisonReduction();
-				equipSpeedPenalty -= item.getSpeedPenalty();
+				if(!(isWieldingTwoHanded() && item == getMainWeapon())) {
+					piercingReductionBonus += item.getPiercingReduction();
+					slashingReductionBonus += item.getSlashingReduction();
+					bludgeoningReductionBonus += item.getBludgeoningReduction();
+					fireReductionBonus += item.getFireReduction();
+					coldReductionBonus += item.getColdReduction();
+					electricityReductionBonus += item.getElectricityReduction();
+					sacredReductionBonus += item.getSacredReduction();
+					profaneReductionBonus += item.getProfaneReduction();
+					poisonReductionBonus += item.getPoisonReduction();
+					equipSpeedPenalty += item.getSpeedPenalty();
+				}
 			}
 		}
 	}
