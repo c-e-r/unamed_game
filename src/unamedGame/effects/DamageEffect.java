@@ -23,28 +23,41 @@ public class DamageEffect extends Effect {
 	 * Creates a damageEffect from the given parameters
 	 * 
 	 * @see Effect#Effect(List, String, int, int, int, String, String, boolean,
-	 *      String, String, String, String, String, String, String, String, String,
-	 *      String, String, String, String, String, String, String, String, int)
+	 *      String, String, String, String, String, String, String, String,
+	 *      String, String, String, String, String, String, String, String,
+	 *      String, int)
 	 * @param damageType
 	 *            the type of damage the effect deals
 	 * @param magnitude
 	 *            the amount of damage the effect deals
 	 */
-	public DamageEffect(List<Effect> effects, String name, int duration, int increment, int baseAccuracy,
-			String resistType, String repeatType, boolean toSelf, String playerEffectDescription,
-			String playerRepeatEffectDescription, String effectDescription, String repeatEffectDescription,
-			String resistEffectDescription, String playerResistEffectDescription, String resistRepeatEffectDescription,
-			String playerResistRepeatEffectDescription, String selfDestructTrigger, String selfDestructDescription,
-			String playerSelfDestructDescription, String specialEffectTrigger, String specialEffectDescription,
-			String playerSpecialEffectDescription, String specialResistEffectDescription,
-			String playerSpecialResistEffectDescription, String specialResistType, int specialAccuracyBonus,
+	public DamageEffect(List<Effect> effects, String name, int duration,
+			int increment, int baseAccuracy, String resistType,
+			String repeatType, boolean toSelf, String playerEffectDescription,
+			String playerRepeatEffectDescription, String effectDescription,
+			String repeatEffectDescription, String resistEffectDescription,
+			String playerResistEffectDescription,
+			String resistRepeatEffectDescription,
+			String playerResistRepeatEffectDescription,
+			String selfDestructTrigger, String selfDestructDescription,
+			String playerSelfDestructDescription, String specialEffectTrigger,
+			String specialEffectDescription,
+			String playerSpecialEffectDescription,
+			String specialResistEffectDescription,
+			String playerSpecialResistEffectDescription,
+			String specialResistType, int specialAccuracyBonus,
 			String damageType, int magnitude) {
-		super(effects, name, duration, increment, baseAccuracy, resistType, repeatType, toSelf, playerEffectDescription,
-				playerRepeatEffectDescription, effectDescription, repeatEffectDescription, resistEffectDescription,
-				playerResistEffectDescription, resistRepeatEffectDescription, playerResistRepeatEffectDescription,
-				selfDestructTrigger, selfDestructDescription, playerSelfDestructDescription, specialEffectTrigger,
-				specialEffectDescription, playerSpecialEffectDescription, specialResistEffectDescription,
-				playerSpecialResistEffectDescription, specialResistType, specialAccuracyBonus);
+		super(effects, name, duration, increment, baseAccuracy, resistType,
+				repeatType, toSelf, playerEffectDescription,
+				playerRepeatEffectDescription, effectDescription,
+				repeatEffectDescription, resistEffectDescription,
+				playerResistEffectDescription, resistRepeatEffectDescription,
+				playerResistRepeatEffectDescription, selfDestructTrigger,
+				selfDestructDescription, playerSelfDestructDescription,
+				specialEffectTrigger, specialEffectDescription,
+				playerSpecialEffectDescription, specialResistEffectDescription,
+				playerSpecialResistEffectDescription, specialResistType,
+				specialAccuracyBonus);
 		this.damageType = damageType;
 		this.magnitude = magnitude;
 	}
@@ -98,21 +111,24 @@ public class DamageEffect extends Effect {
 		for (String string : descriptionArray) {
 			switch (string) {
 			case "damageType":
-				Window.addToPane(Window.getInstance().getTextPane(), damageType);
+				Window.addToPane(Window.getInstance().getTextPane(),
+						damageType);
 				break;
 			case "totalDamage":
 				if (totalDamage == 0) {
-					Window.addToPane(Window.getInstance().getTextPane(), Integer.toString(totalDamage),
-							Colors.DAMAGE_BLOCK);
+					Window.addToPane(Window.getInstance().getTextPane(),
+							Integer.toString(totalDamage), Colors.DAMAGE_BLOCK);
 
 				} else {
-					Window.addToPane(Window.getInstance().getTextPane(), Integer.toString(totalDamage), Colors.DAMAGE);
+					Window.addToPane(Window.getInstance().getTextPane(),
+							Integer.toString(totalDamage), Colors.DAMAGE);
 
 				}
 				break;
 			default:
 				if (!printSharedDescription(string)) {
-					Window.addToPane(Window.getInstance().getTextPane(), string);
+					Window.addToPane(Window.getInstance().getTextPane(),
+							string);
 
 				}
 				break;

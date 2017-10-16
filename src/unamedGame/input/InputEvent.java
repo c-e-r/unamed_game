@@ -18,8 +18,8 @@ public class InputEvent extends EventObject {
 	private final String text;
 
 	/**
-	 * An event to get player entered text. Also put entered text into text field
-	 * and clears the text field.
+	 * An event to get player entered text. Also put entered text into text
+	 * field and clears the text field.
 	 * 
 	 * @param source
 	 * @param text
@@ -28,7 +28,8 @@ public class InputEvent extends EventObject {
 		super(source);
 		this.text = text;
 		Game.clearTextField();
-		Window.appendToPane(Window.getInstance().getTextPane(), text, Colors.PLAYER_TEXT);
+		Window.appendToPane(Window.getInstance().getTextPane(), text,
+				Colors.PLAYER_TEXT);
 		int len = Window.getInstance().getTextPane().getDocument().getLength();
 		Window.getInstance().getTextPane().setCaretPosition(len);
 	}

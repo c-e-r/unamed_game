@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+import unamedGame.Calculate;
 import unamedGame.Dice;
 import unamedGame.Game;
 import unamedGame.effects.Effect;
@@ -216,7 +217,8 @@ public class Entity extends Observable {
 		speed = dexterity * 2;
 		dodge = dexterity * 5 + intellect * 2 + baseDodge;
 		mentalResistance = spirit * 2 + intellect * 1 + baseMentalResistance;
-		physicalResistance = vitality * 2 + strength * 1 + basePhysicalResistance;
+		physicalResistance = vitality * 2 + strength * 1
+				+ basePhysicalResistance;
 		hit = dexterity * 5 + intellect * 2;
 		carryCapacity = strength * 5;
 
@@ -297,22 +299,24 @@ public class Entity extends Observable {
 			weaponDamageType = weapon.getDamageType();
 			weaponAttackHitDescription = weapon.getAttackHitDescription();
 			weaponAttackMissDescription = weapon.getAttackMissDescription();
-			playerWeaponAttackHitDescription = weapon.getPlayerAttackHitDescription();
-			playerWeaponAttackMissDescription = weapon.getPlayerAttackMissDescription();
+			playerWeaponAttackHitDescription = weapon
+					.getPlayerAttackHitDescription();
+			playerWeaponAttackMissDescription = weapon
+					.getPlayerAttackMissDescription();
 		}
 		String[] description = null;
 
-		int damage = (int) (((attacker.getEffectiveStrength() + weaponBaseDamage + Dice.roll(weaponVariableDamage)
-				+ attacker.getEffectiveDamageBonus()) * attacker.getEffectiveDamageMult()));
+		int damage = Calculate.calculateAttackDamage(attacker, weaponBaseDamage,
+				weaponVariableDamage);
 		// Prevent damage from going below 0
 		if (damage < 0) {
 			damage = 0;
 		}
 
-		int temp = Dice.roll(Dice.HIT_DIE);
-
-		if (attacker.getEffectiveHit() + weaponHitChance + temp >= this.getEffectiveDodge()) {
+		if (Calculate.calculateAttackHitChance(attacker,
+				weaponHitChance) >= this.getEffectiveDodge()) {
 			attackHit = true;
+
 			damage = this.takeDamage(damage, weaponDamageType);
 
 			if (attacker instanceof Player) {
@@ -333,26 +337,33 @@ public class Entity extends Observable {
 		for (String string : description) {
 			switch (string) {
 			case "userName":
-				Window.addToPane(Window.getInstance().getTextPane(), attacker.getUseName());
+				Window.addToPane(Window.getInstance().getTextPane(),
+						attacker.getUseName());
 				break;
 			case "userNameCapital":
-				Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(attacker.getUseName()));
+				Window.addToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(attacker.getUseName()));
 				break;
 			case "targetName":
-				Window.addToPane(Window.getInstance().getTextPane(), this.getUseName());
+				Window.addToPane(Window.getInstance().getTextPane(),
+						this.getUseName());
 				break;
 			case "targetNameCapital":
-				Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(this.getUseName()));
+				Window.addToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(this.getUseName()));
 				break;
 			case "damage":
 				if (damage == 0) {
-					Window.addToPane(Window.getInstance().getTextPane(), Integer.toString(damage), Colors.DAMAGE_BLOCK);
+					Window.addToPane(Window.getInstance().getTextPane(),
+							Integer.toString(damage), Colors.DAMAGE_BLOCK);
 				} else {
-					Window.addToPane(Window.getInstance().getTextPane(), Integer.toString(damage), Colors.DAMAGE);
+					Window.addToPane(Window.getInstance().getTextPane(),
+							Integer.toString(damage), Colors.DAMAGE);
 				}
 				break;
 			case "weaponName":
-				Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(weapon.getName()));
+				Window.addToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(weapon.getName()));
 				break;
 			default:
 				Window.addToPane(Window.getInstance().getTextPane(), string);
@@ -427,7 +438,8 @@ public class Entity extends Observable {
 		int weaponHitChance = 0;
 		String weaponDamageType = "null";
 
-		// Get weapon information of weapon if a weapon exists. Otherwise get innate
+		// Get weapon information of weapon if a weapon exists. Otherwise get
+		// innate
 		// weapon stats
 		if (weapon == null) {
 			weaponBaseDamage = attacker.innateWeaponDamage;
@@ -443,20 +455,16 @@ public class Entity extends Observable {
 		}
 		String[] description = null;
 
-		int damage = (int) (((attacker.getEffectiveStrength() + weaponBaseDamage + Dice.roll(weaponVariableDamage)
-				+ attacker.getEffectiveDamageBonus() + skill.getAttackDamageBonus()
-				+ Dice.roll(skill.getAttackVariableDamageBonus()))
-				* (attacker.getEffectiveDamageMult() + skill.getAttackDamageMult())));
+		int damage = Calculate.calculateSkillAttackDamage(attacker, skill,
+				weaponBaseDamage, weaponVariableDamage);
 		// Prevent damage from going below 0
 		if (damage < 0) {
 			damage = 0;
 		}
 
-		int temp = Dice.roll(Dice.HIT_DIE);
-
 		if (skill.isAttack()) {
-			if (attacker.getEffectiveHit() + weaponHitChance + skill.getAttackHitBonus() + temp >= this
-					.getEffectiveDodge()) {
+			if (Calculate.calculateSkillAttackHitChance(attacker, skill,
+					weaponHitChance) >= this.getEffectiveDodge()) {
 				attackHit = true;
 				damage = this.takeDamage(damage, weaponDamageType);
 
@@ -486,26 +494,33 @@ public class Entity extends Observable {
 		for (String string : description) {
 			switch (string) {
 			case "userName":
-				Window.addToPane(Window.getInstance().getTextPane(), attacker.getUseName());
+				Window.addToPane(Window.getInstance().getTextPane(),
+						attacker.getUseName());
 				break;
 			case "userNameCapital":
-				Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(attacker.getUseName()));
+				Window.addToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(attacker.getUseName()));
 				break;
 			case "targetName":
-				Window.addToPane(Window.getInstance().getTextPane(), this.getUseName());
+				Window.addToPane(Window.getInstance().getTextPane(),
+						this.getUseName());
 				break;
 			case "targetNameCapital":
-				Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(this.getUseName()));
+				Window.addToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(this.getUseName()));
 				break;
 			case "damage":
 				if (damage == 0) {
-					Window.addToPane(Window.getInstance().getTextPane(), Integer.toString(damage), Colors.DAMAGE_BLOCK);
+					Window.addToPane(Window.getInstance().getTextPane(),
+							Integer.toString(damage), Colors.DAMAGE_BLOCK);
 				} else {
-					Window.addToPane(Window.getInstance().getTextPane(), Integer.toString(damage), Colors.DAMAGE);
+					Window.addToPane(Window.getInstance().getTextPane(),
+							Integer.toString(damage), Colors.DAMAGE);
 				}
 				break;
 			case "weaponName":
-				Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(weapon.getName()));
+				Window.addToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(weapon.getName()));
 				break;
 			default:
 				Window.addToPane(Window.getInstance().getTextPane(), string);
@@ -611,7 +626,8 @@ public class Entity extends Observable {
 
 		boolean spellHit = false;
 
-		// Get weapon information of weapon if a weapon exists. Otherwise get innate
+		// Get weapon information of weapon if a weapon exists. Otherwise get
+		// innate
 		// weapon stats
 
 		String[] description = null;
@@ -619,8 +635,9 @@ public class Entity extends Observable {
 		int temp = Dice.roll(Dice.HIT_DIE);
 
 		if (spell.isAttack()) {
-			if (attacker.getEffectiveHit() + spellFocusHitChance + spell.getAttackHitBonus() + temp >= this
-					.getEffectiveDodge()) {
+			if (attacker.getEffectiveHit() + spellFocusHitChance
+					+ spell.getAttackHitBonus()
+					+ temp >= this.getEffectiveDodge()) {
 				spellHit = true;
 
 				if (attacker instanceof Player) {
@@ -649,19 +666,24 @@ public class Entity extends Observable {
 		for (String string : description) {
 			switch (string) {
 			case "userName":
-				Window.addToPane(Window.getInstance().getTextPane(), attacker.getUseName());
+				Window.addToPane(Window.getInstance().getTextPane(),
+						attacker.getUseName());
 				break;
 			case "userNameCapital":
-				Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(attacker.getUseName()));
+				Window.addToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(attacker.getUseName()));
 				break;
 			case "targetName":
-				Window.addToPane(Window.getInstance().getTextPane(), this.getUseName());
+				Window.addToPane(Window.getInstance().getTextPane(),
+						this.getUseName());
 				break;
 			case "targetNameCapital":
-				Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(this.getUseName()));
+				Window.addToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(this.getUseName()));
 				break;
 			case "spellFocusName":
-				Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(spellFocus.getName()));
+				Window.addToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(spellFocus.getName()));
 				break;
 			default:
 				Window.addToPane(Window.getInstance().getTextPane(), string);
@@ -762,14 +784,18 @@ public class Entity extends Observable {
 			return (int) ((damage - piercingReduction - piercingReductionBonus)
 					* (piercingResistance + piercingResistanceBonus));
 		case "bludgeoning":
-			return (int) ((damage - bludgeoningReduction - bludgeoningReductionBonus)
+			return (int) ((damage - bludgeoningReduction
+					- bludgeoningReductionBonus)
 					* (bludgeoningResistance + bludgeoningResistanceBonus));
 		case "fire":
-			return (int) ((damage - fireReduction - fireReductionBonus) * (fireResistance + fireResistanceBonus));
+			return (int) ((damage - fireReduction - fireReductionBonus)
+					* (fireResistance + fireResistanceBonus));
 		case "cold":
-			return (int) ((damage - coldReduction - coldReductionBonus) * (coldResistance + coldResistanceBonus));
+			return (int) ((damage - coldReduction - coldReductionBonus)
+					* (coldResistance + coldResistanceBonus));
 		case "electricity":
-			return (int) ((damage - electricityReduction - electricityReductionBonus)
+			return (int) ((damage - electricityReduction
+					- electricityReductionBonus)
 					* (electricityResistance + electricityResistanceBonus));
 		case "sacred":
 			return (int) ((damage - sacredReduction - sacredReductionBonus)
@@ -1345,7 +1371,8 @@ public class Entity extends Observable {
 	}
 
 	/**
-	 * Returns effective speed + a roll of the SPEED_DIE + the skill or speed bonus
+	 * Returns effective speed + a roll of the SPEED_DIE + the skill or speed
+	 * bonus
 	 * 
 	 * @param command
 	 *            the command. 2 for skill and 3 for spell
@@ -1368,7 +1395,8 @@ public class Entity extends Observable {
 			break;
 		}
 
-		return speed + speedBonus - equipSpeedPenalty + tempSpeedBonus + Dice.roll(Dice.SPEED_DIE);
+		return speed + speedBonus - equipSpeedPenalty + tempSpeedBonus
+				+ Dice.roll(Dice.SPEED_DIE);
 	}
 
 	/**
@@ -1397,8 +1425,8 @@ public class Entity extends Observable {
 	}
 
 	/**
-	 * Returns true if there is an effect of the same name as the one given in the
-	 * entity's effects list
+	 * Returns true if there is an effect of the same name as the one given in
+	 * the entity's effects list
 	 * 
 	 * @param effect
 	 *            the effect to compare
@@ -1537,8 +1565,8 @@ public class Entity extends Observable {
 	}
 
 	/*
-	 * Increases the duration of effects of the same name as the given effect if its
-	 * lower than the given effect.
+	 * Increases the duration of effects of the same name as the given effect if
+	 * its lower than the given effect.
 	 */
 	private void updateEffectDuration(Effect effect) {
 		if (effect.getDuration() != -1) {
@@ -1549,18 +1577,25 @@ public class Entity extends Observable {
 				System.out.println(effect2.getEndTime());
 
 				if (effect.getName().equals(effect2.getName())
-						&& effect.getDuration() + Time.getInstance().getTime() > effect2.getEndTime()) {
-					effect2.setEndTime(effect.getDuration() + Time.getInstance().getTime());
+						&& effect.getDuration()
+								+ Time.getInstance().getTime() > effect2
+										.getEndTime()) {
+					effect2.setEndTime(effect.getDuration()
+							+ Time.getInstance().getTime());
 					System.out.println(effect2.getEndTime());
 					if (this instanceof Player) {
 						Window.appendToPane(Window.getInstance().getTextPane(),
-								Game.capitalizeFirstLetter("You are already under the effects of " + effect2.getName())
+								Game.capitalizeFirstLetter(
+										"You are already under the effects of "
+												+ effect2.getName())
 										+ ", duration increased");
 
 					} else {
 						Window.appendToPane(Window.getInstance().getTextPane(),
-								Game.capitalizeFirstLetter(Game.capitalizeFirstLetter(useName)
-										+ " is already under the effects of " + effect2.getName())
+								Game.capitalizeFirstLetter(Game
+										.capitalizeFirstLetter(useName)
+										+ " is already under the effects of "
+										+ effect2.getName())
 										+ ", duration increased");
 
 					}
@@ -1570,11 +1605,16 @@ public class Entity extends Observable {
 		} else {
 			if (this instanceof Player) {
 				Window.appendToPane(Window.getInstance().getTextPane(),
-						Game.capitalizeFirstLetter("You are already under the effects of " + effect.getName()));
+						Game.capitalizeFirstLetter(
+								"You are already under the effects of "
+										+ effect.getName()));
 
 			} else {
-				Window.appendToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(
-						Game.capitalizeFirstLetter(useName) + " is already under the effects of " + effect.getName()));
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(
+								Game.capitalizeFirstLetter(useName)
+										+ " is already under the effects of "
+										+ effect.getName()));
 
 			}
 
@@ -1905,7 +1945,7 @@ public class Entity extends Observable {
 	 * @return the effective maximum stamina
 	 */
 	public int getEffectiveStamina() {
-		return maxStamina + maxStaminaBonus -maxStaminaPenalty;
+		return maxStamina + maxStaminaBonus - maxStaminaPenalty;
 	}
 
 	/**
@@ -1959,7 +1999,8 @@ public class Entity extends Observable {
 	 * @return
 	 */
 	public int getEffectiveHit() {
-		return (int) ((hit + hitBonus - hitPenalty) * hitMult + hitMultBonus - hitMultPenalty);
+		return (int) ((hit + hitBonus - hitPenalty) * hitMult + hitMultBonus
+				- hitMultPenalty);
 	}
 
 	/**
@@ -1970,17 +2011,19 @@ public class Entity extends Observable {
 	public int getDamageBonus() {
 		return damageBonus;
 	}
-	
+
 	/**
 	 * Return the enemies effective damage bonus
+	 * 
 	 * @return the effective damage bonus
 	 */
 	public int getEffectiveDamageBonus() {
 		return damageBonus - damagePenalty;
 	}
-	
+
 	/**
 	 * Return the enemies effective damage bonus
+	 * 
 	 * @return the effective damage bonus
 	 */
 	public double getEffectiveDamageMult() {
@@ -2092,7 +2135,8 @@ public class Entity extends Observable {
 	 * @return the effective mental distance
 	 */
 	public int getEffectiveMentalResistance() {
-		return mentalResistance + mentalResistanceBonus - mentalResistancePenalty;
+		return mentalResistance + mentalResistanceBonus
+				- mentalResistancePenalty;
 	}
 
 	/**
@@ -2101,7 +2145,8 @@ public class Entity extends Observable {
 	 * @return the effective physical resistance
 	 */
 	public int getEffectivePhysicalResistance() {
-		return physicalResistance + physicalResistanceBonus - physicalResistancePenalty;
+		return physicalResistance + physicalResistanceBonus
+				- physicalResistancePenalty;
 	}
 
 	/**
@@ -2112,14 +2157,15 @@ public class Entity extends Observable {
 	public int getMentalChanceMult() {
 		return mentalChanceMult;
 	}
-	
+
 	/**
 	 * Returns the entity's effective physical chance multiplier
 	 * 
 	 * @return the effective physical chance multiplier
 	 */
 	public int getEffectivePhysicalChanceMult() {
-		return physicalChanceMult + physicalChanceMultBonus - physicalChanceMultPenalty;
+		return physicalChanceMult + physicalChanceMultBonus
+				- physicalChanceMultPenalty;
 	}
 
 	/**
@@ -2130,53 +2176,60 @@ public class Entity extends Observable {
 	public int getPhysicalChanceMult() {
 		return physicalChanceMult;
 	}
-	
+
 	/**
 	 * Returns the entity's effective mental chance multiplier
 	 * 
 	 * @return the effective mental chance multiplier
 	 */
 	public int getEffectiveMentalChanceMult() {
-		return mentalChanceMult + mentalChanceMultBonus - mentalChanceMultPenalty;
+		return mentalChanceMult + mentalChanceMultBonus
+				- mentalChanceMultPenalty;
 	}
-	
+
 	/**
-	 * @param vitality the vitality to set
+	 * @param vitality
+	 *            the vitality to set
 	 */
 	public void setVitality(int vitality) {
 		this.vitality = vitality;
 	}
 
 	/**
-	 * @param strength the strength to set
+	 * @param strength
+	 *            the strength to set
 	 */
 	public void setStrength(int strength) {
 		this.strength = strength;
 	}
 
 	/**
-	 * @param dexterity the dexterity to set
+	 * @param dexterity
+	 *            the dexterity to set
 	 */
 	public void setDexterity(int dexterity) {
 		this.dexterity = dexterity;
 	}
 
 	/**
-	 * @param intellect the intellect to set
+	 * @param intellect
+	 *            the intellect to set
 	 */
 	public void setIntellect(int intellect) {
 		this.intellect = intellect;
 	}
 
 	/**
-	 * @param spirit the spirit to set
+	 * @param spirit
+	 *            the spirit to set
 	 */
 	public void setSpirit(int spirit) {
 		this.spirit = spirit;
 	}
 
 	/**
-	 * @param luck the luck to set
+	 * @param luck
+	 *            the luck to set
 	 */
 	public void setLuck(int luck) {
 		this.luck = luck;
@@ -2196,7 +2249,8 @@ public class Entity extends Observable {
 	 *
 	 */
 	public enum EquipmentIndex {
-		HEAD(0), BODY(1), LEFT_HELD(2), RIGHT_HELD(3), LEFT_HAND(4), RIGHT_HAND(5), NECK(6), FEET(7);
+		HEAD(0), BODY(1), LEFT_HELD(2), RIGHT_HELD(3), LEFT_HAND(4), RIGHT_HAND(
+				5), NECK(6), FEET(7);
 
 		private final int index;
 

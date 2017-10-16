@@ -17,21 +17,33 @@ public class CubePoint {
 	/**
 	 * An array to store the cube points of various nearby hexes
 	 */
-	public static final CubePoint[] CUBE_DIRECTIONS_7 = { new CubePoint(-3, 3, 0), new CubePoint(-3, 2, 1),
-			new CubePoint(-3, 1, 2), new CubePoint(-3, 0, 3), new CubePoint(-2, 3, -1), new CubePoint(-2, 2, 0),
-			new CubePoint(-2, 1, 1), new CubePoint(-2, 0, 2), new CubePoint(-2, -1, 3), new CubePoint(-1, 3, -2),
-			new CubePoint(-1, 2, -1), new CubePoint(-1, 1, 0), new CubePoint(-1, 0, 1), new CubePoint(-1, -1, 2),
-			new CubePoint(-1, -2, 3), new CubePoint(0, 3, -3), new CubePoint(0, 2, -2), new CubePoint(0, 1, -1),
-			new CubePoint(0, 0, 0), new CubePoint(0, -1, 1), new CubePoint(0, -2, 2), new CubePoint(0, -3, 3),
-			new CubePoint(1, 2, -3), new CubePoint(1, 1, -2), new CubePoint(1, 0, -1), new CubePoint(1, -1, 0),
-			new CubePoint(1, -2, 1), new CubePoint(1, -3, 2), new CubePoint(2, 1, -3), new CubePoint(2, 0, -2),
-			new CubePoint(2, -1, -1), new CubePoint(2, -2, 0), new CubePoint(2, -3, 1), new CubePoint(3, 0, -3),
-			new CubePoint(3, -1, -2), new CubePoint(3, -2, -1), new CubePoint(3, -3, 0) };
+	public static final CubePoint[] CUBE_DIRECTIONS_7 = {
+			new CubePoint(-3, 3, 0), new CubePoint(-3, 2, 1),
+			new CubePoint(-3, 1, 2), new CubePoint(-3, 0, 3),
+			new CubePoint(-2, 3, -1), new CubePoint(-2, 2, 0),
+			new CubePoint(-2, 1, 1), new CubePoint(-2, 0, 2),
+			new CubePoint(-2, -1, 3), new CubePoint(-1, 3, -2),
+			new CubePoint(-1, 2, -1), new CubePoint(-1, 1, 0),
+			new CubePoint(-1, 0, 1), new CubePoint(-1, -1, 2),
+			new CubePoint(-1, -2, 3), new CubePoint(0, 3, -3),
+			new CubePoint(0, 2, -2), new CubePoint(0, 1, -1),
+			new CubePoint(0, 0, 0), new CubePoint(0, -1, 1),
+			new CubePoint(0, -2, 2), new CubePoint(0, -3, 3),
+			new CubePoint(1, 2, -3), new CubePoint(1, 1, -2),
+			new CubePoint(1, 0, -1), new CubePoint(1, -1, 0),
+			new CubePoint(1, -2, 1), new CubePoint(1, -3, 2),
+			new CubePoint(2, 1, -3), new CubePoint(2, 0, -2),
+			new CubePoint(2, -1, -1), new CubePoint(2, -2, 0),
+			new CubePoint(2, -3, 1), new CubePoint(3, 0, -3),
+			new CubePoint(3, -1, -2), new CubePoint(3, -2, -1),
+			new CubePoint(3, -3, 0) };
 	/**
 	 * An array to store the cube points of neighboring hexes
 	 */
-	public static final CubePoint[] MOVEMENT_DIRECTIONS = { new CubePoint(-1, 1, 0), new CubePoint(0, 1, -1),
-			new CubePoint(1, 0, -1), new CubePoint(1, -1, 0), new CubePoint(0, -1, 1), new CubePoint(-1, 0, 1) };
+	public static final CubePoint[] MOVEMENT_DIRECTIONS = {
+			new CubePoint(-1, 1, 0), new CubePoint(0, 1, -1),
+			new CubePoint(1, 0, -1), new CubePoint(1, -1, 0),
+			new CubePoint(0, -1, 1), new CubePoint(-1, 0, 1) };
 
 	/**
 	 * Create a cubepoint with x, y, and z coordinates
@@ -101,8 +113,10 @@ public class CubePoint {
 	 * Given a cube point and a direction return the neighboring cubepoint. See
 	 * grid.txt for more information on what number refers to which direction
 	 * 
-	 * @param cube the CubePoint to find neighbors of
-	 * @param direction the direction to get the neighbor from
+	 * @param cube
+	 *            the CubePoint to find neighbors of
+	 * @param direction
+	 *            the direction to get the neighbor from
 	 * @return the neighbor CubePoint
 	 */
 	public static CubePoint getCubeNeighbor(CubePoint cube, int direction) {
@@ -113,8 +127,10 @@ public class CubePoint {
 	 * Given a cube point and a direction return the neighboring cubepoint. See
 	 * grid.txt for more information on what number refers to which direction
 	 * 
-	 * @param cube the CubePoint to find neighbors of
-	 * @param direction the direction to get the neighbor from
+	 * @param cube
+	 *            the CubePoint to find neighbors of
+	 * @param direction
+	 *            the direction to get the neighbor from
 	 * @return the neighbor CubePoint
 	 */
 	public static CubePoint getMoveNeighbor(CubePoint cube, int direction) {

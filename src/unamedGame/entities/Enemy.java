@@ -101,48 +101,53 @@ public class Enemy extends Entity {
 	}
 
 	/**
-	 * Prints the description for using the item depending on the user and target
-	 * and calls the items use method
+	 * Prints the description for using the item depending on the user and
+	 * target and calls the items use method
 	 * 
 	 * @param item
 	 *            the item to apply
 	 * @param user
 	 *            the character who used the item
-	 * @return
+	 * @return item 
+	 * 			  the item that had its effect applied
 	 */
 	public Item applyItemEffects(Item item, Entity user) {
-		String[] description;
+		String[] itemDescription;
 		if (user instanceof Player) {
 			if (user == this) {
-				description = item.getPlayerUseText().split("#");
+				itemDescription = item.getPlayerUseText().split("#");
 
 			} else {
-				description = item.getPlayerUseOnText().split("#");
+				itemDescription = item.getPlayerUseOnText().split("#");
 
 			}
 		} else {
 			if (user == this) {
-				description = item.getUseText().split("#");
+				itemDescription = item.getUseText().split("#");
 
 			} else {
-				description = item.getUseOnText().split("#");
+				itemDescription = item.getUseOnText().split("#");
 
 			}
 		}
 
-		for (String string : description) {
+		for (String string : itemDescription) {
 			switch (string) {
 			case "userName":
-				Window.addToPane(Window.getInstance().getTextPane(), user.getUseName());
+				Window.addToPane(Window.getInstance().getTextPane(),
+						user.getUseName());
 				break;
 			case "userNameCapital":
-				Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(user.getUseName()));
+				Window.addToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(user.getUseName()));
 				break;
 			case "targetName":
-				Window.addToPane(Window.getInstance().getTextPane(), this.getUseName());
+				Window.addToPane(Window.getInstance().getTextPane(),
+						this.getUseName());
 				break;
 			case "targetNameCapital":
-				Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(this.getUseName()));
+				Window.addToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(this.getUseName()));
 				break;
 			default:
 				Window.addToPane(Window.getInstance().getTextPane(), string);
@@ -321,7 +326,8 @@ public class Enemy extends Entity {
 				break;
 			case "bludgeoningResistance":
 				if (Game.isDoubleNumeric(element.getText())) {
-					bludgeoningResistance = Double.parseDouble(element.getText());
+					bludgeoningResistance = Double
+							.parseDouble(element.getText());
 				}
 				break;
 			case "fireResistance":
@@ -336,7 +342,8 @@ public class Enemy extends Entity {
 				break;
 			case "electricityResistance":
 				if (Game.isDoubleNumeric(element.getText())) {
-					electricityResistance = Double.parseDouble(element.getText());
+					electricityResistance = Double
+							.parseDouble(element.getText());
 				}
 				break;
 			case "sacredResistance":
@@ -376,7 +383,8 @@ public class Enemy extends Entity {
 				break;
 			case "innateWeaponVariableDamage":
 				if (Game.isNumeric(element.getText())) {
-					innateWeaponVariableDamage = Integer.parseInt(element.getText());
+					innateWeaponVariableDamage = Integer
+							.parseInt(element.getText());
 				}
 				break;
 			case "innateWeaponHitChance":
@@ -412,16 +420,20 @@ public class Enemy extends Entity {
 					int itemIndex = inventory.size() - 1;
 					Item item = inventory.get(itemIndex);
 					if (item.getEquipSlot().equals("hand")) {
-						if (equipment[EquipmentIndex.LEFT_HAND.getValue()] == null) {
+						if (equipment[EquipmentIndex.LEFT_HAND
+								.getValue()] == null) {
 							equipHandItem(item, "left");
-						} else if (equipment[EquipmentIndex.RIGHT_HAND.getValue()] == null) {
+						} else if (equipment[EquipmentIndex.RIGHT_HAND
+								.getValue()] == null) {
 							equipHandItem(item, "right");
 						}
 					} else if (item.getEquipSlot().equals("held")) {
-						if (equipment[EquipmentIndex.LEFT_HELD.getValue()] == null) {
+						if (equipment[EquipmentIndex.LEFT_HELD
+								.getValue()] == null) {
 							equipHeldItem(item, "left");
 
-						} else if (equipment[EquipmentIndex.RIGHT_HELD.getValue()] == null) {
+						} else if (equipment[EquipmentIndex.RIGHT_HELD
+								.getValue()] == null) {
 							equipHeldItem(item, "right");
 						}
 
@@ -437,7 +449,8 @@ public class Enemy extends Entity {
 				}
 				break;
 			default:
-				System.out.println("Error unrecognized element name: " + element.getName());
+				System.out.println("Error unrecognized element name: "
+						+ element.getName());
 				break;
 			}
 		}
@@ -522,7 +535,8 @@ public class Enemy extends Entity {
 				equipment[EquipmentIndex.LEFT_HAND.getValue()] = toEquip;
 				toEquip.setEquipped(true);
 			} else {
-				equipment[EquipmentIndex.LEFT_HAND.getValue()].setEquipped(false);
+				equipment[EquipmentIndex.LEFT_HAND.getValue()]
+						.setEquipped(false);
 				equipment[EquipmentIndex.LEFT_HAND.getValue()] = toEquip;
 				toEquip.setEquipped(true);
 			}
@@ -531,7 +545,8 @@ public class Enemy extends Entity {
 				equipment[EquipmentIndex.RIGHT_HAND.getValue()] = toEquip;
 				toEquip.setEquipped(true);
 			} else {
-				equipment[EquipmentIndex.RIGHT_HAND.getValue()].setEquipped(false);
+				equipment[EquipmentIndex.RIGHT_HAND.getValue()]
+						.setEquipped(false);
 				equipment[EquipmentIndex.RIGHT_HAND.getValue()] = toEquip;
 				toEquip.setEquipped(true);
 
@@ -553,7 +568,8 @@ public class Enemy extends Entity {
 				equipment[EquipmentIndex.LEFT_HELD.getValue()] = toEquip;
 				toEquip.setEquipped(true);
 			} else {
-				equipment[EquipmentIndex.LEFT_HELD.getValue()].setEquipped(false);
+				equipment[EquipmentIndex.LEFT_HELD.getValue()]
+						.setEquipped(false);
 				equipment[EquipmentIndex.LEFT_HELD.getValue()] = toEquip;
 				toEquip.setEquipped(true);
 			}
@@ -562,7 +578,8 @@ public class Enemy extends Entity {
 				equipment[EquipmentIndex.RIGHT_HELD.getValue()] = toEquip;
 				toEquip.setEquipped(true);
 			} else {
-				equipment[EquipmentIndex.RIGHT_HELD.getValue()].setEquipped(false);
+				equipment[EquipmentIndex.RIGHT_HELD.getValue()]
+						.setEquipped(false);
 				equipment[EquipmentIndex.RIGHT_HELD.getValue()] = toEquip;
 				toEquip.setEquipped(true);
 

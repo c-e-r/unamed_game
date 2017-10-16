@@ -296,7 +296,8 @@ public class Item {
 			case "itemType":
 				itemType = element.getText();
 			default:
-				System.out.println("Error unrecognized element name: " + element.getName());
+				System.out.println("Error unrecognized element name: "
+						+ element.getName());
 				break;
 			}
 		}
@@ -426,7 +427,8 @@ public class Item {
 		}
 		uses--;
 		if (uses <= 0 && maxUses > 0) {
-			Window.appendToPane(Window.getInstance().getTextPane(), getName() + " has run out of uses");
+			Window.appendToPane(Window.getInstance().getTextPane(),
+					getName() + " has run out of uses");
 		}
 	}
 
@@ -443,10 +445,12 @@ public class Item {
 			maxUsesString = "-";
 		}
 		if (this.isEquipped()) {
-			return String.format("%-24s%5.1f%10s/%-6s", "[e] " + name, weight, usesString, maxUsesString);
+			return String.format("%-24s%5.1f%10s/%-6s", "[e] " + name, weight,
+					usesString, maxUsesString);
 
 		}
-		return String.format("%-24s%5.1f%10s/%-6s", name, weight, usesString, maxUsesString);
+		return String.format("%-24s%5.1f%10s/%-6s", name, weight, usesString,
+				maxUsesString);
 	}
 
 	/**
@@ -514,8 +518,8 @@ public class Item {
 	}
 
 	/**
-	 * Returns true if the item is used against the opponent in battle instead of on
-	 * the used
+	 * Returns true if the item is used against the opponent in battle instead
+	 * of on the used
 	 * 
 	 * @return if the item is used offensively in battle
 	 */
@@ -699,7 +703,8 @@ public class Item {
 	}
 
 	/**
-	 * Returns the list of effects imparted when an attack made with the item hits
+	 * Returns the list of effects imparted when an attack made with the item
+	 * hits
 	 * 
 	 * @return the items attackEffects ArrayList
 	 */
@@ -708,8 +713,8 @@ public class Item {
 	}
 
 	/**
-	 * Returns the list of effects imparted when a spell attack made with the item
-	 * hits
+	 * Returns the list of effects imparted when a spell attack made with the
+	 * item hits
 	 * 
 	 * @return the items attackEffects ArrayList
 	 */
