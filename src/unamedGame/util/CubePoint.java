@@ -37,6 +37,40 @@ public class CubePoint {
 			new CubePoint(2, -3, 1), new CubePoint(3, 0, -3),
 			new CubePoint(3, -1, -2), new CubePoint(3, -2, -1),
 			new CubePoint(3, -3, 0) };
+
+	public static final CubePoint[] CUBE_DIRECTIONS_9 = {
+			new CubePoint(-4, 4, 0), new CubePoint(-4, 3, 1),
+			new CubePoint(-4, 2, 2), new CubePoint(-4, 1, 3),
+			new CubePoint(-4, 0, 4), new CubePoint(-3, 4, 1),
+			new CubePoint(-3, 3, 0), new CubePoint(-3, 2, 1),
+			new CubePoint(-3, 1, 2), new CubePoint(-3, 0, 3),
+			new CubePoint(-3, -1, 4), new CubePoint(-2, 4, -2),
+			new CubePoint(-2, 3, -1), new CubePoint(-2, 2, 0),
+			new CubePoint(-2, 1, 1), new CubePoint(-2, 0, 2),
+			new CubePoint(-2, -1, 3), new CubePoint(-2, -2, 4),
+			new CubePoint(-1, 4, -3), new CubePoint(-1, 3, -2),
+			new CubePoint(-1, 2, -1), new CubePoint(-1, 1, 0),
+			new CubePoint(-1, 0, 1), new CubePoint(-1, -1, 2),
+			new CubePoint(-1, -2, 3), new CubePoint(-1, -3, 4),
+			new CubePoint(0, 4, -4), new CubePoint(0, 3, -3),
+			new CubePoint(0, 2, -2), new CubePoint(0, 1, -1),
+			new CubePoint(0, 0, 0), new CubePoint(0, -1, 1),
+			new CubePoint(0, -2, 2), new CubePoint(0, -3, 3),
+			new CubePoint(0, -4, 4), new CubePoint(1, 3, -4),
+			new CubePoint(1, 2, -3), new CubePoint(1, 1, -2),
+			new CubePoint(1, 0, -1), new CubePoint(1, -1, 0),
+			new CubePoint(1, -2, 1), new CubePoint(1, -3, 2),
+			new CubePoint(1, -4, 3), new CubePoint(2, 2, -4),
+			new CubePoint(2, 1, -3), new CubePoint(2, 0, -2),
+			new CubePoint(2, -1, -1), new CubePoint(2, -2, 0),
+			new CubePoint(2, -3, 1), new CubePoint(2, -4, 2),
+			new CubePoint(3, 1, -4), new CubePoint(3, 0, -3),
+			new CubePoint(3, -1, -2), new CubePoint(3, -2, -1),
+			new CubePoint(3, -3, 0), new CubePoint(3, -4, 1),
+			new CubePoint(4, 0, -4), new CubePoint(4, -1, -3),
+			new CubePoint(4, -2, -2), new CubePoint(4, -3, -1),
+			new CubePoint(4, -4, 0), };
+
 	/**
 	 * An array to store the cube points of neighboring hexes
 	 */
@@ -95,7 +129,7 @@ public class CubePoint {
 	 * @return a CubePoint for the given direction
 	 */
 	private static CubePoint getCubeDirection(int direction) {
-		return CUBE_DIRECTIONS_7[direction];
+		return CUBE_DIRECTIONS_9[direction];
 	}
 
 	/**
