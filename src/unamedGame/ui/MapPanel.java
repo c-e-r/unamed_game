@@ -31,8 +31,8 @@ import unamedGame.world.WorldTile;
 
 public class MapPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private final int WIDTH = 400;
-	private final int HEIGHT = 400;
+	private final int WIDTH = 500;
+	private final int HEIGHT = 500;
 	private Font font = new Font("monospaced", Font.PLAIN, 16);
 	FontMetrics metrics;
 
@@ -57,7 +57,7 @@ public class MapPanel extends JPanel {
 		metrics = g.getFontMetrics();
 
 		drawRectangle(g2d, true, 0xFFFFFF, 1);
-		drawHexGridLoop(g2d, origin, 7, 30, 1);
+		drawHexGridLoop(g2d, origin, 9, 30, 1);
 		drawMovementOverlay(g2d, WIDTH, HEIGHT, 0x000000);
 	}
 
@@ -84,7 +84,7 @@ public class MapPanel extends JPanel {
 		Point playerPoint = Player.getInstance().getLocation();
 		CubePoint playerCubePoint = CubePoint.pointToCubePoint(playerPoint);
 		WorldTile playerTile = World.getInstance().getWorld()[playerPoint.x][playerPoint.y];
-		WorldTile[] tiles = new WorldTile[37];
+		WorldTile[] tiles = new WorldTile[61];
 
 		for (int i = 0; i < tiles.length; i++) {
 			tiles[i] = getMapTile(playerCubePoint, i);
@@ -127,9 +127,9 @@ public class MapPanel extends JPanel {
 		g.setStroke(new BasicStroke(lineThickness, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
 		if (filled)
-			g.fillRect(0, 0, 400, 400);
+			g.fillRect(0, 0, 500, 500);
 		else
-			g.drawRect(0, 0, 400, 400);
+			g.drawRect(0, 0, 500, 500);
 
 		// Set values to previous when done.
 		g.setColor(tmpC);

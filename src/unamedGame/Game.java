@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import unamedGame.effects.StatIncreaseEffect;
 import unamedGame.entities.Player;
 import unamedGame.events.EventReader;
+import unamedGame.events.EventSelector;
 import unamedGame.input.InputEvent;
 import unamedGame.input.InputObserver;
 import unamedGame.items.Item;
@@ -51,6 +52,7 @@ public class Game {
 	 * Opens the main exploration menu and waits for player input
 	 */
 	public static void openExplorationMenu() {
+		Window.clearPane(Window.getInstance().getTextPane());
 		Window.clearPane(window.getSidePane());
 		Window.addToPane(window.getSidePane(), "1: Explore \n2: Move\n3: Gather\n4: Inventory \n5: Status");
 
@@ -98,8 +100,7 @@ public class Game {
 	 * NOT YET IMPLEMENTED
 	 */
 	private static void explore() {
-		System.out.println("explore");
-		EventReader.startEvent("testEvent");
+		EventSelector.startRandomEvent("forestEvents");
 	}
 
 	/*
