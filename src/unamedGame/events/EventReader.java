@@ -34,10 +34,11 @@ public class EventReader {
 	private static Element root;
 
 	/**
-	 * Starts an event from the given string. The string must be the file name of an
-	 * event in the events folder.
+	 * Starts an event from the given string. The string must be the file name
+	 * of an event in the events folder.
 	 * 
-	 * @param event a string of the filename of the event
+	 * @param event
+	 *            a string of the filename of the event
 	 */
 	public static void startEvent(String event) {
 		Window.clearPane(Window.getInstance().getSidePane());
@@ -66,7 +67,7 @@ public class EventReader {
 		Window.clearPane(Window.getInstance().getTextPane());
 		resumeParseEventXML(currentElement);
 	}
-	
+
 	/*
 	 * Begins parsing the resumed event
 	 */
@@ -92,19 +93,22 @@ public class EventReader {
 	 * Waits for the player to hit enter then loads the next element
 	 */
 	private static void parseEventXML(Element root, int branch) {
-		currentElement = (Element) root.selectSingleNode("//branch[@number='" + branch + "']");
-		interpretElement(currentElement);
-		if (currentElement != null) {
-			Window.getInstance().addInputObsever(new InputObserver() {
-				@Override
-				public void inputChanged(InputEvent evt) {
-					nextElement();
-					if (!interpretElement(currentElement)) {
-						Window.getInstance().removeInputObsever(this);
-					}
+		currentElement = (Element) root
+				.selectSingleNode("//branch[@number='" + branch + "']");
+		nextElement();
+		if (interpretElement(currentElement)) {
+			if (currentElement != null) {
+				Window.getInstance().addInputObsever(new InputObserver() {
+					@Override
+					public void inputChanged(InputEvent evt) {
+						nextElement();
+						if (!interpretElement(currentElement)) {
+							Window.getInstance().removeInputObsever(this);
+						}
 
-				}
-			});
+					}
+				});
+			}
 		}
 	}
 
@@ -116,24 +120,29 @@ public class EventReader {
 	}
 
 	/*
-	 * interprets the element based on the element name and does something depending what that is
+	 * interprets the element based on the element name and does something
+	 * depending what that is
 	 */
 	private static boolean interpretElement(Element element) {
 		switch (element.getName()) {
 		case "text":
-			Window.appendToPane(Window.getInstance().getTextPane(), currentElement.getTextTrim());
+			Window.appendToPane(Window.getInstance().getTextPane(),
+					currentElement.getTextTrim());
 			return true;
 		case "end":
 			Game.openExplorationMenu();
 			return false;
 		case "choice":
 			Window.clearPane(Window.getInstance().getSidePane());
-			String choiceDescription = ((Element) currentElement.selectSingleNode("choiceDescription")).getTextTrim();
+			String choiceDescription = ((Element) currentElement
+					.selectSingleNode("choiceDescription")).getTextTrim();
 			List<Node> choices = currentElement.selectNodes("option");
-			Window.appendToPane(Window.getInstance().getTextPane(), choiceDescription);
+			Window.appendToPane(Window.getInstance().getTextPane(),
+					choiceDescription);
 			int i = 1;
 			for (Node node : choices) {
-				Window.appendToPane(Window.getInstance().getSidePane(), i++ + ": " + node.getText());
+				Window.appendToPane(Window.getInstance().getSidePane(),
+						i++ + ": " + node.getText());
 			}
 			waitForChoice(choices);
 			return false;
@@ -145,12 +154,15 @@ public class EventReader {
 			new Combat(new Enemy(element.getText()));
 			return false;
 		case "addItem":
-			Item item = Player.getInstance().addItemToInventory(new Item(element.getText()));
+			Item item = Player.getInstance()
+					.addItemToInventory(new Item(element.getText()));
 			Window.appendToPane(Window.getInstance().getTextPane(),
-					Game.capitalizeFirstLetter(item.getName()) + " added to inventory");
+					Game.capitalizeFirstLetter(item.getName())
+							+ " added to inventory");
 			return true;
 		default:
-			System.out.println("Error unrecognized element name: " + currentElement.getName());
+			System.out.println("Error unrecognized element name: "
+					+ currentElement.getName());
 			return false;
 		}
 	}
@@ -164,14 +176,17 @@ public class EventReader {
 			@Override
 			public void inputChanged(InputEvent evt) {
 				int choice = -1;
-				if (Game.isNumeric(evt.getText()) && Integer.parseInt(evt.getText()) <= max) {
-					choice = Integer.parseInt(
-							((Element) choices.get(Integer.parseInt(evt.getText()) - 1)).attributeValue("branch"));
+				if (Game.isNumeric(evt.getText())
+						&& Integer.parseInt(evt.getText()) <= max) {
+					choice = Integer.parseInt(((Element) choices
+							.get(Integer.parseInt(evt.getText()) - 1))
+									.attributeValue("branch"));
 					Window.getInstance().removeInputObsever(this);
 					Window.clearPane(Window.getInstance().getSidePane());
 					parseEventXML(root, choice);
 				} else {
-					Window.appendToPane(Window.getInstance().getTextPane(), "Invalid choice");
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"Invalid choice");
 
 				}
 
@@ -181,7 +196,8 @@ public class EventReader {
 	}
 
 	/*
-	 * Gets the next XML element. Priority is first child, next sibling, then parents next sibling.
+	 * Gets the next XML element. Priority is first child, next sibling, then
+	 * parents next sibling.
 	 */
 	private static Element getNextElement(Element element) {
 		if (element != null) {
@@ -200,8 +216,10 @@ public class EventReader {
 			}
 
 			if (element.getParent().getParent() != null) {
-				Iterator<Element> parentElements = element.getParent().getParent().elementIterator();
-				while (parentElements.hasNext() && parentElements.next() != element.getParent()) {
+				Iterator<Element> parentElements = element.getParent()
+						.getParent().elementIterator();
+				while (parentElements.hasNext()
+						&& parentElements.next() != element.getParent()) {
 
 				}
 				if (parentElements.hasNext()) {

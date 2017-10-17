@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<event>
+    <branch number = '0'>
+        <choice>
+            <choiceDescription>You notice somthing glinting on the forest floor from underneath some leaves.</choiceDescription>
+            <option branch='1'>Investigate</option>
+            <option branch='2'>Ignore it</option>
+        </choice>       
+    </branch>
+    
+    <branch number='1'>
+        <choice>
+            <choiceDescription>You move the leaves away and find a dagger.</choiceDescription>
+            <option branch='3'>Take it</option>
+            <option branch='4'>Leave it</option>
+        </choice>
+    </branch>
+    
+    <branch number='2'>
+        <text>You ignore it and continue on your way.</text>
+        <end></end>
+    </branch>
+    
+    <branch number='3'>
+        <addItem>dagger</addItem>
+        <end></end>
+    </branch>
+    
+    <branch number='4'>
+        <text>You leave the dagger there and move on.</text>
+        <end></end>
+    </branch>
+</event>
