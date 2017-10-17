@@ -43,7 +43,6 @@ public class Game {
 		Player.getInstance().addItemToInventory(new Item("dagger"));
 		Player.getInstance().addInnateSkill(new Skill("testSkill"));
 		Window.getInstance().getFrame().setVisible(true);
-
 		openExplorationMenu();
 
 	}
@@ -52,9 +51,9 @@ public class Game {
 	 * Opens the main exploration menu and waits for player input
 	 */
 	public static void openExplorationMenu() {
-		Window.clearPane(Window.getInstance().getTextPane());
 		Window.clearPane(window.getSidePane());
-		Window.addToPane(window.getSidePane(), "1: Explore \n2: Move\n3: Gather\n4: Inventory \n5: Status");
+		Window.addToPane(window.getSidePane(),
+				"1: Explore \n2: Move\n3: Gather\n4: Inventory \n5: Status");
 
 		Window.getInstance().addInputObsever(new InputObserver() {
 			@Override
@@ -88,7 +87,8 @@ public class Game {
 					openStatusMenu();
 					break;
 				default:
-					Window.appendToPane(Window.getInstance().getTextPane(), "Invalid Command");
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"Invalid Command");
 					break;
 				}
 
@@ -141,24 +141,29 @@ public class Game {
 	}
 
 	/**
-	 * Opens the out of combat inventory and waits for the player to select an item
-	 * or return to the exploration menu.
+	 * Opens the out of combat inventory and waits for the player to select an
+	 * item or return to the exploration menu.
 	 */
 	public static void inventory() {
 
 		Window.clearPane(window.getSidePane());
 		Window.appendToPane(Window.getInstance().getSidePane(),
 				String.format("%-24s%10s%13s", "Name", "Weight", "Uses Left"));
-		Window.appendToPane(Window.getInstance().getSidePane(), "------------------------------------------------");
-		Window.appendToPane(Window.getInstance().getSidePane(), String.format("0: Back"));
+		Window.appendToPane(Window.getInstance().getSidePane(),
+				"------------------------------------------------");
+		Window.appendToPane(Window.getInstance().getSidePane(),
+				String.format("0: Back"));
 		int i = 1;
 		for (Item item : Player.getInstance().getInventory()) {
 			if (i % 2 != 0) {
-				Window.appendToPaneBackground(Window.getInstance().getSidePane(), i++ + ": " + item.getItemInfo(),
+				Window.appendToPaneBackground(
+						Window.getInstance().getSidePane(),
+						i++ + ": " + item.getItemInfo(),
 						new Color(244, 244, 244));
 
 			} else {
-				Window.appendToPane(Window.getInstance().getSidePane(), i++ + ": " + item.getItemInfo());
+				Window.appendToPane(Window.getInstance().getSidePane(),
+						i++ + ": " + item.getItemInfo());
 
 			}
 
@@ -170,14 +175,16 @@ public class Game {
 				if (isNumeric(evt.getText())) {
 					itemIndex = Integer.parseInt(evt.getText()) - 1;
 				}
-				if (itemIndex >= 0 && itemIndex < Player.getInstance().getInventory().size()) {
+				if (itemIndex >= 0 && itemIndex < Player.getInstance()
+						.getInventory().size()) {
 					itemChoiceMenu(itemIndex);
 					Window.getInstance().removeInputObsever(this);
 				} else if (itemIndex == -1) {
 					Window.getInstance().removeInputObsever(this);
 					openExplorationMenu();
 				} else {
-					Window.appendToPane(Window.getInstance().getTextPane(), "Invalid Command");
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"Invalid Command");
 
 				}
 			}
@@ -220,39 +227,62 @@ public class Game {
 					case 1: // use
 						if (item.isFieldUse()) {
 							if (item.getMaxUses() == 0) {
-								Window.appendToPane(Window.getInstance().getTextPane(), "That item is not usable.");
+								Window.appendToPane(
+										Window.getInstance().getTextPane(),
+										"That item is not usable.");
 							} else {
 								if (item.getUses() <= 0) {
-									Window.appendToPane(Window.getInstance().getTextPane(),
+									Window.appendToPane(
+											Window.getInstance().getTextPane(),
 											"That item is out of uses.");
 
 								} else {
 									Player.getInstance().applyItemEffects(
-											Player.getInstance().getInventoryItem(itemIndex), Player.getInstance());
-									Window.getInstance().removeInputObsever(this);
+											Player.getInstance()
+													.getInventoryItem(
+															itemIndex),
+											Player.getInstance());
+									Window.getInstance()
+											.removeInputObsever(this);
 									inventory();
 								}
 
 							}
 
 						} else {
-							Window.appendToPane(Window.getInstance().getTextPane(), "You cant use that item here.");
+							Window.appendToPane(
+									Window.getInstance().getTextPane(),
+									"You cant use that item here.");
 						}
 
 						break;
 					case 2: // inspect
 						Window.appendToPane(Window.getInstance().getTextPane(),
-								Player.getInstance().getItemDescription(itemIndex));
+								Player.getInstance()
+										.getItemDescription(itemIndex));
 
 						break;
 					case 3: // drop
 						if (item.isEquipped()) {
-							Player.getInstance().unequipInventoryItem(itemIndex);
-							Window.appendToPane(Window.getInstance().getTextPane(), "You threw away the "
-									+ Player.getInstance().removeItemFromInventory(itemIndex).getName() + ".");
+							Player.getInstance()
+									.unequipInventoryItem(itemIndex);
+							Window.appendToPane(
+									Window.getInstance().getTextPane(),
+									"You threw away the "
+											+ Player.getInstance()
+													.removeItemFromInventory(
+															itemIndex)
+													.getName()
+											+ ".");
 						} else {
-							Window.appendToPane(Window.getInstance().getTextPane(), "You threw away the "
-									+ Player.getInstance().removeItemFromInventory(itemIndex).getName() + ".");
+							Window.appendToPane(
+									Window.getInstance().getTextPane(),
+									"You threw away the "
+											+ Player.getInstance()
+													.removeItemFromInventory(
+															itemIndex)
+													.getName()
+											+ ".");
 							Window.getInstance().removeInputObsever(this);
 						}
 
@@ -262,27 +292,33 @@ public class Game {
 					case 4: // equip
 						if (item.isEquippable()) {
 							if (item.isEquipped()) {
-								Player.getInstance().unequipInventoryItem(itemIndex);
+								Player.getInstance()
+										.unequipInventoryItem(itemIndex);
 								inventory();
 							} else {
-								Player.getInstance().equipInventoryItem(itemIndex);
+								Player.getInstance()
+										.equipInventoryItem(itemIndex);
 
 							}
 							Window.getInstance().removeInputObsever(this);
 						} else {
-							Window.appendToPane(Window.getInstance().getTextPane(), "You cant equip that item!");
+							Window.appendToPane(
+									Window.getInstance().getTextPane(),
+									"You cant equip that item!");
 						}
 
 						break;
 					default:
-						Window.appendToPane(Window.getInstance().getTextPane(), "Invalid Command");
+						Window.appendToPane(Window.getInstance().getTextPane(),
+								"Invalid Command");
 						break;
 					}
 
 				}
 			});
 		} else {
-			System.out.println("Somehow you tried to access an item that dosn't exist");
+			System.out.println(
+					"Somehow you tried to access an item that dosn't exist");
 		}
 
 	}
@@ -290,10 +326,12 @@ public class Game {
 	private static void openStatusMenu() {
 		window.swapToPlayerPane();
 		Window.clearPane(window.getPlayerPane());
-		Window.appendToPane(Window.getInstance().getPlayerPane(), Player.getInstance().getStatus());
+		Window.appendToPane(Window.getInstance().getPlayerPane(),
+				Player.getInstance().getStatus());
 
 		Window.clearPane(window.getSidePane());
-		Window.addToPane(window.getSidePane(), "0: Back\n1: View Perks\n2: Spend Stat Points\n3: Spend Perk Points");
+		Window.addToPane(window.getSidePane(),
+				"0: Back\n1: View Perks\n2: Spend Stat Points\n3: Spend Perk Points");
 
 		Window.getInstance().addInputObsever(new InputObserver() {
 			@Override
@@ -312,17 +350,20 @@ public class Game {
 					openExplorationMenu();
 					break;
 				case 1: // View Perks
-					Window.appendToPane(Window.getInstance().getTextPane(), "This command is not implemented yet");
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"This command is not implemented yet");
 					break;
 				case 2: // Spend Stat Points
 					window.removeInputObsever(this);
 					openStatPointMenu();
 					break;
 				case 3: // Spend Perk Points
-					Window.appendToPane(Window.getInstance().getTextPane(), "This command is not implemented yet");
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"This command is not implemented yet");
 					break;
 				default:
-					Window.appendToPane(Window.getInstance().getTextPane(), "Invalid Command");
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"Invalid Command");
 					break;
 				}
 			}
@@ -351,104 +392,136 @@ public class Game {
 		player.setNewLuck(curLuck);
 		player.setNewStatPoints(player.getStatPoints());
 
-		Window.appendToPane(window.getTextPane(), "Points Remaining: " + player.getNewStatPoints());
+		Window.appendToPane(window.getTextPane(),
+				"Points Remaining: " + player.getNewStatPoints());
 		Window.appendToPane(window.getTextPane(), "STAT CURRENT NEW COST");
 
-		Window.addToPane(window.getTextPane(), "VIT   " + curVitality + " -----> ");
+		Window.addToPane(window.getTextPane(),
+				"VIT   " + curVitality + " -----> ");
 		if (player.getNewVitality() > curVitality) {
-			Window.addToPane(window.getTextPane(), Integer.toString(player.getNewVitality()),
+			Window.addToPane(window.getTextPane(),
+					Integer.toString(player.getNewVitality()),
 					Colors.STAT_POINT_INCREASE);
 		} else {
-			Window.addToPane(window.getTextPane(), Integer.toString(player.getNewVitality()));
+			Window.addToPane(window.getTextPane(),
+					Integer.toString(player.getNewVitality()));
 		}
-		if (Math.ceil((double) player.getNewVitality() / 5) > player.getNewStatPoints()) {
+		if (Math.ceil((double) player.getNewVitality() / 5) > player
+				.getNewStatPoints()) {
 			Window.appendToPane(window.getTextPane(),
-					"   (" + (int) Math.ceil((double) player.getNewVitality() / 5) + ")",
+					"   (" + (int) Math
+							.ceil((double) player.getNewVitality() / 5) + ")",
 					Colors.STAT_POINT_CANT_AFFORD);
 		} else {
-			Window.appendToPane(window.getTextPane(),
-					"   (" + (int) Math.ceil((double) player.getNewVitality() / 5) + ")");
+			Window.appendToPane(window.getTextPane(), "   ("
+					+ (int) Math.ceil((double) player.getNewVitality() / 5)
+					+ ")");
 		}
-		
-		Window.addToPane(window.getTextPane(), "STR   " + curStrength + " -----> ");
+
+		Window.addToPane(window.getTextPane(),
+				"STR   " + curStrength + " -----> ");
 		if (player.getNewStrength() > curStrength) {
-			Window.addToPane(window.getTextPane(), Integer.toString(player.getNewStrength()),
+			Window.addToPane(window.getTextPane(),
+					Integer.toString(player.getNewStrength()),
 					Colors.STAT_POINT_INCREASE);
 		} else {
-			Window.addToPane(window.getTextPane(), Integer.toString(player.getNewStrength()));
+			Window.addToPane(window.getTextPane(),
+					Integer.toString(player.getNewStrength()));
 		}
-		if (Math.ceil((double) player.getNewStrength() / 5) > player.getNewStatPoints()) {
+		if (Math.ceil((double) player.getNewStrength() / 5) > player
+				.getNewStatPoints()) {
 			Window.appendToPane(window.getTextPane(),
-					"   (" + (int) Math.ceil((double) player.getNewStrength() / 5) + ")",
+					"   (" + (int) Math
+							.ceil((double) player.getNewStrength() / 5) + ")",
 					Colors.STAT_POINT_CANT_AFFORD);
 		} else {
-			Window.appendToPane(window.getTextPane(),
-					"   (" + (int) Math.ceil((double) player.getNewStrength() / 5) + ")");
+			Window.appendToPane(window.getTextPane(), "   ("
+					+ (int) Math.ceil((double) player.getNewStrength() / 5)
+					+ ")");
 		}
-		
-		Window.addToPane(window.getTextPane(), "DEX   " + curDexterity + " -----> ");
+
+		Window.addToPane(window.getTextPane(),
+				"DEX   " + curDexterity + " -----> ");
 		if (player.getNewDexterity() > curDexterity) {
-			Window.addToPane(window.getTextPane(), Integer.toString(player.getNewDexterity()),
+			Window.addToPane(window.getTextPane(),
+					Integer.toString(player.getNewDexterity()),
 					Colors.STAT_POINT_INCREASE);
 		} else {
-			Window.addToPane(window.getTextPane(), Integer.toString(player.getNewDexterity()));
+			Window.addToPane(window.getTextPane(),
+					Integer.toString(player.getNewDexterity()));
 		}
-		if (Math.ceil((double) player.getNewDexterity() / 5) > player.getNewStatPoints()) {
+		if (Math.ceil((double) player.getNewDexterity() / 5) > player
+				.getNewStatPoints()) {
 			Window.appendToPane(window.getTextPane(),
-					"   (" + (int) Math.ceil((double) player.getNewDexterity() / 5) + ")",
+					"   (" + (int) Math
+							.ceil((double) player.getNewDexterity() / 5) + ")",
 					Colors.STAT_POINT_CANT_AFFORD);
 		} else {
-			Window.appendToPane(window.getTextPane(),
-					"   (" + (int) Math.ceil((double) player.getNewDexterity() / 5) + ")");
+			Window.appendToPane(window.getTextPane(), "   ("
+					+ (int) Math.ceil((double) player.getNewDexterity() / 5)
+					+ ")");
 		}
-		
-		Window.addToPane(window.getTextPane(), "INT   " + curIntellect + " -----> ");
+
+		Window.addToPane(window.getTextPane(),
+				"INT   " + curIntellect + " -----> ");
 		if (player.getNewIntellect() > curIntellect) {
-			Window.addToPane(window.getTextPane(), Integer.toString(player.getNewIntellect()),
+			Window.addToPane(window.getTextPane(),
+					Integer.toString(player.getNewIntellect()),
 					Colors.STAT_POINT_INCREASE);
 		} else {
-			Window.addToPane(window.getTextPane(), Integer.toString(player.getNewIntellect()));
+			Window.addToPane(window.getTextPane(),
+					Integer.toString(player.getNewIntellect()));
 		}
-		if (Math.ceil((double) player.getNewIntellect() / 5) > player.getNewStatPoints()) {
+		if (Math.ceil((double) player.getNewIntellect() / 5) > player
+				.getNewStatPoints()) {
 			Window.appendToPane(window.getTextPane(),
-					"   (" + (int) Math.ceil((double) player.getNewIntellect() / 5) + ")",
+					"   (" + (int) Math
+							.ceil((double) player.getNewIntellect() / 5) + ")",
 					Colors.STAT_POINT_CANT_AFFORD);
 		} else {
-			Window.appendToPane(window.getTextPane(),
-					"   (" + (int) Math.ceil((double) player.getNewIntellect() / 5) + ")");
+			Window.appendToPane(window.getTextPane(), "   ("
+					+ (int) Math.ceil((double) player.getNewIntellect() / 5)
+					+ ")");
 		}
 
-
-		Window.addToPane(window.getTextPane(), "SPR   " + curSpirit + " -----> ");
+		Window.addToPane(window.getTextPane(),
+				"SPR   " + curSpirit + " -----> ");
 		if (player.getNewSpirit() > curSpirit) {
-			Window.addToPane(window.getTextPane(), Integer.toString(player.getNewSpirit()),
+			Window.addToPane(window.getTextPane(),
+					Integer.toString(player.getNewSpirit()),
 					Colors.STAT_POINT_INCREASE);
 		} else {
-			Window.addToPane(window.getTextPane(), Integer.toString(player.getNewSpirit()));
+			Window.addToPane(window.getTextPane(),
+					Integer.toString(player.getNewSpirit()));
 		}
-		if (Math.ceil((double) player.getNewSpirit() / 5) > player.getNewStatPoints()) {
-			Window.appendToPane(window.getTextPane(),
-					"   (" + (int) Math.ceil((double) player.getNewSpirit() / 5) + ")",
+		if (Math.ceil((double) player.getNewSpirit() / 5) > player
+				.getNewStatPoints()) {
+			Window.appendToPane(window.getTextPane(), "   ("
+					+ (int) Math.ceil((double) player.getNewSpirit() / 5) + ")",
 					Colors.STAT_POINT_CANT_AFFORD);
 		} else {
 			Window.appendToPane(window.getTextPane(),
-					"   (" + (int) Math.ceil((double) player.getNewSpirit() / 5) + ")");
+					"   (" + (int) Math.ceil((double) player.getNewSpirit() / 5)
+							+ ")");
 		}
-		
+
 		Window.addToPane(window.getTextPane(), "LCK   " + curLuck + " -----> ");
 		if (player.getNewLuck() > curLuck) {
-			Window.addToPane(window.getTextPane(), Integer.toString(player.getNewLuck()),
+			Window.addToPane(window.getTextPane(),
+					Integer.toString(player.getNewLuck()),
 					Colors.STAT_POINT_INCREASE);
 		} else {
-			Window.addToPane(window.getTextPane(), Integer.toString(player.getNewLuck()));
+			Window.addToPane(window.getTextPane(),
+					Integer.toString(player.getNewLuck()));
 		}
-		if (Math.ceil((double) player.getNewLuck() / 5) > player.getNewStatPoints()) {
-			Window.appendToPane(window.getTextPane(),
-					"   (" + (int) Math.ceil((double) player.getNewLuck() / 5) + ")",
+		if (Math.ceil((double) player.getNewLuck() / 5) > player
+				.getNewStatPoints()) {
+			Window.appendToPane(window.getTextPane(), "   ("
+					+ (int) Math.ceil((double) player.getNewLuck() / 5) + ")",
 					Colors.STAT_POINT_CANT_AFFORD);
 		} else {
-			Window.appendToPane(window.getTextPane(),
-					"   (" + (int) Math.ceil((double) player.getNewLuck() / 5) + ")");
+			Window.appendToPane(window.getTextPane(), "   ("
+					+ (int) Math.ceil((double) player.getNewLuck() / 5) + ")");
 		}
 		Window.getInstance().addInputObsever(new InputObserver() {
 			@Override
@@ -475,60 +548,77 @@ public class Game {
 
 						player.setStatPoints(player.getNewStatPoints());
 
+						player.recalculateStats();
+
 						window.removeInputObsever(this);
 						print = false;
+						
 						openStatusMenu();
 						break;
 					case 2:
-						cost = (int) Math.ceil((double) player.getNewVitality() / 5);
+						cost = (int) Math
+								.ceil((double) player.getNewVitality() / 5);
 						System.out.println(cost);
 						System.out.println(player.getNewStatPoints());
 						if (player.getNewStatPoints() >= cost) {
 							player.setNewVitality(player.getNewVitality() + 1);
-							player.setNewStatPoints(player.getNewStatPoints() - cost);
+							player.setNewStatPoints(
+									player.getNewStatPoints() - cost);
 						}
 						break;
 					case 3:
-						cost = (int) Math.ceil((double) player.getNewStrength() / 5);
+						cost = (int) Math
+								.ceil((double) player.getNewStrength() / 5);
 						System.out.println(cost);
 						System.out.println(player.getNewStatPoints());
 						if (player.getNewStatPoints() >= cost) {
 							player.setNewStrength(player.getNewStrength() + 1);
-							player.setNewStatPoints(player.getNewStatPoints() - cost);
+							player.setNewStatPoints(
+									player.getNewStatPoints() - cost);
 						}
 						break;
 					case 4:
-						cost = (int) Math.ceil((double) player.getNewDexterity() / 5);
+						cost = (int) Math
+								.ceil((double) player.getNewDexterity() / 5);
 						System.out.println(cost);
 						System.out.println(player.getNewStatPoints());
 						if (player.getNewStatPoints() >= cost) {
-							player.setNewDexterity(player.getNewDexterity() + 1);
-							player.setNewStatPoints(player.getNewStatPoints() - cost);
+							player.setNewDexterity(
+									player.getNewDexterity() + 1);
+							player.setNewStatPoints(
+									player.getNewStatPoints() - cost);
 						}
 						break;
 					case 5:
-						cost = (int) Math.ceil((double) player.getNewIntellect() / 5);
+						cost = (int) Math
+								.ceil((double) player.getNewIntellect() / 5);
 						System.out.println(cost);
 						System.out.println(player.getNewStatPoints());
 						if (player.getNewStatPoints() >= cost) {
-							player.setNewIntellect(player.getNewIntellect() + 1);
-							player.setNewStatPoints(player.getNewStatPoints() - cost);
+							player.setNewIntellect(
+									player.getNewIntellect() + 1);
+							player.setNewStatPoints(
+									player.getNewStatPoints() - cost);
 						}
 						break;
 					case 6:
-						cost = (int) Math.ceil((double) player.getNewSpirit() / 5);
+						cost = (int) Math
+								.ceil((double) player.getNewSpirit() / 5);
 						System.out.println(cost);
 						System.out.println(player.getNewStatPoints());
 						if (player.getNewStatPoints() >= cost) {
 							player.setNewSpirit(player.getNewSpirit() + 1);
-							player.setNewStatPoints(player.getNewStatPoints() - cost);
+							player.setNewStatPoints(
+									player.getNewStatPoints() - cost);
 						}
 						break;
 					case 7:
-						cost = (int) Math.ceil((double) player.getNewLuck() / 5);
+						cost = (int) Math
+								.ceil((double) player.getNewLuck() / 5);
 						if (player.getNewStatPoints() >= cost) {
 							player.setNewLuck(player.getNewLuck() + 1);
-							player.setNewStatPoints(player.getNewStatPoints() - cost);
+							player.setNewStatPoints(
+									player.getNewStatPoints() - cost);
 						}
 						break;
 
@@ -541,103 +631,154 @@ public class Game {
 				Window.clearPane(window.getTextPane());
 
 				if (print) {
-					Window.appendToPane(window.getTextPane(), "Points Remaining: " + player.getNewStatPoints());
-					Window.appendToPane(window.getTextPane(), "STAT CURRENT NEW COST");
-					Window.addToPane(window.getTextPane(), "VIT   " + curVitality + " -----> ");
+					Window.appendToPane(window.getTextPane(),
+							"Points Remaining: " + player.getNewStatPoints());
+					Window.appendToPane(window.getTextPane(),
+							"STAT CURRENT NEW COST");
+					Window.addToPane(window.getTextPane(),
+							"VIT   " + curVitality + " -----> ");
 					if (player.getNewVitality() > curVitality) {
-						Window.addToPane(window.getTextPane(), Integer.toString(player.getNewVitality()),
+						Window.addToPane(window.getTextPane(),
+								Integer.toString(player.getNewVitality()),
 								Colors.STAT_POINT_INCREASE);
 					} else {
-						Window.addToPane(window.getTextPane(), Integer.toString(player.getNewVitality()));
+						Window.addToPane(window.getTextPane(),
+								Integer.toString(player.getNewVitality()));
 					}
-					if (Math.ceil((double) player.getNewVitality() / 5) > player.getNewStatPoints()) {
+					if (Math.ceil((double) player.getNewVitality() / 5) > player
+							.getNewStatPoints()) {
 						Window.appendToPane(window.getTextPane(),
-								"   (" + (int) Math.ceil((double) player.getNewVitality() / 5) + ")",
+								"   (" + (int) Math.ceil(
+										(double) player.getNewVitality() / 5)
+										+ ")",
 								Colors.STAT_POINT_CANT_AFFORD);
 					} else {
 						Window.appendToPane(window.getTextPane(),
-								"   (" + (int) Math.ceil((double) player.getNewVitality() / 5) + ")");
+								"   (" + (int) Math.ceil(
+										(double) player.getNewVitality() / 5)
+										+ ")");
 					}
-					
-					Window.addToPane(window.getTextPane(), "STR   " + curStrength + " -----> ");
+
+					Window.addToPane(window.getTextPane(),
+							"STR   " + curStrength + " -----> ");
 					if (player.getNewStrength() > curStrength) {
-						Window.addToPane(window.getTextPane(), Integer.toString(player.getNewStrength()),
+						Window.addToPane(window.getTextPane(),
+								Integer.toString(player.getNewStrength()),
 								Colors.STAT_POINT_INCREASE);
 					} else {
-						Window.addToPane(window.getTextPane(), Integer.toString(player.getNewStrength()));
+						Window.addToPane(window.getTextPane(),
+								Integer.toString(player.getNewStrength()));
 					}
-					if (Math.ceil((double) player.getNewStrength() / 5) > player.getNewStatPoints()) {
+					if (Math.ceil((double) player.getNewStrength() / 5) > player
+							.getNewStatPoints()) {
 						Window.appendToPane(window.getTextPane(),
-								"   (" + (int) Math.ceil((double) player.getNewStrength() / 5) + ")",
+								"   (" + (int) Math.ceil(
+										(double) player.getNewStrength() / 5)
+										+ ")",
 								Colors.STAT_POINT_CANT_AFFORD);
 					} else {
 						Window.appendToPane(window.getTextPane(),
-								"   (" + (int) Math.ceil((double) player.getNewStrength() / 5) + ")");
+								"   (" + (int) Math.ceil(
+										(double) player.getNewStrength() / 5)
+										+ ")");
 					}
-					
-					Window.addToPane(window.getTextPane(), "DEX   " + curDexterity + " -----> ");
+
+					Window.addToPane(window.getTextPane(),
+							"DEX   " + curDexterity + " -----> ");
 					if (player.getNewDexterity() > curDexterity) {
-						Window.addToPane(window.getTextPane(), Integer.toString(player.getNewDexterity()),
+						Window.addToPane(window.getTextPane(),
+								Integer.toString(player.getNewDexterity()),
 								Colors.STAT_POINT_INCREASE);
 					} else {
-						Window.addToPane(window.getTextPane(), Integer.toString(player.getNewDexterity()));
+						Window.addToPane(window.getTextPane(),
+								Integer.toString(player.getNewDexterity()));
 					}
-					if (Math.ceil((double) player.getNewDexterity() / 5) > player.getNewStatPoints()) {
+					if (Math.ceil(
+							(double) player.getNewDexterity() / 5) > player
+									.getNewStatPoints()) {
 						Window.appendToPane(window.getTextPane(),
-								"   (" + (int) Math.ceil((double) player.getNewDexterity() / 5) + ")",
+								"   (" + (int) Math.ceil(
+										(double) player.getNewDexterity() / 5)
+										+ ")",
 								Colors.STAT_POINT_CANT_AFFORD);
 					} else {
 						Window.appendToPane(window.getTextPane(),
-								"   (" + (int) Math.ceil((double) player.getNewDexterity() / 5) + ")");
+								"   (" + (int) Math.ceil(
+										(double) player.getNewDexterity() / 5)
+										+ ")");
 					}
-					
-					Window.addToPane(window.getTextPane(), "INT   " + curIntellect + " -----> ");
+
+					Window.addToPane(window.getTextPane(),
+							"INT   " + curIntellect + " -----> ");
 					if (player.getNewIntellect() > curIntellect) {
-						Window.addToPane(window.getTextPane(), Integer.toString(player.getNewIntellect()),
+						Window.addToPane(window.getTextPane(),
+								Integer.toString(player.getNewIntellect()),
 								Colors.STAT_POINT_INCREASE);
 					} else {
-						Window.addToPane(window.getTextPane(), Integer.toString(player.getNewIntellect()));
+						Window.addToPane(window.getTextPane(),
+								Integer.toString(player.getNewIntellect()));
 					}
-					if (Math.ceil((double) player.getNewIntellect() / 5) > player.getNewStatPoints()) {
+					if (Math.ceil(
+							(double) player.getNewIntellect() / 5) > player
+									.getNewStatPoints()) {
 						Window.appendToPane(window.getTextPane(),
-								"   (" + (int) Math.ceil((double) player.getNewIntellect() / 5) + ")",
+								"   (" + (int) Math.ceil(
+										(double) player.getNewIntellect() / 5)
+										+ ")",
 								Colors.STAT_POINT_CANT_AFFORD);
 					} else {
 						Window.appendToPane(window.getTextPane(),
-								"   (" + (int) Math.ceil((double) player.getNewIntellect() / 5) + ")");
+								"   (" + (int) Math.ceil(
+										(double) player.getNewIntellect() / 5)
+										+ ")");
 					}
 
-
-					Window.addToPane(window.getTextPane(), "SPR   " + curSpirit + " -----> ");
+					Window.addToPane(window.getTextPane(),
+							"SPR   " + curSpirit + " -----> ");
 					if (player.getNewSpirit() > curSpirit) {
-						Window.addToPane(window.getTextPane(), Integer.toString(player.getNewSpirit()),
+						Window.addToPane(window.getTextPane(),
+								Integer.toString(player.getNewSpirit()),
 								Colors.STAT_POINT_INCREASE);
 					} else {
-						Window.addToPane(window.getTextPane(), Integer.toString(player.getNewSpirit()));
+						Window.addToPane(window.getTextPane(),
+								Integer.toString(player.getNewSpirit()));
 					}
-					if (Math.ceil((double) player.getNewSpirit() / 5) > player.getNewStatPoints()) {
+					if (Math.ceil((double) player.getNewSpirit() / 5) > player
+							.getNewStatPoints()) {
 						Window.appendToPane(window.getTextPane(),
-								"   (" + (int) Math.ceil((double) player.getNewSpirit() / 5) + ")",
+								"   (" + (int) Math.ceil(
+										(double) player.getNewSpirit() / 5)
+										+ ")",
 								Colors.STAT_POINT_CANT_AFFORD);
 					} else {
 						Window.appendToPane(window.getTextPane(),
-								"   (" + (int) Math.ceil((double) player.getNewSpirit() / 5) + ")");
+								"   (" + (int) Math.ceil(
+										(double) player.getNewSpirit() / 5)
+										+ ")");
 					}
-					
-					Window.addToPane(window.getTextPane(), "LCK   " + curLuck + " -----> ");
+
+					Window.addToPane(window.getTextPane(),
+							"LCK   " + curLuck + " -----> ");
 					if (player.getNewLuck() > curLuck) {
-						Window.addToPane(window.getTextPane(), Integer.toString(player.getNewLuck()),
+						Window.addToPane(window.getTextPane(),
+								Integer.toString(player.getNewLuck()),
 								Colors.STAT_POINT_INCREASE);
 					} else {
-						Window.addToPane(window.getTextPane(), Integer.toString(player.getNewLuck()));
+						Window.addToPane(window.getTextPane(),
+								Integer.toString(player.getNewLuck()));
 					}
-					if (Math.ceil((double) player.getNewLuck() / 5) > player.getNewStatPoints()) {
+					if (Math.ceil((double) player.getNewLuck() / 5) > player
+							.getNewStatPoints()) {
 						Window.appendToPane(window.getTextPane(),
-								"   (" + (int) Math.ceil((double) player.getNewLuck() / 5) + ")",
+								"   (" + (int) Math
+										.ceil((double) player.getNewLuck() / 5)
+										+ ")",
 								Colors.STAT_POINT_CANT_AFFORD);
 					} else {
 						Window.appendToPane(window.getTextPane(),
-								"   (" + (int) Math.ceil((double) player.getNewLuck() / 5) + ")");
+								"   (" + (int) Math
+										.ceil((double) player.getNewLuck() / 5)
+										+ ")");
 					}
 
 				}
@@ -694,6 +835,7 @@ public class Game {
 	 * prints the status of the player to the textPane
 	 */
 	private static void printStatus() {
-		Window.appendToPane(Window.getInstance().getTextPane(), Player.getInstance().getStatus());
+		Window.appendToPane(Window.getInstance().getTextPane(),
+				Player.getInstance().getStatus());
 	}
 }

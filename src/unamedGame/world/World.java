@@ -49,7 +49,6 @@ public class World {
 	private void fillWorldFromIntGrid(int[][] intGrid) {
 		for (int i = 0; i < intGrid.length; i++) {
 			for (int j = 0; j < intGrid[i].length; j++) {
-				System.out.print(intGrid[i][j]);
 				switch (intGrid[i][j]) {
 				case 0:
 					world[i][j] = new WorldTile("ocean", 0, 0, 'o',
@@ -72,7 +71,6 @@ public class World {
 					break;
 				}
 			}
-			System.out.print("\n");
 
 		}
 	}
@@ -99,9 +97,7 @@ public class World {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		for (int j = 0; j < intGrid.length; j++) {
-			System.out.println(Arrays.toString(intGrid[j]));
-		}
+		
 		
 		return intGrid;
 	}
