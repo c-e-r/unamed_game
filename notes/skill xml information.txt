@@ -14,6 +14,7 @@
     attackHitBonus              [OPTIONAL: default 0]       the amount of bonus hit granted by the skill
     attackSpeedBonus            [OPTIONAL: default 0]       the amount of bonus speed granted by the skill
     skillType                   [REQUIRED]                  used by ai to decide what to do. Valid options are "offensive","buff", "debuff", "heal"
+    offhandSkill                [OPTIONAL: default false]   specifies if the skill should use the offhand weapon for its attack
     
     <hitEffect>                 [OPTIONAL]      the name of an effect that will apply if the skill hits. Can have multiple
     <missEffect>                [OPTIONAL]      the name of an effect that will apply if the skill misses. Can have multiple

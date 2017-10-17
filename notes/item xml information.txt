@@ -35,12 +35,13 @@
     <spellFocus>                    [OPTIONAL: default 'false']             if the item can be uased as a spell focus
     <spellFocusHitChance>           [SITUATIONAL for spellFocus = 'true']   the bonus to spell attacks hit chance made while using this item as a mainhand weapon
     <spellFocusSpeed>               [SITUATIONAL for spellFocus = 'true']   the bonus to speed while casting a spell and using this item as a mainhand weapon
-    <slashingReduction>             [OPTIONAL: default 1]                   the amount of slashing reduction granted by having this item equipped
-    <piercingReduction>             [OPTIONAL: default 1]                   the amount of piercing reduction granted by having this item equipped
-    <bludgeoningReduction>          [OPTIONAL: default 1]                   the amount of bludgeoning reduction granted by having this item equipped
-    <fireReduction>                 [OPTIONAL: default 1]                   the amount of fire reduction granted by having this item equipped
-    <coldReduction>                 [OPTIONAL: default 1]                   the amount of cold reduction granted by having this item equipped
-    <electricityReduction>          [OPTIONAL: default 1]                   the amount of electric reduction granted by having this item equipped
-    <sacredReduction>               [OPTIONAL: default 1]                   the amount of sacred reduction granted by having this item equipped
-    <profaneReduction>              [OPTIONAL: default 1]                   the amount of profane reduction granted by having this item equipped
-    <poisonReduction>               [OPTIONAL: default 1]                   the amount of poison reduction granted by having this item equipped
+    <slashingReduction>             [OPTIONAL: default 0]                   the amount of slashing reduction granted by having this item equipped
+    <piercingReduction>             [OPTIONAL: default 0]                   the amount of piercing reduction granted by having this item equipped
+    <bludgeoningReduction>          [OPTIONAL: default 0]                   the amount of bludgeoning reduction granted by having this item equipped
+    <fireReduction>                 [OPTIONAL: default 0]                   the amount of fire reduction granted by having this item equipped
+    <coldReduction>                 [OPTIONAL: default 0]                   the amount of cold reduction granted by having this item equipped
+    <electricityReduction>          [OPTIONAL: default 0]                   the amount of electric reduction granted by having this item equipped
+    <sacredReduction>               [OPTIONAL: default 0]                   the amount of sacred reduction granted by having this item equipped
+    <profaneReduction>              [OPTIONAL: default 0]                   the amount of profane reduction granted by having this item equipped
+    <poisonReduction>               [OPTIONAL: default 0]                   the amount of poison reduction granted by having this item equipped
+    <strRequirement>                [OPTIONAL: default 0]                   the amount of strenght required to use this item as a weapon effectively
