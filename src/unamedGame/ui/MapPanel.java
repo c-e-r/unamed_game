@@ -217,10 +217,7 @@ public class MapPanel extends JPanel {
 	private static WorldTile getMapTile(CubePoint playerCubePoint, int direction) {
 		Point point = CubePoint.cubePointToPoint(CubePoint.getCubeNeighbor(playerCubePoint, direction));
 
-		if (point.x < 0 || point.y < 0) {
-			return new WorldTile();
-		}
-		return World.getInstance().getWorld()[point.x][point.y];
+		return World.getInstance().getTile(point);
 
 	}
 

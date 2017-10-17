@@ -41,7 +41,7 @@ public class CubePoint {
 	public static final CubePoint[] CUBE_DIRECTIONS_9 = {
 			new CubePoint(-4, 4, 0), new CubePoint(-4, 3, 1),
 			new CubePoint(-4, 2, 2), new CubePoint(-4, 1, 3),
-			new CubePoint(-4, 0, 4), new CubePoint(-3, 4, 1),
+			new CubePoint(-4, 0, 4), new CubePoint(-3, 4, -1),
 			new CubePoint(-3, 3, 0), new CubePoint(-3, 2, 1),
 			new CubePoint(-3, 1, 2), new CubePoint(-3, 0, 3),
 			new CubePoint(-3, -1, 4), new CubePoint(-2, 4, -2),

@@ -65,7 +65,7 @@ public class Player extends Entity {
 		currentHealth = maxHealth;
 		currentStamina = maxStamina;
 		currentMana = maxMana;
-		location = new Point(2, 2);
+		location = new Point(4, 4);
 		inventory = new ArrayList<Item>();
 		permanantEffects = new ArrayList<Effect>();
 		equipmentEffects = new ArrayList<Effect>();
