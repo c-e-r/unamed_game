@@ -7,6 +7,8 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -29,6 +31,8 @@ import unamedGame.ui.Window;
  *
  */
 public class EventReader {
+
+	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	private static Element currentElement;
 	private static Element root;
@@ -54,7 +58,10 @@ public class EventReader {
 			parseEventXML(root, 0);
 
 		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
+			Window.appendToPane(Window.getInstance().getTextPane(),
+					"ERROR: " + e.getMessage());
+			Game.openExplorationMenu();
+			LOG.error("Error loading event xml file", e);
 			e.printStackTrace();
 		}
 
@@ -151,20 +158,33 @@ public class EventReader {
 			interpretElement(currentElement);
 			return true;
 		case "combat":
-			new Combat(new Enemy(element.getText()));
+			Enemy newEnemy = Enemy.buildEnemy(element.getText());
+			if (newEnemy != null) {
+				new Combat(newEnemy, Combat.FROM_EVENT);
+			} else {
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						"ERROR: Somthing went wrong while creating an enemy. See game.log for more info.");
+			}
+
 			return false;
 		case "addItem":
-			Item item = Player.getInstance()
-					.addItemToInventory(new Item(element.getText()));
-			Window.appendToPane(Window.getInstance().getTextPane(),
-					Game.capitalizeFirstLetter(item.getName())
-							+ " added to inventory");
+			Item newItem = Item.buildItem(element.getText());
+			if (newItem != null) {
+				Item item = Player.getInstance().addItemToInventory(newItem);
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(item.getName())
+								+ " added to inventory");
+			} else {
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						"ERROR: Somthing went wrong adding an item to your inventry. See game.log for more information.");
+			}
 			return true;
 		default:
-			System.out.println("Error unrecognized element name: "
+			LOG.error("Error unrecognized element name: "
 					+ currentElement.getName());
 			return false;
 		}
+
 	}
 
 	/*
@@ -177,7 +197,8 @@ public class EventReader {
 			public void inputChanged(InputEvent evt) {
 				int choice = -1;
 				if (Game.isNumeric(evt.getText())
-						&& Integer.parseInt(evt.getText()) <= max) {
+						&& Integer.parseInt(evt.getText()) <= max
+						&& Integer.parseInt(evt.getText()) > 0) {
 					choice = Integer.parseInt(((Element) choices
 							.get(Integer.parseInt(evt.getText()) - 1))
 									.attributeValue("branch"));

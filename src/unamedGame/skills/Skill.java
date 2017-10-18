@@ -8,12 +8,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import unamedGame.Game;
 import unamedGame.effects.Effect;
+import unamedGame.items.Item;
+import unamedGame.ui.Window;
 
 /**
  * 
@@ -22,6 +27,8 @@ import unamedGame.effects.Effect;
  *
  */
 public class Skill {
+
+	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	private List<Skill> hitSkills;
 	private List<Skill> alwaysSkills;
@@ -52,28 +59,39 @@ public class Skill {
 	 * 
 	 * @param filename
 	 *            the filename of the skill to create
+	 * @throws DocumentException
 	 */
-	public Skill(String filename) {
+	private Skill(String filename) throws DocumentException {
 		loadSkillFromXML(filename);
+	}
+
+	public static Skill buildSkill(String skillName) {
+		Skill temp;
+		try {
+			temp = new Skill(skillName);
+			return temp;
+
+		} catch (DocumentException e) {
+			LOG.error("Error building item from xml file", e);
+			e.printStackTrace();
+			return null;
+
+		}
 	}
 
 	/**
 	 * Load a skills information from an xml file
 	 * 
 	 * @param filename
+	 * @throws DocumentException
 	 */
-	public void loadSkillFromXML(String filename) {
+	public void loadSkillFromXML(String filename) throws DocumentException {
 		SAXReader reader = new SAXReader();
-		try {
-			File inputFile = new File("data/skills/" + filename + ".xml");
-			Document document = reader.read(inputFile);
+		File inputFile = new File("data/skills/" + filename + ".xml");
+		Document document = reader.read(inputFile);
 
-			Element root = document.getRootElement();
-			buildSkill(root);
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Element root = document.getRootElement();
+		buildSkill(root);
 	}
 
 	/**
@@ -149,13 +167,31 @@ public class Skill {
 				addAlwaysEffect(Effect.buildEffect(temp));
 				break;
 			case "hitSkill":
-				addHitSkill(new Skill(temp.getTextTrim()));
+				Skill newHitSkill = Skill.buildSkill(temp.getTextTrim());
+				if (newHitSkill != null) {
+					addHitSkill(newHitSkill);
+				} else {
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"ERROR: Somthing went wrong when creating a skill. See game.log for more information.");
+				}
 				break;
 			case "missSkill":
-				addMissSkill(new Skill(temp.getTextTrim()));
+				Skill newMissSkill = Skill.buildSkill(temp.getTextTrim());
+				if (newMissSkill != null) {
+					addMissSkill(newMissSkill);
+				} else {
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"ERROR: Somthing went wrong when creating a skill. See game.log for more information.");
+				}
 				break;
 			case "alwaysSkill":
-				addAlwaysSkill(new Skill(temp.getTextTrim()));
+				Skill newAlwaysSkill = Skill.buildSkill(temp.getTextTrim());
+				if (newAlwaysSkill != null) {
+					addAlwaysSkill(newAlwaysSkill);
+				} else {
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"ERROR: Somthing went wrong when creating a skill. See game.log for more information.");
+				}
 				break;
 			default:
 				break;

@@ -19,6 +19,10 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import unamedGame.Game;
 import unamedGame.input.InputEvent;
 import unamedGame.input.InputObserver;
 
@@ -35,6 +39,8 @@ import java.awt.event.MouseListener;
 import javax.swing.JSplitPane;
 
 public class Window {
+
+	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	private boolean mapState = true;
 
@@ -99,7 +105,8 @@ public class Window {
 		textScrollPane = new JScrollPane();
 		panel.add(textScrollPane, BorderLayout.SOUTH);
 
-		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panel2, textScrollPane);
+		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panel2,
+				textScrollPane);
 		panel.add(splitPane);
 
 		splitPane.setResizeWeight(0.0);
@@ -108,7 +115,8 @@ public class Window {
 
 		mapScrollPane = new JScrollPane();
 		sideScrollPane = new JScrollPane();
-		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mapScrollPane, sideScrollPane);
+		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mapScrollPane,
+				sideScrollPane);
 
 		splitPane2.setResizeWeight(0.0);
 
@@ -239,7 +247,8 @@ public class Window {
 	public static void addToPane(JTextPane pane, String msg, Color c) {
 		StyledDocument doc = pane.getStyledDocument();
 		StyleContext sc = StyleContext.getDefaultStyleContext();
-		AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+		AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
+				StyleConstants.Foreground, c);
 		try {
 			doc.insertString(doc.getLength(), msg, aset);
 
@@ -247,7 +256,7 @@ public class Window {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+		LOG.debug(msg);
 	}
 
 	/**
@@ -261,7 +270,8 @@ public class Window {
 	public static void addToPane(JTextPane pane, String msg) {
 		StyledDocument doc = pane.getStyledDocument();
 		StyleContext sc = StyleContext.getDefaultStyleContext();
-		AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, Color.BLACK);
+		AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
+				StyleConstants.Foreground, Color.BLACK);
 		try {
 			doc.insertString(doc.getLength(), msg, aset);
 
@@ -269,7 +279,7 @@ public class Window {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+		LOG.debug(msg);
 	}
 
 	/**
@@ -286,7 +296,8 @@ public class Window {
 	public static void appendToPane(JTextPane pane, String msg, Color c) {
 		StyledDocument doc = pane.getStyledDocument();
 		StyleContext sc = StyleContext.getDefaultStyleContext();
-		AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+		AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
+				StyleConstants.Foreground, c);
 		try {
 			doc.insertString(doc.getLength(), msg + "\n", aset);
 
@@ -294,12 +305,13 @@ public class Window {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		LOG.debug(msg);
 
 	}
 
 	/**
-	 * Adds the given string to the given pane with a background of the given color
-	 * with a newline character
+	 * Adds the given string to the given pane with a background of the given
+	 * color with a newline character
 	 * 
 	 * @param pane
 	 *            the pane to add the string to
@@ -308,10 +320,12 @@ public class Window {
 	 * @param c
 	 *            the color of the string background
 	 */
-	public static void appendToPaneBackground(JTextPane pane, String msg, Color c) {
+	public static void appendToPaneBackground(JTextPane pane, String msg,
+			Color c) {
 		StyledDocument doc = pane.getStyledDocument();
 		StyleContext sc = StyleContext.getDefaultStyleContext();
-		AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, c);
+		AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
+				StyleConstants.Background, c);
 		try {
 			doc.insertString(doc.getLength(), msg + "\n", aset);
 
@@ -319,6 +333,7 @@ public class Window {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		LOG.debug(msg);
 
 	}
 
@@ -333,7 +348,8 @@ public class Window {
 	public static void appendToPane(JTextPane pane, String msg) {
 		StyledDocument doc = pane.getStyledDocument();
 		StyleContext sc = StyleContext.getDefaultStyleContext();
-		AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, Color.BLACK);
+		AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
+				StyleConstants.Foreground, Color.BLACK);
 		try {
 			doc.insertString(doc.getLength(), msg + "\n", aset);
 
@@ -341,6 +357,7 @@ public class Window {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		LOG.debug(msg);
 
 	}
 
@@ -441,7 +458,8 @@ public class Window {
 
 	protected void fireInputChanged(String text) {
 
-		InputObserver[] listeners = listenerList.getListeners(InputObserver.class);
+		InputObserver[] listeners = listenerList
+				.getListeners(InputObserver.class);
 		if (listeners.length > 0) {
 
 			InputEvent evt = new InputEvent(this, text);

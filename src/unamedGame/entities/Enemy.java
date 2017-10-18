@@ -7,6 +7,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -24,6 +27,8 @@ import unamedGame.ui.Window;
  *
  */
 public class Enemy extends Entity {
+
+	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	private String description;
 	private String deathDescription;
@@ -43,7 +48,7 @@ public class Enemy extends Entity {
 	 * 
 	 * @param fileName
 	 */
-	public Enemy(String fileName) {
+	private Enemy(String fileName) throws DocumentException {
 		itemSkills = new ArrayList<Skill>();
 		equipment = new Item[7];
 		inventory = new ArrayList<Item>();
@@ -57,10 +62,25 @@ public class Enemy extends Entity {
 		effects = new ArrayList<Effect>();
 
 		loadEnemyFromXML(fileName);
+
 		calculateDerivedStats();
 		reloadSkills();
 		calculateChances();
 		currentHealth = maxHealth;
+	}
+
+	public static Enemy buildEnemy(String enemyName) {
+		Enemy temp;
+		try {
+			temp = new Enemy(enemyName);
+			return temp;
+
+		} catch (DocumentException e) {
+			LOG.error("Error building enemy from xml file", e);
+			e.printStackTrace();
+			return null;
+
+		}
 	}
 
 	/**
@@ -166,20 +186,16 @@ public class Enemy extends Entity {
 	 * @param fileName
 	 *            the name of the enemy xml file
 	 */
-	public void loadEnemyFromXML(String fileName) {
+	public void loadEnemyFromXML(String fileName) throws DocumentException {
 		SAXReader reader = new SAXReader();
-		try {
-			File inputFile = new File("data/enemies/" + fileName + ".xml");
-			Document document = reader.read(inputFile);
 
-			Element root = document.getRootElement();
-			Iterator<Element> iterator = root.elementIterator();
-			parseEnemyXML(iterator);
+		File inputFile = new File("data/enemies/" + fileName + ".xml");
+		Document document = reader.read(inputFile);
 
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Element root = document.getRootElement();
+		Iterator<Element> iterator = root.elementIterator();
+		parseEnemyXML(iterator);
+
 	}
 
 	/**
@@ -370,38 +386,54 @@ public class Enemy extends Entity {
 				killDescription = element.getText();
 				break;
 			case "innateSkill":
-				addInnateSkill(new Skill(element.getText()));
+				Skill newSkill = Skill.buildSkill(element.getText());
+				if (newSkill != null) {
+					addInnateSkill(newSkill);
+				}
 				break;
 			case "knownSpell":
-				addKnownSpell(new Spell(element.getText()));
+				Spell newSpell = Spell.buildSpell(element.getText());
+				if (newSpell != null) {
+					addKnownSpell(newSpell);
+
+				} else {
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"ERROR: Somthing went wrong while creating a spell. See game.log for more information.");
+				}
 				break;
 			case "item":
-				addItemToInventory(new Item(element.getText()));
-				if (element.attributeValue("equip").equals("true")) {
+				Item newItem = Item.buildItem(element.getText());
+				if (newItem != null) {
+					addItemToInventory(newItem);
+					if (element.attributeValue("equip").equals("true")) {
 
-					int itemIndex = inventory.size() - 1;
-					Item item = inventory.get(itemIndex);
-					if (item.getEquipSlot().equals("hand")) {
-						if (equipment[EquipmentIndex.LEFT_HAND
-								.getValue()] == null) {
-							equipHandItem(item, "left");
-						} else if (equipment[EquipmentIndex.RIGHT_HAND
-								.getValue()] == null) {
-							equipHandItem(item, "right");
+						int itemIndex = inventory.size() - 1;
+						Item item = inventory.get(itemIndex);
+						if (item.getEquipSlot().equals("hand")) {
+							if (equipment[EquipmentIndex.LEFT_HAND
+									.getValue()] == null) {
+								equipHandItem(item, "left");
+							} else if (equipment[EquipmentIndex.RIGHT_HAND
+									.getValue()] == null) {
+								equipHandItem(item, "right");
+							}
+						} else if (item.getEquipSlot().equals("held")) {
+							if (equipment[EquipmentIndex.LEFT_HELD
+									.getValue()] == null) {
+								equipHeldItem(item, "left");
+
+							} else if (equipment[EquipmentIndex.RIGHT_HELD
+									.getValue()] == null) {
+								equipHeldItem(item, "right");
+							}
+
+						} else {
+							equipInventoryItem(itemIndex);
 						}
-					} else if (item.getEquipSlot().equals("held")) {
-						if (equipment[EquipmentIndex.LEFT_HELD
-								.getValue()] == null) {
-							equipHeldItem(item, "left");
-
-						} else if (equipment[EquipmentIndex.RIGHT_HELD
-								.getValue()] == null) {
-							equipHeldItem(item, "right");
-						}
-
-					} else {
-						equipInventoryItem(itemIndex);
 					}
+				} else {
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"ERROR: Somthing went wrong when adding an item to the enemies inventory. See game.log for more information.");
 				}
 				reloadSkills();
 				break;
@@ -414,7 +446,7 @@ public class Enemy extends Entity {
 				innateWeapon = new Item(element);
 				break;
 			default:
-				System.out.println("Error unrecognized element name: "
+				LOG.error("Error unrecognized element name: "
 						+ element.getName());
 				break;
 			}

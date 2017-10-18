@@ -8,12 +8,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import unamedGame.Game;
 import unamedGame.effects.Effect;
+import unamedGame.items.Item;
+import unamedGame.ui.Window;
 
 /**
  * 
@@ -22,6 +27,8 @@ import unamedGame.effects.Effect;
  *
  */
 public class Spell {
+
+	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	private List<Spell> hitSpells;
 	private List<Spell> alwaysSpells;
@@ -48,28 +55,39 @@ public class Spell {
 	 * 
 	 * @param filename
 	 *            the filename of the spell to create
+	 * @throws DocumentException
 	 */
-	public Spell(String filename) {
+	private Spell(String filename) throws DocumentException {
 		loadSpellFromXML(filename);
+	}
+
+	public static Spell buildSpell(String spellName) {
+		Spell temp;
+		try {
+			temp = new Spell(spellName);
+			return temp;
+		} catch (DocumentException e) {
+			LOG.error("Error building item from xml file", e);
+			e.printStackTrace();
+			return null;
+
+		}
 	}
 
 	/**
 	 * Load a spells information from an xml file
 	 * 
 	 * @param filename
+	 * @throws DocumentException
 	 */
-	public void loadSpellFromXML(String filename) {
+	public void loadSpellFromXML(String filename) throws DocumentException {
 		SAXReader reader = new SAXReader();
-		try {
-			File inputFile = new File("data/spells/" + filename + ".xml");
-			Document document = reader.read(inputFile);
+		File inputFile = new File("data/spells/" + filename + ".xml");
+		Document document = reader.read(inputFile);
 
-			Element root = document.getRootElement();
-			buildSpell(root);
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Element root = document.getRootElement();
+		buildSpell(root);
+
 	}
 
 	/**
@@ -82,7 +100,8 @@ public class Spell {
 		name = element.attributeValue("name");
 		description = element.attributeValue("description");
 		attackDescription = element.attributeValue("attackDescription");
-		playerAttackDescription = element.attributeValue("playerAttackDescription");
+		playerAttackDescription = element
+				.attributeValue("playerAttackDescription");
 		missDescription = element.attributeValue("missDescription");
 		playerMissDescription = element.attributeValue("playerMissDescription");
 		spellType = element.attributeValue("spellType");
@@ -94,10 +113,12 @@ public class Spell {
 		isAttack = Boolean.parseBoolean(element.attributeValue("isAttack"));
 
 		if (element.attributeValue("attackHitBonus") != null) {
-			attackHitBonus = Integer.parseInt(element.attributeValue("attackHitBonus"));
+			attackHitBonus = Integer
+					.parseInt(element.attributeValue("attackHitBonus"));
 		}
 		if (element.attributeValue("attackSpeedBonus") != null) {
-			attackSpeedBonus = Integer.parseInt(element.attributeValue("attackSpeedBonus"));
+			attackSpeedBonus = Integer
+					.parseInt(element.attributeValue("attackSpeedBonus"));
 		}
 
 		hitEffects = new ArrayList<Effect>();
@@ -122,13 +143,31 @@ public class Spell {
 				addAlwaysEffect(Effect.buildEffect(temp));
 				break;
 			case "hitSpell":
-				addHitSpell(new Spell(temp.getTextTrim()));
+				Spell newHitSpell = Spell.buildSpell(temp.getTextTrim());
+				if (newHitSpell != null) {
+					addHitSpell(newHitSpell);
+				} else {
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"ERROR: Somthing went wrong while creating a spell. See game.log for more information.");
+				}
 				break;
 			case "missSpell":
-				addMissSpell(new Spell(temp.getTextTrim()));
+				Spell newMissSpell = Spell.buildSpell(temp.getTextTrim());
+				if (newMissSpell != null) {
+					addMissSpell(newMissSpell);
+				} else {
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"ERROR: Somthing went wrong while creating a spell. See game.log for more information.");
+				}
 				break;
 			case "alwaysSpell":
-				addAlwaysSpell(new Spell(temp.getTextTrim()));
+				Spell newAlwaysSpell = Spell.buildSpell(temp.getTextTrim());
+				if (newAlwaysSpell != null) {
+					addAlwaysSpell(newAlwaysSpell);
+				} else {
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"ERROR: Somthing went wrong while creating a spell. See game.log for more information.");
+				}
 				break;
 			default:
 				break;
@@ -217,8 +256,8 @@ public class Spell {
 	}
 
 	/**
-	 * Returns the description to be displayed if the spell is used by a non-player
-	 * and hits
+	 * Returns the description to be displayed if the spell is used by a
+	 * non-player and hits
 	 * 
 	 * @return the spell's attackDescription
 	 */
@@ -227,8 +266,8 @@ public class Spell {
 	}
 
 	/**
-	 * Returns the description to be displayed if the spell is used by a player and
-	 * hits
+	 * Returns the description to be displayed if the spell is used by a player
+	 * and hits
 	 * 
 	 * @return the spell's playerAttackDescription
 	 */
@@ -264,8 +303,8 @@ public class Spell {
 	}
 
 	/**
-	 * Returns the description to be displayed if a non-player Entity uses the spell
-	 * and misses
+	 * Returns the description to be displayed if a non-player Entity uses the
+	 * spell and misses
 	 * 
 	 * @return the spell's missDescription
 	 */

@@ -224,7 +224,6 @@ public abstract class Effect {
 	 */
 	protected boolean checkSpecialResistance() {
 		if (specialResistType.equals("none")) {
-			System.out.println(specialResistType);
 			return true;
 		}
 		int target = specialAccuracy;
@@ -238,7 +237,6 @@ public abstract class Effect {
 
 		}
 		int temp = Dice.roll(Dice.RESISTANCE_DIE);
-		System.out.println(temp + " < " + target);
 		return temp < target;
 
 	}

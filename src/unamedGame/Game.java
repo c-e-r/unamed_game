@@ -4,9 +4,11 @@
 package unamedGame;
 
 import java.awt.Color;
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
 
-import unamedGame.effects.StatIncreaseEffect;
+import org.dom4j.DocumentException;
+
+import unamedGame.entities.Enemy;
 import unamedGame.entities.Player;
 import unamedGame.events.EventReader;
 import unamedGame.events.EventSelector;
@@ -14,11 +16,14 @@ import unamedGame.input.InputEvent;
 import unamedGame.input.InputObserver;
 import unamedGame.items.Item;
 import unamedGame.skills.Skill;
+import unamedGame.spells.Spell;
 import unamedGame.time.Time;
 import unamedGame.time.TimeObserver;
 import unamedGame.ui.Window;
 import unamedGame.util.Colors;
 import unamedGame.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author c-e-r
@@ -29,20 +34,17 @@ public class Game {
 	public static InputObserver observer;
 	public static Window window = Window.getInstance();
 
+	private static final Logger LOG = LogManager.getLogger(Game.class);
+
 	/**
 	 * Starts the game.
 	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
+
 		TimeObserver timeObserver = new TimeObserver();
 		timeObserver.observe(Time.getInstance());
-		Item item = new Item("testItem");
-		Item item2 = new Item("testItem");
-		Player.getInstance().addItemToInventory(item);
-		Player.getInstance().addItemToInventory(item2);
-		Player.getInstance().addItemToInventory(new Item("dagger"));
-		Player.getInstance().addInnateSkill(new Skill("testSkill"));
 		Window.getInstance().getFrame().setVisible(true);
 		openExplorationMenu();
 
@@ -67,6 +69,10 @@ public class Game {
 				}
 
 				switch (command) {
+				case 0: // debug
+					window.removeInputObsever(this);
+					debug();
+					break;
 				case 1: // explore
 					window.removeInputObsever(this);
 					explore();
@@ -101,8 +107,17 @@ public class Game {
 	 * NOT YET IMPLEMENTED
 	 */
 	private static void explore() {
-		EventSelector.startRandomEventFromFileList(World.getInstance()
-				.getTile(Player.getInstance().getLocation()).getEventFiles());
+		try {
+			EventSelector.startRandomEventFromFileList(World.getInstance()
+					.getTile(Player.getInstance().getLocation())
+					.getEventFiles());
+		} catch (FileNotFoundException e) {
+			Window.appendToPane(Window.getInstance().getTextPane(),
+					"ERROR: " + e.getMessage());
+			Game.openExplorationMenu();
+			LOG.error("Event list file not found.", e);
+			e.printStackTrace();
+		}
 	}
 
 	/*
@@ -139,7 +154,6 @@ public class Game {
 	 * NOT YET IMPLEMENTED
 	 */
 	private static void gather() {
-		System.out.println("gather");
 	}
 
 	/**
@@ -319,8 +333,7 @@ public class Game {
 				}
 			});
 		} else {
-			System.out.println(
-					"Somehow you tried to access an item that dosn't exist");
+			LOG.error("Somehow you tried to access an item that dosn't exist");
 		}
 
 	}
@@ -560,8 +573,6 @@ public class Game {
 					case 2:
 						cost = (int) Math
 								.ceil((double) player.getNewVitality() / 5);
-						System.out.println(cost);
-						System.out.println(player.getNewStatPoints());
 						if (player.getNewStatPoints() >= cost) {
 							player.setNewVitality(player.getNewVitality() + 1);
 							player.setNewStatPoints(
@@ -571,8 +582,6 @@ public class Game {
 					case 3:
 						cost = (int) Math
 								.ceil((double) player.getNewStrength() / 5);
-						System.out.println(cost);
-						System.out.println(player.getNewStatPoints());
 						if (player.getNewStatPoints() >= cost) {
 							player.setNewStrength(player.getNewStrength() + 1);
 							player.setNewStatPoints(
@@ -582,8 +591,6 @@ public class Game {
 					case 4:
 						cost = (int) Math
 								.ceil((double) player.getNewDexterity() / 5);
-						System.out.println(cost);
-						System.out.println(player.getNewStatPoints());
 						if (player.getNewStatPoints() >= cost) {
 							player.setNewDexterity(
 									player.getNewDexterity() + 1);
@@ -594,8 +601,6 @@ public class Game {
 					case 5:
 						cost = (int) Math
 								.ceil((double) player.getNewIntellect() / 5);
-						System.out.println(cost);
-						System.out.println(player.getNewStatPoints());
 						if (player.getNewStatPoints() >= cost) {
 							player.setNewIntellect(
 									player.getNewIntellect() + 1);
@@ -606,8 +611,6 @@ public class Game {
 					case 6:
 						cost = (int) Math
 								.ceil((double) player.getNewSpirit() / 5);
-						System.out.println(cost);
-						System.out.println(player.getNewStatPoints());
 						if (player.getNewStatPoints() >= cost) {
 							player.setNewSpirit(player.getNewSpirit() + 1);
 							player.setNewStatPoints(
@@ -783,6 +786,97 @@ public class Game {
 										+ ")");
 					}
 
+				}
+
+			}
+
+		});
+	}
+
+	public static void debug() {
+		openDebugMenu();
+	}
+
+	private static void openDebugMenu() {
+		Window.clearPane(window.getSidePane());
+		Window.addToPane(window.getSidePane(),
+				"back \naddItem <itemName>\ngainExp <amount>\nstartEvent <eventName>\naddSkill <skillName>\naddSpell <spellName>\nstartCombat <enemyName>");
+		Window.appendToPane(Window.getInstance().getTextPane(), "Move where?");
+
+		Window.getInstance().addInputObsever(new InputObserver() {
+			@Override
+			public void inputChanged(InputEvent evt) {
+				String[] command = evt.getText().split(" ");
+				switch (command[0]) {
+				case "back":
+					window.removeInputObsever(this);
+					openExplorationMenu();
+					break;
+				case "addItem":
+
+					Item newItem = Item.buildItem(command[1]);
+					if (newItem != null) {
+						Player.getInstance().addItemToInventory(newItem);
+						Window.appendToPane(window.getTextPane(),
+								command[1] + " added to inventory.");
+					} else {
+						Window.appendToPane(window.getTextPane(),
+								"ERROR: Somthing went wrong adding an item to your inventory. See game.log for more information.");
+
+					}
+					break;
+				case "gainExp":
+					if (isNumeric(command[1])) {
+						Player.getInstance()
+								.gainExp(Integer.parseInt(command[1]));
+						Window.appendToPane(window.getTextPane(),
+								"You gained " + command[1] + "exp");
+					} else {
+						Window.appendToPane(window.getTextPane(),
+								"That command needs a number.");
+					}
+					break;
+				case "startEvent":
+					window.removeInputObsever(this);
+					EventReader.startEvent(command[1]);
+					break;
+				case "addSkill":
+
+					Skill newSkill = Skill.buildSkill(command[1]);
+					if (newSkill != null) {
+						Player.getInstance().addInnateSkill(newSkill);
+						Window.appendToPane(window.getTextPane(),
+								command[1] = " added to innate skill list.");
+					} else {
+						Window.appendToPane(window.getTextPane(),
+								"ERROR: Somthing went wrong while creating a skill. See game.log for more information.");
+					}
+
+					break;
+				case "addSpell":
+					Spell newSpell = Spell.buildSpell(command[1]);
+					if (newSpell != null) {
+						Player.getInstance().addKnownSpell(newSpell);
+						Window.appendToPane(window.getTextPane(),
+								command[1] = " added to known spells list.");
+					} else {
+						Window.appendToPane(Window.getInstance().getTextPane(),
+								"ERROR: Somthing went wrong while creating a spell. See game.log for more information.");
+					}
+					break;
+				case "startCombat":
+					window.removeInputObsever(this);
+					Enemy newEnemy = Enemy.buildEnemy(command[1]);
+					if (newEnemy != null) {
+						new Combat(newEnemy, Combat.FROM_EXPLORATION);
+					} else {
+						Window.appendToPane(Window.getInstance().getTextPane(),
+								"ERROR: Somthing went wrong while creating an enemy. See game.log for more info.");
+					}
+
+					break;
+				default:
+					break;
 				}
 
 			}

@@ -9,7 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.dom4j.Element;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
@@ -27,6 +28,8 @@ import unamedGame.spells.Spell;
  *
  */
 public class Item {
+
+	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	private String name;
 	private double weight;
@@ -79,7 +82,7 @@ public class Item {
 	private int poisonReduction;
 
 	private int strRequirement;
-	
+
 	private int speedPenalty;
 
 	/**
@@ -87,8 +90,9 @@ public class Item {
 	 * 
 	 * @param itemName
 	 *            the filename of the item to create
+	 * @throws DocumentException
 	 */
-	public Item(String itemName) {
+	private Item(String itemName) throws DocumentException {
 		permanantEffects = new ArrayList<Effect>();
 		equipEffects = new ArrayList<Effect>();
 		attackEffects = new ArrayList<Effect>();
@@ -97,7 +101,6 @@ public class Item {
 		spells = new ArrayList<Spell>();
 		skills = new ArrayList<Skill>();
 		equipSpells = new ArrayList<Spell>();
-
 		loadItemFromXML(itemName);
 
 		if (uses == 0 && maxUses != 0) {
@@ -121,23 +124,32 @@ public class Item {
 
 	}
 
+	public static Item buildItem(String itemName) {
+		Item temp;
+		try {
+			temp = new Item(itemName);
+			return temp;
+
+		} catch (DocumentException e) {
+			LOG.error("Error building item from xml file", e);
+			e.printStackTrace();
+			return null;
+
+		}
+	}
+
 	/*
 	 * loads the xml and calls the method to parse it
 	 */
-	private void loadItemFromXML(String itemName) {
+	private void loadItemFromXML(String itemName) throws DocumentException {
 		SAXReader reader = new SAXReader();
-		try {
-			File inputFile = new File("data/items/" + itemName + ".xml");
-			Document document = reader.read(inputFile);
 
-			Element root = document.getRootElement();
-			Iterator<Element> iterator = root.elementIterator();
-			parseItemXML(iterator);
+		File inputFile = new File("data/items/" + itemName + ".xml");
+		Document document = reader.read(inputFile);
 
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Element root = document.getRootElement();
+		Iterator<Element> iterator = root.elementIterator();
+		parseItemXML(iterator);
 	}
 
 	/*
@@ -245,16 +257,40 @@ public class Item {
 				}
 				break;
 			case "skill":
-				addSkill(new Skill(element.getText()));
+				Skill newSkill = Skill.buildSkill(element.getText());
+				if (newSkill != null) {
+					addSkill(newSkill);
+				} else {
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"ERROR: Somthing went wrong while creating a skill. See game.log for more information.");
+				}
 				break;
 			case "spell":
-				addSpell(new Spell(element.getText()));
+				Spell newSpell = Spell.buildSpell(element.getText());
+				if (newSpell != null) {
+					addSpell(newSpell);
+				} else {
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"ERROR: Somthing went wrong while creating a spell. See game.log for more information.");
+				}
 				break;
 			case "equipSkill":
-				addEquipSkill(new Skill(element.getText()));
+				Skill newEquipSkill = Skill.buildSkill(element.getText());
+				if (newEquipSkill != null) {
+					addEquipSkill(newEquipSkill);
+				} else {
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"ERROR: Somthing went wrong while creating a skill. See game.log for more information.");
+				}
 				break;
 			case "equipSpell":
-				addEquipSpell(new Spell(element.getText()));
+				Spell newEquipSpell = Spell.buildSpell(element.getText());
+				if (newEquipSpell != null) {
+					addEquipSpell(newEquipSpell);
+				} else {
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"ERROR: Somthing went wrong while creating a spell. See game.log for more information.");
+				}
 				break;
 
 			case "piercingReduction":
@@ -318,7 +354,7 @@ public class Item {
 			case "itemType":
 				itemType = element.getText();
 			default:
-				System.out.println("Error unrecognized element name: "
+				LOG.error("Error unrecognized element name: "
 						+ element.getName());
 				break;
 			}

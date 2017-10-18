@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import unamedGame.Calculate;
 import unamedGame.Dice;
 import unamedGame.Game;
@@ -23,6 +26,8 @@ import unamedGame.util.Colors;
  *
  */
 public class Entity extends Observable {
+
+	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	protected Item[] equipment;
 
@@ -179,7 +184,7 @@ public class Entity extends Observable {
 	protected int currentMana;
 
 	protected Item innateWeapon;
-	
+
 	protected int equipSpeedPenalty;
 
 	/**
@@ -320,10 +325,9 @@ public class Entity extends Observable {
 			damage = 0;
 		}
 
-
-		if (Calculate.calculateAttackHitChance(attacker,
-				weaponHitChance) >= this.getEffectiveDodge()) {
-			attackHit = true;
+		attackHit = Calculate.calculateAttackHitChance(attacker,
+				weaponHitChance) >= this.getEffectiveDodge();
+		if (attackHit) {
 
 			damage = this.takeDamage(damage, weaponDamageType);
 
@@ -472,25 +476,8 @@ public class Entity extends Observable {
 		}
 
 		if (skill.isAttack()) {
-			if (Calculate.calculateSkillAttackHitChance(attacker, skill,
-					weaponHitChance) >= this.getEffectiveDodge()) {
-				attackHit = true;
-				damage = this.takeDamage(damage, weaponDamageType);
-
-				if (attacker instanceof Player) {
-					description = skill.getPlayerAttackDescription().split("#");
-				} else {
-					description = skill.getAttackDescription().split("#");
-				}
-
-			} else {
-				if (attacker instanceof Player) {
-					description = skill.getPlayerMissDescription().split("#");
-				} else {
-					description = skill.getMissDescription().split("#");
-				}
-
-			}
+			attackHit = Calculate.calculateSkillAttackHitChance(attacker, skill,
+					weaponHitChance) >= this.getEffectiveDodge();
 		} else {
 			if (attacker instanceof Player) {
 				description = skill.getPlayerAttackDescription().split("#");
@@ -499,6 +486,25 @@ public class Entity extends Observable {
 				description = skill.getAttackDescription().split("#");
 			}
 		}
+
+		if (attackHit) {
+			damage = this.takeDamage(damage, weaponDamageType);
+
+			if (attacker instanceof Player) {
+				description = skill.getPlayerAttackDescription().split("#");
+			} else {
+				description = skill.getAttackDescription().split("#");
+			}
+
+		} else {
+			if (attacker instanceof Player) {
+				description = skill.getPlayerMissDescription().split("#");
+			} else {
+				description = skill.getMissDescription().split("#");
+			}
+
+		}
+
 		// Replace keywords in description with variables
 		for (String string : description) {
 			switch (string) {
@@ -1500,6 +1506,7 @@ public class Entity extends Observable {
 			damage = 0;
 		}
 		currentHealth -= damage;
+		LOG.debug(damage + " taken by " + name);
 		return damage;
 	}
 
@@ -1595,7 +1602,7 @@ public class Entity extends Observable {
 		if (effect.getDuration() != -1) {
 
 			for (Effect effect2 : effects) {
-	
+
 				if (effect.getName().equals(effect2.getName())
 						&& effect.getDuration()
 								+ Time.getInstance().getTime() > effect2

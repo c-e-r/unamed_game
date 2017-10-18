@@ -28,6 +28,10 @@ public class Combat {
 	private Player player;
 	private Enemy enemy;
 	private static boolean inCombat;
+	private int returnPoint;
+
+	public static final int FROM_EXPLORATION = 1;
+	public static final int FROM_EVENT = 2;
 
 	private static final String OFFENSIVE = "offensive";
 	private static final String DEBUFF = "debuff";
@@ -40,14 +44,16 @@ public class Combat {
 	 * @param enemy
 	 *            the Enemy to start combat with
 	 */
-	public Combat(Enemy enemy) {
+	public Combat(Enemy enemy, int returnPoint) {
+		this.returnPoint = returnPoint;
 		player = Player.getInstance();
 		this.enemy = enemy;
 		inCombat = true;
 
 		Window.getInstance().swapMapPane();
 		Window.clearPane(Window.getInstance().getTextPane());
-		Window.appendToPane(Window.getInstance().getTextPane(), enemy.getDescription());
+		Window.appendToPane(Window.getInstance().getTextPane(),
+				enemy.getDescription());
 
 		newTurn();
 	}
@@ -57,9 +63,11 @@ public class Combat {
 	 */
 	private void newTurn() {
 		Window.clearPane(Window.getInstance().getSidePane());
-		Window.appendToPane(Window.getInstance().getSidePane(), "1: Attack \n2: Skill \n3: Magic\n4: Item \n5: Escape");
+		Window.appendToPane(Window.getInstance().getSidePane(),
+				"1: Attack \n2: Skill \n3: Magic\n4: Item \n5: Escape");
 		Window.clearPane(Window.getInstance().getPlayerPane());
-		Window.appendToPane(Window.getInstance().getPlayerPane(), player.getStatus());
+		Window.appendToPane(Window.getInstance().getPlayerPane(),
+				player.getStatus());
 
 		getCombatInput();
 	}
@@ -69,7 +77,8 @@ public class Combat {
 	 */
 	private void getCombatInput() {
 		Window.clearPane(Window.getInstance().getSidePane());
-		Window.appendToPane(Window.getInstance().getSidePane(), "1: Attack\n2: Skill\n3: Magic\n4: Item\n5: Escape");
+		Window.appendToPane(Window.getInstance().getSidePane(),
+				"1: Attack\n2: Skill\n3: Magic\n4: Item\n5: Escape");
 
 		Window.getInstance().addInputObsever(new InputObserver() {
 			@Override
@@ -100,7 +109,8 @@ public class Combat {
 						break;
 
 					default:
-						Window.appendToPane(Window.getInstance().getTextPane(), "Invalid Command");
+						Window.appendToPane(Window.getInstance().getTextPane(),
+								"Invalid Command");
 						break;
 					}
 					if (command >= 1 && command <= 5) {
@@ -109,7 +119,8 @@ public class Combat {
 
 					}
 				} else {
-					Window.appendToPane(Window.getInstance().getTextPane(), "Invalid Command");
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"Invalid Command");
 				}
 
 			}
@@ -141,7 +152,8 @@ public class Combat {
 		case 5: // escape
 			break;
 		default:
-			Window.addToPane(Window.getInstance().getTextPane(), "Invalid Command");
+			Window.addToPane(Window.getInstance().getTextPane(),
+					"Invalid Command");
 			break;
 		}
 	}
@@ -171,7 +183,8 @@ public class Combat {
 		case 5: // escape
 			break;
 		default:
-			Window.addToPane(Window.getInstance().getTextPane(), "Invalid Command");
+			Window.addToPane(Window.getInstance().getTextPane(),
+					"Invalid Command");
 			break;
 		}
 	}
@@ -183,20 +196,30 @@ public class Combat {
 		Window.clearPane(Window.getInstance().getSidePane());
 		Window.appendToPane(Window.getInstance().getSidePane(),
 				String.format("%-14s%6s%18s", "Name", "Cost", "Description"));
-		Window.appendToPane(Window.getInstance().getSidePane(), "------------------------------------------------");
-		Window.appendToPane(Window.getInstance().getSidePane(), String.format("0: Back"));
+		Window.appendToPane(Window.getInstance().getSidePane(),
+				"------------------------------------------------");
+		Window.appendToPane(Window.getInstance().getSidePane(),
+				String.format("0: Back"));
 		int i = 1;
 		for (Skill skill : Player.getInstance().getCombinedSkills()) {
 			if (i % 2 != 0) {
-				Window.appendToPaneBackground(Window.getInstance().getSidePane(),
-						String.format("%-14s%5d%25s", i++ + ": " + Game.capitalizeFirstLetter(skill.getName()),
+				Window.appendToPaneBackground(
+						Window.getInstance().getSidePane(),
+						String.format("%-14s%5d%25s",
+								i++ + ": "
+										+ Game.capitalizeFirstLetter(
+												skill.getName()),
 								skill.getStaminaCost(), skill.getDescription()),
 						new Color(244, 244, 244));
 
 			} else {
 				Window.appendToPane(Window.getInstance().getSidePane(),
-						String.format("%-14s%5d%25s", i++ + ": " + Game.capitalizeFirstLetter(skill.getName()),
-								skill.getStaminaCost(), skill.getDescription()));
+						String.format("%-14s%5d%25s",
+								i++ + ": "
+										+ Game.capitalizeFirstLetter(
+												skill.getName()),
+								skill.getStaminaCost(),
+								skill.getDescription()));
 
 			}
 
@@ -208,21 +231,25 @@ public class Combat {
 				if (Game.isNumeric(evt.getText())) {
 					skillIndex = Integer.parseInt(evt.getText()) - 1;
 				}
-				if (skillIndex >= 0 && skillIndex < Player.getInstance().getInventory().size()) {
-					if (player.getCurrentStamina() >= player.getCombinedSkills().get(skillIndex).getStaminaCost()) {
+				if (skillIndex >= 0 && skillIndex < Player.getInstance()
+						.getInventory().size()) {
+					if (player.getCurrentStamina() >= player.getCombinedSkills()
+							.get(skillIndex).getStaminaCost()) {
 
 						combatTurn(2, skillIndex);
 						Window.getInstance().removeInputObsever(this);
 					} else {
 
-						Window.appendToPane(Window.getInstance().getTextPane(), "Not enough stamina");
+						Window.appendToPane(Window.getInstance().getTextPane(),
+								"Not enough stamina");
 
 					}
 				} else if (skillIndex == -1) {
 					Window.getInstance().removeInputObsever(this);
 					getCombatInput();
 				} else {
-					Window.appendToPane(Window.getInstance().getTextPane(), "Invalid Attack");
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"Invalid Attack");
 
 				}
 			}
@@ -236,19 +263,28 @@ public class Combat {
 		Window.clearPane(Window.getInstance().getSidePane());
 		Window.appendToPane(Window.getInstance().getSidePane(),
 				String.format("%-14s%6s%18s", "Name", "Cost", "Description"));
-		Window.appendToPane(Window.getInstance().getSidePane(), "------------------------------------------------");
-		Window.appendToPane(Window.getInstance().getSidePane(), String.format("0: Back"));
+		Window.appendToPane(Window.getInstance().getSidePane(),
+				"------------------------------------------------");
+		Window.appendToPane(Window.getInstance().getSidePane(),
+				String.format("0: Back"));
 		int i = 1;
 		for (Spell spell : Player.getInstance().getKnownSpells()) {
 			if (i % 2 != 0) {
-				Window.appendToPaneBackground(Window.getInstance().getSidePane(),
-						String.format("%-14s%5d%25s", i++ + ": " + Game.capitalizeFirstLetter(spell.getName()),
+				Window.appendToPaneBackground(
+						Window.getInstance().getSidePane(),
+						String.format("%-14s%5d%25s",
+								i++ + ": "
+										+ Game.capitalizeFirstLetter(
+												spell.getName()),
 								spell.getManaCost(), spell.getDescription()),
 						new Color(244, 244, 244));
 
 			} else {
 				Window.appendToPane(Window.getInstance().getSidePane(),
-						String.format("%-14s%5d%25s", i++ + ": " + Game.capitalizeFirstLetter(spell.getName()),
+						String.format("%-14s%5d%25s",
+								i++ + ": "
+										+ Game.capitalizeFirstLetter(
+												spell.getName()),
 								spell.getManaCost(), spell.getDescription()));
 
 			}
@@ -261,21 +297,25 @@ public class Combat {
 				if (Game.isNumeric(evt.getText())) {
 					spellIndex = Integer.parseInt(evt.getText()) - 1;
 				}
-				if (spellIndex >= 0 && spellIndex < Player.getInstance().getInventory().size()) {
-					if (player.getCurrentStamina() >= player.getCombinedSkills().get(spellIndex).getStaminaCost()) {
+				if (spellIndex >= 0 && spellIndex < Player.getInstance()
+						.getInventory().size()) {
+					if (player.getCurrentStamina() >= player.getCombinedSkills()
+							.get(spellIndex).getStaminaCost()) {
 
 						combatTurn(3, spellIndex);
 						Window.getInstance().removeInputObsever(this);
 					} else {
 
-						Window.appendToPane(Window.getInstance().getTextPane(), "Not enough mana");
+						Window.appendToPane(Window.getInstance().getTextPane(),
+								"Not enough mana");
 
 					}
 				} else if (spellIndex == -1) {
 					Window.getInstance().removeInputObsever(this);
 					getCombatInput();
 				} else {
-					Window.appendToPane(Window.getInstance().getTextPane(), "Invalid Input");
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"Invalid Input");
 
 				}
 			}
@@ -283,8 +323,8 @@ public class Combat {
 	}
 
 	/*
-	 * Decides on the order of player and enemy turns and calls methods to do their
-	 * actions.
+	 * Decides on the order of player and enemy turns and calls methods to do
+	 * their actions.
 	 */
 	private void combatTurn(int command, int index) {
 
@@ -295,7 +335,8 @@ public class Combat {
 		int enemyCommand = arr[0];
 		int enemyIndex = arr[1];
 
-		if (player.speedCheck(command, index) > enemy.speedCheck(enemyCommand, enemyIndex)) {
+		if (player.speedCheck(command, index) > enemy.speedCheck(enemyCommand,
+				enemyIndex)) {
 			playerAction(command, index);
 			playerLoss = player.isDead();
 			playerWin = enemy.isDead();
@@ -425,7 +466,8 @@ public class Combat {
 	 */
 	private void endCombatLoss() {
 		Window.clearPane(Window.getInstance().getSidePane());
-		Window.appendToPane(Window.getInstance().getTextPane(), enemy.getKillDescription());
+		Window.appendToPane(Window.getInstance().getTextPane(),
+				enemy.getKillDescription());
 		inCombat = false;
 	}
 
@@ -435,8 +477,18 @@ public class Combat {
 	private void endCombatWin() {
 		player.gainExp(enemy.getExpValue());
 		Window.clearPane(Window.getInstance().getSidePane());
-		Window.appendToPane(Window.getInstance().getTextPane(), enemy.getDeathDescription());
-		backToEvent();
+		Window.appendToPane(Window.getInstance().getTextPane(),
+				enemy.getDeathDescription());
+		switch (returnPoint) {
+		case FROM_EXPLORATION:
+			Game.openExplorationMenu();
+			break;
+		case FROM_EVENT:
+			backToEvent();
+			break;
+		default:
+			Game.openExplorationMenu();
+		}
 		inCombat = true;
 	}
 
@@ -449,16 +501,21 @@ public class Combat {
 		Window.clearPane(Window.getInstance().getSidePane());
 		Window.appendToPane(Window.getInstance().getSidePane(),
 				String.format("%-24s%10s%13s", "Name", "Weight", "Uses Left"));
-		Window.appendToPane(Window.getInstance().getSidePane(), "------------------------------------------------");
-		Window.appendToPane(Window.getInstance().getSidePane(), String.format("0: Back"));
+		Window.appendToPane(Window.getInstance().getSidePane(),
+				"------------------------------------------------");
+		Window.appendToPane(Window.getInstance().getSidePane(),
+				String.format("0: Back"));
 		int i = 1;
 		for (Item item : Player.getInstance().getInventory()) {
 			if (i % 2 != 0) {
-				Window.appendToPaneBackground(Window.getInstance().getSidePane(), i++ + ": " + item.getItemInfo(),
+				Window.appendToPaneBackground(
+						Window.getInstance().getSidePane(),
+						i++ + ": " + item.getItemInfo(),
 						new Color(244, 244, 244));
 
 			} else {
-				Window.appendToPane(Window.getInstance().getSidePane(), i++ + ": " + item.getItemInfo());
+				Window.appendToPane(Window.getInstance().getSidePane(),
+						i++ + ": " + item.getItemInfo());
 
 			}
 
@@ -470,14 +527,16 @@ public class Combat {
 				if (Game.isNumeric(evt.getText())) {
 					itemIndex = Integer.parseInt(evt.getText()) - 1;
 				}
-				if (itemIndex >= 0 && itemIndex < Player.getInstance().getInventory().size()) {
+				if (itemIndex >= 0 && itemIndex < Player.getInstance()
+						.getInventory().size()) {
 					combatItemChoiceMenu(itemIndex);
 					Window.getInstance().removeInputObsever(this);
 				} else if (itemIndex == -1) {
 					Window.getInstance().removeInputObsever(this);
 					getCombatInput();
 				} else {
-					Window.appendToPane(Window.getInstance().getTextPane(), "Invalid Command");
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"Invalid Command");
 
 				}
 			}
@@ -485,12 +544,13 @@ public class Combat {
 	}
 
 	/*
-	 * Opens the combat version of the item choice menu. From here the player can
-	 * choose what to do with the selected item.
+	 * Opens the combat version of the item choice menu. From here the player
+	 * can choose what to do with the selected item.
 	 */
 	public void combatItemChoiceMenu(int itemIndex) {
 		Window.clearPane(Window.getInstance().getSidePane());
-		Window.appendToPane(Window.getInstance().getSidePane(), "0: Back \n1: Use\n2: Inspect\n3: Drop\n4: Equip");
+		Window.appendToPane(Window.getInstance().getSidePane(),
+				"0: Back \n1: Use\n2: Inspect\n3: Drop\n4: Equip");
 		Window.getInstance().addInputObsever(new InputObserver() {
 			@Override
 			public void inputChanged(InputEvent evt) {
@@ -504,17 +564,21 @@ public class Combat {
 					combatInventory();
 					break;
 				case 1: // use
-					Item item = Player.getInstance().getInventoryItem(itemIndex);
+					Item item = Player.getInstance()
+							.getInventoryItem(itemIndex);
 					if (item.isBattleUse()) {
 						if (item.getUses() <= 0) {
-							Window.appendToPane(Window.getInstance().getTextPane(), "That item is out of uses.");
+							Window.appendToPane(
+									Window.getInstance().getTextPane(),
+									"That item is out of uses.");
 
 						} else {
 							combatTurn(4, itemIndex);
 							Window.getInstance().removeInputObsever(this);
 						}
 					} else {
-						Window.appendToPane(Window.getInstance().getTextPane(), "You cant use that item in battle!");
+						Window.appendToPane(Window.getInstance().getTextPane(),
+								"You cant use that item in battle!");
 					}
 					break;
 				case 2: // inspect
@@ -524,7 +588,9 @@ public class Combat {
 					break;
 				case 3: // drop
 					Window.appendToPane(Window.getInstance().getTextPane(),
-							"You threw away the " + Player.getInstance().removeItemFromInventory(itemIndex).getName());
+							"You threw away the " + Player.getInstance()
+									.removeItemFromInventory(itemIndex)
+									.getName());
 					combatInventory();
 					Window.getInstance().removeInputObsever(this);
 
@@ -537,7 +603,8 @@ public class Combat {
 					Window.getInstance().removeInputObsever(this);
 
 				default:
-					Window.appendToPane(Window.getInstance().getTextPane(), "Invalid Command");
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"Invalid Command");
 					break;
 				}
 			}
