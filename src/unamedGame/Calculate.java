@@ -28,9 +28,10 @@ public class Calculate {
 		if (attacker.getEffectiveStrength() < weapon.getStrRequirement()) {
 			strRequirementMod = 0.5;
 		}
+
+		int dieRoll = Dice.roll(weapon.getWeaponVariableDamage());
 		int damage = (int) (((((attacker.getEffectiveStrength()
 				+ weapon.getWeaponBaseDamage()
-				+ Dice.roll(weapon.getWeaponVariableDamage())
 				+ attacker.getEffectiveDamageBonus())
 				* attacker.getEffectiveDamageMult())) * twoHandedMultiplier)
 				* strRequirementMod);

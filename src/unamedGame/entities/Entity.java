@@ -328,9 +328,7 @@ public class Entity extends Observable {
 		attackHit = Calculate.calculateAttackHitChance(attacker,
 				weaponHitChance) >= this.getEffectiveDodge();
 		if (attackHit) {
-
 			damage = this.takeDamage(damage, weaponDamageType);
-
 			if (attacker instanceof Player) {
 				description = playerWeaponAttackHitDescription.split("#");
 			} else {
@@ -445,7 +443,7 @@ public class Entity extends Observable {
 	public void getAttackedBySkill(Skill skill, Entity attacker,
 			boolean usingOffhandWeapon) {
 		Item weapon = attacker.getMainWeapon();
-		boolean attackHit = false;
+		boolean attackHit = true;
 
 		int weaponBaseDamage = 0;
 		int weaponVariableDamage = 1;
@@ -474,22 +472,14 @@ public class Entity extends Observable {
 		if (damage < 0) {
 			damage = 0;
 		}
-
 		if (skill.isAttack()) {
 			attackHit = Calculate.calculateSkillAttackHitChance(attacker, skill,
 					weaponHitChance) >= this.getEffectiveDodge();
-		} else {
-			if (attacker instanceof Player) {
-				description = skill.getPlayerAttackDescription().split("#");
-
-			} else {
-				description = skill.getAttackDescription().split("#");
+			if (attackHit) {
+				damage = this.takeDamage(damage, weaponDamageType);
 			}
 		}
-
 		if (attackHit) {
-			damage = this.takeDamage(damage, weaponDamageType);
-
 			if (attacker instanceof Player) {
 				description = skill.getPlayerAttackDescription().split("#");
 			} else {
@@ -497,12 +487,12 @@ public class Entity extends Observable {
 			}
 
 		} else {
+
 			if (attacker instanceof Player) {
 				description = skill.getPlayerMissDescription().split("#");
 			} else {
 				description = skill.getMissDescription().split("#");
 			}
-
 		}
 
 		// Replace keywords in description with variables
