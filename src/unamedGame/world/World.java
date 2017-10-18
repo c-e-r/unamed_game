@@ -9,8 +9,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Properties;
 import java.util.Scanner;
+import java.lang.Integer;
 
 /**
  * A class to store and manipulate the world
@@ -21,6 +25,7 @@ import java.util.Scanner;
 public class World {
 
 	private static World instance = null;
+	private static HashMap<Integer, WorldTile> tileStorage = new HashMap<Integer, WorldTile>();
 
 	private WorldTile[][] world;
 
@@ -42,6 +47,7 @@ public class World {
 	 */
 	private World() {
 		world = new WorldTile[10][10];
+		fillTileStorageFromFile();
 		fillWorldFromIntGrid(readIntGridFromFile());
 
 	}
@@ -49,27 +55,8 @@ public class World {
 	private void fillWorldFromIntGrid(int[][] intGrid) {
 		for (int i = 0; i < intGrid.length; i++) {
 			for (int j = 0; j < intGrid[i].length; j++) {
-				switch (intGrid[i][j]) {
-				case 0:
-					world[i][j] = new WorldTile("ocean", 0, 0, 'o',
-							new Point(i, j));
-					break;
-				case 1:
-					world[i][j] = new WorldTile("plains", 2, 2, 'p',
-							new Point(i, j));
-					break;
-				case 2:
-					world[i][j] = new WorldTile("forest", 3, 3, 'f',
-							new Point(i, j));
-					break;
-				case 3:
-					world[i][j] = new WorldTile("mountain", 4, 4, 'm',
-							new Point(i, j));
-					break;
-				
-				default:
-					break;
-				}
+				world[i][j] = new WorldTile(tileStorage.get(intGrid[i][j]),
+						new Point(i, j));
 			}
 
 		}
@@ -85,7 +72,10 @@ public class World {
 			while ((line = reader.readLine()) != null) {
 				String[] splitLine = line.split(",");
 				for (int j = 0; j < splitLine.length; j++) {
-					intGrid[j][i] = Integer.parseInt(splitLine[j]);
+					if (j < intGrid.length && i < intGrid[j].length) {
+						intGrid[j][i] = Integer.parseInt(splitLine[j], 16);
+
+					}
 				}
 				i++;
 			}
@@ -97,8 +87,7 @@ public class World {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 		return intGrid;
 	}
 
@@ -143,6 +132,28 @@ public class World {
 	 */
 	public WorldTile[][] getWorld() {
 		return world;
+	}
+
+	private void fillTileStorageFromFile() {
+		Properties properties = new Properties();
+
+		try {
+			properties.load(
+					new FileReader(new File("data/map/tileData.properties")));
+			for (String key : properties.stringPropertyNames()) {
+				String[] values = properties.getProperty(key).split("\\|");
+				WorldTile tile = new WorldTile(values[0],
+						Integer.parseInt(values[1]), values[2].charAt(0));
+				for (int i = 3; i < values.length; i++) {
+					tile.addEventFile(values[i]);
+				}
+				tileStorage.put(Integer.parseInt(key, 16), tile);
+
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

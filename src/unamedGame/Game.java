@@ -18,6 +18,7 @@ import unamedGame.time.Time;
 import unamedGame.time.TimeObserver;
 import unamedGame.ui.Window;
 import unamedGame.util.Colors;
+import unamedGame.world.World;
 
 /**
  * @author c-e-r
@@ -100,7 +101,8 @@ public class Game {
 	 * NOT YET IMPLEMENTED
 	 */
 	private static void explore() {
-		EventSelector.startRandomEvent("forestEvents");
+		EventSelector.startRandomEventFromFileList(World.getInstance()
+				.getTile(Player.getInstance().getLocation()).getEventFiles());
 	}
 
 	/*
@@ -552,7 +554,7 @@ public class Game {
 
 						window.removeInputObsever(this);
 						print = false;
-						
+
 						openStatusMenu();
 						break;
 					case 2:

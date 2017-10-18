@@ -1,0 +1,37 @@
+<event>
+    <branch number='0'>
+        <choice>
+            <choiceDescription>You find a rock. Sit on it?</choiceDescription>
+            <option branch='1'>Yes</option>
+            <option branch='2'>No way</option>
+        </choice>
+    </branch>
+    
+    <branch number='1'>
+        <text>You sit on the rock</text>
+        <choice>
+            <choiceDescription>Stay sitting?</choiceDescription>
+            <option branch='3'>Stay</option>
+            <option branch='4'>Leave</option>
+        </choice>
+    </branch>
+    
+    <branch number='2'>
+        <text>You leave the rock. It seems sad.</text>
+        <end></end>
+    </branch>
+    
+    <branch number='3'>
+        <text>You are sitting on a rock</text>
+        <choice>
+            <choiceDescription>Stay sitting?</choiceDescription>
+            <option branch='3'>Stay</option>
+            <option branch='4'>Leave</option>
+        </choice>
+    </branch>
+    
+    <branch number='4'>
+        <text>You get up and leave</text>
+        <end></end>
+    </branch>
+</event>

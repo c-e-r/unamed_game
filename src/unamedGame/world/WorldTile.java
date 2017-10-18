@@ -4,6 +4,8 @@
 package unamedGame.world;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author c-e-r
@@ -16,6 +18,7 @@ public class WorldTile {
 	private int currentExplore;
 	private char character;
 	private Point coordinates;
+	private List<String> eventFiles;
 
 	/**
 	 * A default Constructor
@@ -29,13 +32,20 @@ public class WorldTile {
 
 	/**
 	 * Creates a worldtile from the given parameters
-	 * @param tileType the type of tile
-	 * @param maxExplore the maximum amount of times the tile can be explored
-	 * @param currentExplore the number of remaining times the tile can be explored
-	 * @param character the character representing the tiles type
-	 * @param coordinates the x y coordinates of the tile
+	 * 
+	 * @param tileType
+	 *            the type of tile
+	 * @param maxExplore
+	 *            the maximum amount of times the tile can be explored
+	 * @param currentExplore
+	 *            the number of remaining times the tile can be explored
+	 * @param character
+	 *            the character representing the tiles type
+	 * @param coordinates
+	 *            the x y coordinates of the tile
 	 */
-	public WorldTile(String tileType, int maxExplore, int currentExplore, char character, Point coordinates) {
+	public WorldTile(String tileType, int maxExplore, int currentExplore,
+			char character, Point coordinates) {
 		this.tileType = tileType;
 		this.maxExplore = maxExplore;
 		this.currentExplore = currentExplore;
@@ -44,9 +54,36 @@ public class WorldTile {
 
 	}
 
+	public WorldTile(String tileType, int maxExplore, char character,
+			String... eventFiles) {
+		this.tileType = tileType;
+		this.maxExplore = maxExplore;
+		this.character = character;
+		this.eventFiles = new ArrayList<String>();
+		for (String fileName : eventFiles) {
+			this.eventFiles.add(fileName);
+		}
+	}
+
+	public WorldTile(WorldTile worldTile, Point point) {
+		this.tileType = worldTile.tileType;
+		this.maxExplore = worldTile.maxExplore;
+		this.currentExplore = this.maxExplore;
+		this.character = worldTile.character;
+		this.eventFiles = worldTile.eventFiles;
+
+	}
+
+	public void addEventFile(String filename) {
+		eventFiles.add(filename);
+	}
+
 	/**
-	 * Returns a string showing the number of remaining explorations out of the maximum
-	 * @return a string showing the number of remaining explorations out of the maximum
+	 * Returns a string showing the number of remaining explorations out of the
+	 * maximum
+	 * 
+	 * @return a string showing the number of remaining explorations out of the
+	 *         maximum
 	 */
 	public String getExploredOutOfMax() {
 		if (maxExplore != 0) {
@@ -54,8 +91,10 @@ public class WorldTile {
 		}
 		return "";
 	}
+
 	/**
 	 * Returns the tiles type
+	 * 
 	 * @return the tiles tileType
 	 */
 	public String getTileType() {
@@ -64,13 +103,16 @@ public class WorldTile {
 
 	/**
 	 * Returns the maximum number of times the tile can be explored
+	 * 
 	 * @return the maximum number of times the tile can be explored
 	 */
 	public int getMaxExplore() {
 		return maxExplore;
 	}
+
 	/**
 	 * Returns the number of remaining times the tile can be explored
+	 * 
 	 * @return the number of remaining times the tile can be explored
 	 */
 	public int getCurrentExplore() {
@@ -79,32 +121,44 @@ public class WorldTile {
 
 	/**
 	 * Sets the number of times the tiles has left to be explored
-	 * @param currentExplore the number of explorations remaning to set
+	 * 
+	 * @param currentExplore
+	 *            the number of explorations remaning to set
 	 */
 	public void setCurrentExplore(int currentExplore) {
 		this.currentExplore = currentExplore;
 	}
+
 	/**
 	 * Returns the character that represents the tile type
+	 * 
 	 * @return the chracter taht represents the tile type
 	 */
 	public char getCharacter() {
 		return character;
 	}
 
-	
 	/**
 	 * Returns the tiles coordinates as a Point
+	 * 
 	 * @return the tiles coordinates as a Point
 	 */
 	public Point getCoordinates() {
 		return coordinates;
 	}
 
+	/**
+	 * @return the eventFiles
+	 */
+	public List<String> getEventFiles() {
+		return eventFiles;
+	}
+
 	@Override
 	public String toString() {
-		return "WorldTile [tileType=" + tileType + ", maxExplore=" + maxExplore + ", currentExplore=" + currentExplore
-				+ ", character=" + character + "]";
+		return "WorldTile [tileType=" + tileType + ", maxExplore=" + maxExplore
+				+ ", currentExplore=" + currentExplore + ", character="
+				+ character + "]";
 	}
 
 }
