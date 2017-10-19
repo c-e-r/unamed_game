@@ -4,7 +4,11 @@
 package unamedGame;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 import org.dom4j.DocumentException;
 
@@ -36,12 +40,15 @@ public class Game {
 
 	private static final Logger LOG = LogManager.getLogger(Game.class);
 
+	public static boolean onMoveMenu;
+
 	/**
 	 * Starts the game.
 	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
 
 		TimeObserver timeObserver = new TimeObserver();
 		timeObserver.observe(Time.getInstance());
@@ -124,6 +131,7 @@ public class Game {
 	 * Opens a menu for the player to choose which direction to move.
 	 */
 	private static void move() {
+		onMoveMenu = true;
 		Window.clearPane(window.getSidePane());
 		Window.addToPane(window.getSidePane(),
 				"1: Northwest\n2: North\n3: Northeast\n4: Southeast\n5: South\n6: Southwest");
@@ -143,6 +151,7 @@ public class Game {
 					}
 
 				}
+				onMoveMenu = false;
 				window.removeInputObsever(this);
 				openExplorationMenu();
 			}

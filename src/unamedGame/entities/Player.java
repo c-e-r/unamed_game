@@ -4,6 +4,7 @@
 package unamedGame.entities;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import unamedGame.world.World;
  * @author c-e-r
  *
  */
-public class Player extends Entity {
+public class Player extends Entity implements Serializable {
 
 	private static Player instance = null;
 
@@ -35,6 +36,7 @@ public class Player extends Entity {
 		return instance;
 	}
 
+	private boolean canMove;
 	private Point location;
 	private int level;
 	private int exp;
@@ -95,49 +97,52 @@ public class Player extends Entity {
 	 * @param direction
 	 */
 	public void move(int direction) {
-		Point tempLocation;
-		tempLocation = CubePoint.cubePointToPoint(CubePoint.getMoveNeighbor(
-				CubePoint.pointToCubePoint(location), direction));
-		if (World.getInstance().locationExists(tempLocation)) {
-			location = tempLocation;
-			Time.getInstance().passTime(480);
-		} else {
-			direction = -1;
-		}
-		switch (direction) {
-		case -1:
-			Window.appendToPane(Window.getInstance().getTextPane(),
-					"You can't go there.");
-			break;
-		case 0:
-			Window.appendToPane(Window.getInstance().getTextPane(),
-					"You travel northwest.");
-			break;
-		case 1:
-			Window.appendToPane(Window.getInstance().getTextPane(),
-					"You travel north.");
-			break;
-		case 2:
-			Window.appendToPane(Window.getInstance().getTextPane(),
-					"You travel southeast.");
-			break;
-		case 3:
-			Window.appendToPane(Window.getInstance().getTextPane(),
-					"You travel northeast.");
-			break;
-		case 4:
-			Window.appendToPane(Window.getInstance().getTextPane(),
-					"You travel south.");
-			break;
-		case 5:
-			Window.appendToPane(Window.getInstance().getTextPane(),
-					"You travel southwest.");
-			break;
+		if (Game.onMoveMenu) {
+			Point tempLocation;
+			tempLocation = CubePoint.cubePointToPoint(CubePoint.getMoveNeighbor(
+					CubePoint.pointToCubePoint(location), direction));
+			if (World.getInstance().locationExists(tempLocation)) {
+				System.out.println(location);
+				location = tempLocation;
+				System.out.println(location);
+				Time.getInstance().passTime(480);
+			} else {
+				direction = -1;
+			}
+			switch (direction) {
+			case -1:
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						"You can't go there.");
+				break;
+			case 0:
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						"You travel northwest.");
+				break;
+			case 1:
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						"You travel north.");
+				break;
+			case 2:
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						"You travel northeast.");
+				break;
+			case 3:
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						"You travel southeast.");
+				break;
+			case 4:
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						"You travel south.");
+				break;
+			case 5:
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						"You travel southwest.");
+				break;
 
-		default:
-			break;
+			default:
+				break;
+			}
 		}
-
 	}
 
 	public void gainExp(int expGain) {

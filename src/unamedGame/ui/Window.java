@@ -10,6 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 
 import javax.swing.JTextPane;
+import javax.swing.KeyStroke;
 import javax.swing.event.EventListenerList;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -23,6 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import unamedGame.Game;
+import unamedGame.entities.Player;
 import unamedGame.input.InputEvent;
 import unamedGame.input.InputObserver;
 
@@ -33,6 +35,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -189,6 +192,7 @@ public class Window {
 		playerPane = new JTextPane();
 		playerPane.setEditable(false);
 
+		setUpKeyBindings();
 	}
 
 	/**
@@ -469,6 +473,103 @@ public class Window {
 
 		}
 
+	}
+
+	private void setUpKeyBindings() {
+
+		Action moveNorthWest = new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1913467203987288379L;
+
+			public void actionPerformed(ActionEvent e) {
+				Player.getInstance().move(0);
+				Window.getInstance().getMapPane().repaint();
+
+			}
+		};
+		textField.getInputMap().put(KeyStroke.getKeyStroke("Q"),
+				"moveNorthWest");
+		textField.getActionMap().put("moveNorthWest", moveNorthWest);
+
+		Action moveNorth = new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -7823599887108172961L;
+
+			public void actionPerformed(ActionEvent e) {
+				Player.getInstance().move(1);
+				Window.getInstance().getMapPane().repaint();
+
+			}
+		};
+		textField.getInputMap().put(KeyStroke.getKeyStroke("W"), "moveNorth");
+		textField.getActionMap().put("moveNorth", moveNorth);
+
+		Action moveNorthEast = new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 3971483173919348630L;
+
+			public void actionPerformed(ActionEvent e) {
+				Player.getInstance().move(2);
+				Window.getInstance().getMapPane().repaint();
+
+			}
+		};
+		textField.getInputMap().put(KeyStroke.getKeyStroke("E"),
+				"moveNorthEast");
+		textField.getActionMap().put("moveNorthEast", moveNorthEast);
+
+		Action moveSouthWest = new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -8986802417301697297L;
+
+			public void actionPerformed(ActionEvent e) {
+				Player.getInstance().move(3);
+				Window.getInstance().getMapPane().repaint();
+
+			}
+		};
+		textField.getInputMap().put(KeyStroke.getKeyStroke("D"),
+				"moveSouthWest");
+		textField.getActionMap().put("moveSouthWest", moveSouthWest);
+
+		Action moveSouth = new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -6960339214481443539L;
+
+			public void actionPerformed(ActionEvent e) {
+				Player.getInstance().move(4);
+				Window.getInstance().getMapPane().repaint();
+
+			}
+		};
+		textField.getInputMap().put(KeyStroke.getKeyStroke("S"), "moveSouth");
+		textField.getActionMap().put("moveSouth", moveSouth);
+
+		Action moveSouthEast = new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -5341066901232125649L;
+
+			public void actionPerformed(ActionEvent e) {
+				Player.getInstance().move(5);
+				Window.getInstance().getMapPane().repaint();
+
+			}
+		};
+		textField.getInputMap().put(KeyStroke.getKeyStroke("A"),
+				"moveSouthEast");
+		textField.getActionMap().put("moveSouthEast", moveSouthEast);
 	}
 
 }
