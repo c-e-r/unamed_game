@@ -3,6 +3,7 @@
  */
 package unamedGame.world;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class WorldTile {
 	private char character;
 	private Point coordinates;
 	private List<String> eventFiles;
+	private Color color;
 
 	/**
 	 * A default Constructor
@@ -55,11 +57,12 @@ public class WorldTile {
 	}
 
 	public WorldTile(String tileType, int maxExplore, char character,
-			String... eventFiles) {
+			Color color, String... eventFiles) {
 		this.tileType = tileType;
 		this.maxExplore = maxExplore;
 		this.character = character;
 		this.eventFiles = new ArrayList<String>();
+		this.color = color;
 		for (String fileName : eventFiles) {
 			this.eventFiles.add(fileName);
 		}
@@ -71,7 +74,7 @@ public class WorldTile {
 		this.currentExplore = this.maxExplore;
 		this.character = worldTile.character;
 		this.eventFiles = worldTile.eventFiles;
-
+		this.color = worldTile.color;
 	}
 
 	public void addEventFile(String filename) {
@@ -132,7 +135,7 @@ public class WorldTile {
 	/**
 	 * Returns the character that represents the tile type
 	 * 
-	 * @return the chracter taht represents the tile type
+	 * @return the character that represents the tile type
 	 */
 	public char getCharacter() {
 		return character;
@@ -152,6 +155,13 @@ public class WorldTile {
 	 */
 	public List<String> getEventFiles() {
 		return eventFiles;
+	}
+
+	/**
+	 * @return the color
+	 */
+	public Color getColor() {
+		return color;
 	}
 
 	@Override

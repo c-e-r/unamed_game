@@ -3,6 +3,7 @@
  */
 package unamedGame.world;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +15,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Scanner;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import unamedGame.Game;
+import unamedGame.ui.Window;
+
 import java.lang.Integer;
 
 /**
@@ -23,6 +31,8 @@ import java.lang.Integer;
  *
  */
 public class World {
+
+	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	private static World instance = null;
 	private static HashMap<Integer, WorldTile> tileStorage = new HashMap<Integer, WorldTile>();
@@ -143,15 +153,23 @@ public class World {
 			for (String key : properties.stringPropertyNames()) {
 				String[] values = properties.getProperty(key).split("\\|");
 				WorldTile tile = new WorldTile(values[0],
-						Integer.parseInt(values[1]), values[2].charAt(0));
-				for (int i = 3; i < values.length; i++) {
+						Integer.parseInt(values[1]), values[2].charAt(0),
+						Color.decode(values[3]));
+				for (int i = 4; i < values.length; i++) {
 					tile.addEventFile(values[i]);
 				}
 				tileStorage.put(Integer.parseInt(key, 16), tile);
 
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			Window.appendToPane(Window.getInstance().getTextPane(),
+					"ERROR: There was an error loading 'data/map/tileData.properties'. Please check that the file exists. See game.log for more information.");
+			LOG.error(e);
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			Window.appendToPane(Window.getInstance().getTextPane(),
+					"ERROR: There was an error loading 'data/map/tileData.properties'. Please check that the file is correctly formatted. See game.log for more information.");
+			LOG.error(e);
 			e.printStackTrace();
 		}
 	}

@@ -46,13 +46,15 @@ public class MapPanel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		RenderingHints rh = new RenderingHints(RenderingHints.KEY_TEXT_ANTIALIASING,
+		RenderingHints rh = new RenderingHints(
+				RenderingHints.KEY_TEXT_ANTIALIASING,
 				RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 		g2d.setRenderingHints(rh);
 
 		Point origin = new Point(WIDTH / 2, HEIGHT / 2);
 
-		g2d.setStroke(new BasicStroke(4.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
+		g2d.setStroke(new BasicStroke(4.0f, BasicStroke.CAP_SQUARE,
+				BasicStroke.JOIN_MITER));
 		g2d.setFont(font);
 		metrics = g.getFontMetrics();
 
@@ -75,7 +77,8 @@ public class MapPanel extends JPanel {
 	 * @param padding
 	 *            the padding between hexes
 	 */
-	private void drawHexGridLoop(Graphics g, Point origin, int size, int radius, int padding) {
+	private void drawHexGridLoop(Graphics g, Point origin, int size, int radius,
+			int padding) {
 		double ang30 = Math.toRadians(30);
 		double xOff = Math.cos(ang30) * (radius + padding);
 		double yOff = Math.sin(ang30) * (radius + padding);
@@ -83,7 +86,8 @@ public class MapPanel extends JPanel {
 
 		Point playerPoint = Player.getInstance().getLocation();
 		CubePoint playerCubePoint = CubePoint.pointToCubePoint(playerPoint);
-		WorldTile playerTile = World.getInstance().getWorld()[playerPoint.x][playerPoint.y];
+		WorldTile playerTile = World.getInstance()
+				.getWorld()[playerPoint.x][playerPoint.y];
 		WorldTile[] tiles = new WorldTile[61];
 
 		for (int i = 0; i < tiles.length; i++) {
@@ -118,13 +122,15 @@ public class MapPanel extends JPanel {
 	 * @param lineThickness
 	 *            the thickness of the rectangle border
 	 */
-	public void drawRectangle(Graphics2D g, boolean filled, int colorValue, int lineThickness) {
+	public void drawRectangle(Graphics2D g, boolean filled, int colorValue,
+			int lineThickness) {
 		// Store before changing.
 		Stroke tmpS = g.getStroke();
 		Color tmpC = g.getColor();
 
 		g.setColor(new Color(colorValue));
-		g.setStroke(new BasicStroke(lineThickness, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		g.setStroke(new BasicStroke(lineThickness, BasicStroke.CAP_ROUND,
+				BasicStroke.JOIN_ROUND));
 
 		if (filled)
 			g.fillRect(0, 0, 500, 500);
@@ -154,7 +160,8 @@ public class MapPanel extends JPanel {
 	 * @param tile
 	 *            the WorldTile the hex represents
 	 */
-	private void drawHex(Graphics g, int posX, int posY, int x, int y, int r, WorldTile tile) {
+	private void drawHex(Graphics g, int posX, int posY, int x, int y, int r,
+			WorldTile tile) {
 		Graphics2D g2d = (Graphics2D) g;
 
 		Hexagon hex = new Hexagon(x, y, r);
@@ -162,15 +169,15 @@ public class MapPanel extends JPanel {
 		int w = metrics.stringWidth(text);
 		int h = metrics.getHeight();
 
-		int outlineColor = 0xf1fccf;
-		if (tile.getCoordinates() != null && tile.getCoordinates().equals(Player.getInstance().getLocation())) {
-			outlineColor = 0xFF0000;
+		String outlineColor = "0xf1fccf";
+		if (tile.getCoordinates() != null && tile.getCoordinates()
+				.equals(Player.getInstance().getLocation())) {
+			outlineColor = "0xFF0000";
 			g.drawString("1", x - w / 2 + 1, y + h / 2);
 
 		}
-
-		hex.draw(g2d, x, y, 0, 0x84cc80, true);
-		hex.draw(g2d, x, y, 2, outlineColor, false);
+		hex.draw(g2d, x, y, 0, tile.getColor(), true);
+		hex.draw(g2d, x, y, 2, Color.decode(outlineColor), false);
 
 		g.setColor(new Color(0xFFFFFF));
 		g.drawString(text, x - w / 2, y + h / 2 - 14);
@@ -189,7 +196,8 @@ public class MapPanel extends JPanel {
 	 * @param colorValue
 	 *            the color to use for the text
 	 */
-	private void drawMovementOverlay(Graphics2D g, int w, int h, int colorValue) {
+	private void drawMovementOverlay(Graphics2D g, int w, int h,
+			int colorValue) {
 		Color tmpC = g.getColor();
 
 		g.setColor(new Color(colorValue));
@@ -214,8 +222,10 @@ public class MapPanel extends JPanel {
 	 *            the direction of the neighbor to get
 	 * @return the neighboring tile
 	 */
-	private static WorldTile getMapTile(CubePoint playerCubePoint, int direction) {
-		Point point = CubePoint.cubePointToPoint(CubePoint.getCubeNeighbor(playerCubePoint, direction));
+	private static WorldTile getMapTile(CubePoint playerCubePoint,
+			int direction) {
+		Point point = CubePoint.cubePointToPoint(
+				CubePoint.getCubeNeighbor(playerCubePoint, direction));
 
 		return World.getInstance().getTile(point);
 
