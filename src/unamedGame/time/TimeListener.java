@@ -14,18 +14,26 @@ import java.util.Observer;
  * @author c-e-r
  *
  */
-public class TimeObserver implements Observer, Serializable {
+public abstract class TimeListener implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5454029316475387373L;
+	private boolean delete;
 
-	public void observe(Observable o) {
-		o.addObserver(this);
+	protected abstract void action();
+
+	public void setDelete() {
+		delete = true;
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		int time = ((Time) o).getTime();
+	public boolean getDelete() {
+		return delete;
+	}
+
+	public void entityEvent() {
+		if (!delete) {
+			action();
+		}
 	}
 }

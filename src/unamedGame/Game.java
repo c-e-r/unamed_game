@@ -22,7 +22,7 @@ import unamedGame.items.Item;
 import unamedGame.skills.Skill;
 import unamedGame.spells.Spell;
 import unamedGame.time.Time;
-import unamedGame.time.TimeObserver;
+import unamedGame.time.TimeListener;
 import unamedGame.ui.Window;
 import unamedGame.util.Colors;
 import unamedGame.world.World;
@@ -49,8 +49,6 @@ public class Game {
 	 */
 	public static void main(String[] args) {
 
-		TimeObserver timeObserver = new TimeObserver();
-		timeObserver.observe(Time.getInstance());
 		Window.getInstance().getFrame().setVisible(true);
 		openMainMenu();
 
@@ -103,11 +101,11 @@ public class Game {
 						try {
 							ObjectInputStream in = new ObjectInputStream(
 									new FileInputStream(new File("save1")));
-							Player.setInstance(
-									((Save) in.readObject()).getPlayer());
+							Save save = ((Save) in.readObject());
+							Player.setInstance(save.getPlayer());
+							Time.setInstance(save.getTime());
+
 							in.close();
-							System.out.println(
-									Player.getInstance().getLocation());
 						} catch (IOException | ClassNotFoundException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -887,15 +885,14 @@ public class Game {
 	private static void openDebugMenu() {
 		Window.clearPane(window.getSidePane());
 		Window.addToPane(window.getSidePane(),
-				"back \naddItem <itemName>\ngainExp <amount>\nstartEvent <eventName>\naddSkill <skillName>\naddSpell <spellName>\nstartCombat <enemyName>");
-		Window.appendToPane(Window.getInstance().getTextPane(), "Move where?");
+				"0: Back \naddItem <itemName>\ngainExp <amount>\nstartEvent <eventName>\naddSkill <skillName>\naddSpell <spellName>\nstartCombat <enemyName>");
 
 		Window.getInstance().addInputObsever(new InputObserver() {
 			@Override
 			public void inputChanged(InputEvent evt) {
 				String[] command = evt.getText().split(" ");
 				switch (command[0]) {
-				case "back":
+				case "0":
 					window.removeInputObsever(this);
 					openExplorationMenu();
 					break;

@@ -5,6 +5,7 @@ package unamedGame.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 
@@ -34,6 +35,8 @@ public class Entity extends Observable implements Serializable {
 	private static final long serialVersionUID = -7904979206847101273L;
 
 	private static final Logger LOG = LogManager.getLogger(Game.class);
+
+	protected List<EntityListener> entityListeners = new ArrayList<EntityListener>();
 
 	protected Item[] equipment;
 
@@ -431,8 +434,15 @@ public class Entity extends Observable implements Serializable {
 	 *            the reason effects are being triggered
 	 */
 	public void triggerEffects(String reason) {
-		setChanged();
-		notifyObservers((String) reason);
+		for (Iterator<EntityListener> it = entityListeners.iterator(); it
+				.hasNext();) {
+			EntityListener listener = it.next();
+			listener.entityEvent(reason);
+			if (listener.getDelete()) {
+				it.remove();
+			}
+
+		}
 	}
 
 	/**
@@ -640,7 +650,8 @@ public class Entity extends Observable implements Serializable {
 		Dice.roll(Dice.HIT_DIE);
 
 		if (spell.isAttack()) {
-			spellHit = Calculate.calculateSpellAttackHitChance(attacker, spell, spellFocusHitChance) >= this.getEffectiveDodge();
+			spellHit = Calculate.calculateSpellAttackHitChance(attacker, spell,
+					spellFocusHitChance) >= this.getEffectiveDodge();
 			spellHit = true;
 
 		}
@@ -1407,7 +1418,8 @@ public class Entity extends Observable implements Serializable {
 			break;
 		}
 		int speedDie = Dice.roll(Dice.SPEED_DIE);
-		LOG.debug("speed + speedBonus - equipSpeedPenalty + actionBonus + speedDie[D10]");
+		LOG.debug(
+				"speed + speedBonus - equipSpeedPenalty + actionBonus + speedDie[D10]");
 		StringBuilder builder = new StringBuilder();
 		builder.append("Speed roll: ");
 		builder.append(speed);
@@ -2336,5 +2348,13 @@ public class Entity extends Observable implements Serializable {
 		}
 
 		return builder.toString();
+	}
+
+	public void addEntityListener(EntityListener listener) {
+		entityListeners.add(listener);
+	}
+
+	public void removeEntityListener(EntityListener listener) {
+		entityListeners.remove(listener);
 	}
 }

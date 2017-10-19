@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<item>
+    <name>dot item</name>
+    <description>this is a dot item</description>
+    <useText>#userNameCapital# uses the dot item</useText>
+    <useOnText>#userNameCapital# uses the dot item on #targetName#</useOnText>
+    <playerUseText>You use the dot item</playerUseText>
+    <playerUseOnText>You use the dot item on #targetName#</playerUseOnText>
+    <offensive>true</offensive>
+    <weight>1</weight>
+    <uses>1</uses>
+    <maxUses>2</maxUses>
+    <battleUse>true</battleUse>
+    <fieldUse>true</fieldUse>
+    <equippable equipSlot='held'>true</equippable>
+    <spell>testSpell</spell>
+    <effect 
+        name='itemNameDamage' 
+        magnitude='2' 
+        duration='10000'
+        increment='1'
+        damageType='sacred' 
+        repeatType='persistant'
+        effectDescription='#targetNameCapital# takes #totalDamage# damage'
+        repeatEffectDescription='#targetNameCapital# takes #totalDamage# damage'
+        playerRepeatEffectDescription='You take #totalDamage# damage'
+        playerEffectDescription='F You take #totalDamage# damage'
+        resistEffectDescription='#targetNameCapital# resists the effect'
+        resistRepeatEffectDescription='#targetNameCapital# resisted the effect this turn'
+        playerResistEffectDescription='You resist the effect'
+        playerResistRepeatEffectDescription='You resisted the effect this turn'
+        selfDestructTrigger='attacked'
+        selfDestructDescription='Effect self destructed on #targetName#'
+        playerSelfDestructDescription='Effect self destructed on player'
+        specialEffectTrigger='attacked'
+        specialResistType='physical'
+        specialAccuracyBonus='-130'
+        specialEffectDescription='#targetNameCapital# takes #totalDamage# extra damage from a special effect'
+        playerSpecialEffectDescription='You take #totalDamage# extra damage from a special effect'
+        specialResistEffectDescription='#targetNameCapital# resists the special effect'
+        playerSpecialResistEffectDescription='You resist the special effect'
+    >damage</effect>
+</item>

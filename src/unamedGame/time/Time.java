@@ -4,9 +4,15 @@
 package unamedGame.time;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Observable;
 
 import javax.swing.event.EventListenerList;
+
+import unamedGame.entities.EntityListener;
+import unamedGame.entities.Player;
 
 /**
  * Keeps track of the games current time and contains methods for manipulating
@@ -31,9 +37,14 @@ public class Time extends Observable implements Serializable {
 		}
 		return instance;
 	}
+	
+	public static void setInstance(Time instance) {
+		Time.instance = instance;
+	}
+
 
 	private int time;
-	private EventListenerList timeList = new EventListenerList();
+	private List<TimeListener> timeListeners = new ArrayList<TimeListener>();
 
 	/**
 	 * A constructor to initialize the time at 0
@@ -51,8 +62,15 @@ public class Time extends Observable implements Serializable {
 	public void passTime(int time) {
 		for (int i = 0; i < time; i++) {
 			this.time++;
-			setChanged();
-			notifyObservers();
+
+			for (Iterator<TimeListener> it = timeListeners.iterator(); it
+					.hasNext();) {
+				TimeListener listener = it.next();
+				listener.entityEvent();
+				if (listener.getDelete()) {
+					it.remove();
+				}
+			}
 		}
 
 	}
@@ -64,6 +82,14 @@ public class Time extends Observable implements Serializable {
 	 */
 	public int getTime() {
 		return time;
+	}
+
+	public void addTimeListener(TimeListener listener) {
+		timeListeners.add(listener);
+	}
+
+	public void removeEntityListener(TimeListener listener) {
+		timeListeners.remove(listener);
 	}
 
 }
