@@ -3,6 +3,7 @@
  */
 package unamedGame.effects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +26,12 @@ import unamedGame.ui.Window;
  * @author c-e-r
  *
  */
-public abstract class Effect {
+public abstract class Effect implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1153105558946744535L;
 
 	private static final Logger LOG = LogManager.getLogger(Game.class);
 
@@ -468,6 +474,11 @@ public abstract class Effect {
 		Effect effect = this;
 
 		Time.getInstance().addObserver(timeObserver = new TimeObserver() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 6561115758201409530L;
+
 			@Override
 			public void update(Observable o, Object arg) {
 				if (destroyed) {

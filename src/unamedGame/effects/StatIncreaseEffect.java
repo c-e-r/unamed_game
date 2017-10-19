@@ -16,6 +16,10 @@ import unamedGame.util.Colors;
  */
 public class StatIncreaseEffect extends Effect {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1217888167733580084L;
 	private int magnitude;
 	private String stat;
 

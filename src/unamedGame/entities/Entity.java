@@ -3,6 +3,7 @@
  */
 package unamedGame.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -25,7 +26,12 @@ import unamedGame.util.Colors;
  * @author c-e-r
  *
  */
-public class Entity extends Observable {
+public class Entity extends Observable implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7904979206847101273L;
 
 	private static final Logger LOG = LogManager.getLogger(Game.class);
 
@@ -297,8 +303,6 @@ public class Entity extends Observable {
 
 		triggerEffects("attacked");
 
-		int weaponBaseDamage = 0;
-		int weaponVariableDamage = 1;
 		int weaponHitChance = 0;
 		String weaponDamageType = "null";
 		String weaponAttackHitDescription;
@@ -306,9 +310,9 @@ public class Entity extends Observable {
 		String playerWeaponAttackHitDescription;
 		String playerWeaponAttackMissDescription;
 
-		weaponBaseDamage = weapon.getWeaponBaseDamage();
+		weapon.getWeaponBaseDamage();
 		weaponHitChance = weapon.getWeaponHitChance();
-		weaponVariableDamage = weapon.getWeaponVariableDamage();
+		weapon.getWeaponVariableDamage();
 		weaponDamageType = weapon.getDamageType();
 		weaponAttackHitDescription = weapon.getAttackHitDescription();
 		weaponAttackMissDescription = weapon.getAttackMissDescription();
@@ -444,8 +448,6 @@ public class Entity extends Observable {
 		Item weapon = attacker.getMainWeapon();
 		boolean attackHit = true;
 
-		int weaponBaseDamage = 0;
-		int weaponVariableDamage = 1;
 		int weaponHitChance = 0;
 		String weaponDamageType = "null";
 
@@ -458,9 +460,9 @@ public class Entity extends Observable {
 			weapon = attacker.getMainWeapon();
 		}
 
-		weaponBaseDamage = weapon.getWeaponBaseDamage();
+		weapon.getWeaponBaseDamage();
 		weaponHitChance = weapon.getWeaponHitChance();
-		weaponVariableDamage = weapon.getWeaponVariableDamage();
+		weapon.getWeaponVariableDamage();
 		weaponDamageType = weapon.getDamageType();
 
 		String[] description = null;
@@ -635,7 +637,7 @@ public class Entity extends Observable {
 
 		String[] description = null;
 
-		int temp = Dice.roll(Dice.HIT_DIE);
+		Dice.roll(Dice.HIT_DIE);
 
 		if (spell.isAttack()) {
 			spellHit = Calculate.calculateSpellAttackHitChance(attacker, spell, spellFocusHitChance) >= this.getEffectiveDodge();

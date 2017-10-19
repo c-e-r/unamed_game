@@ -6,16 +6,10 @@ package unamedGame.events;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import unamedGame.Dice;
-import unamedGame.Game;
-import unamedGame.ui.Window;
 
 /**
  * @author c-e-r
@@ -23,7 +17,6 @@ import unamedGame.ui.Window;
  */
 public class EventSelector {
 
-	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	public static void startRandomEventFromFile(String fileName)
 			throws FileNotFoundException {

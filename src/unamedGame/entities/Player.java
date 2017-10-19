@@ -26,6 +26,10 @@ import unamedGame.world.World;
  */
 public class Player extends Entity implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3011027798036421350L;
 	private static Player instance = null;
 
 	public static Player getInstance() {
@@ -35,8 +39,11 @@ public class Player extends Entity implements Serializable {
 		}
 		return instance;
 	}
+	
+	public static void setInstance(Player instance) {
+		Player.instance = instance;
+	}
 
-	private boolean canMove;
 	private Point location;
 	private int level;
 	private int exp;
@@ -92,7 +99,7 @@ public class Player extends Entity implements Serializable {
 
 	/**
 	 * Moves the player in the given direction passing time and displaying a
-	 * confimation of direction moved
+	 * confirmation of direction moved
 	 * 
 	 * @param direction
 	 */
@@ -102,9 +109,7 @@ public class Player extends Entity implements Serializable {
 			tempLocation = CubePoint.cubePointToPoint(CubePoint.getMoveNeighbor(
 					CubePoint.pointToCubePoint(location), direction));
 			if (World.getInstance().locationExists(tempLocation)) {
-				System.out.println(location);
 				location = tempLocation;
-				System.out.println(location);
 				Time.getInstance().passTime(480);
 			} else {
 				direction = -1;

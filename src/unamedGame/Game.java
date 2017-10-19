@@ -5,12 +5,12 @@ package unamedGame;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
-import org.dom4j.DocumentException;
 
 import unamedGame.entities.Enemy;
 import unamedGame.entities.Player;
@@ -40,7 +40,7 @@ public class Game {
 
 	private static final Logger LOG = LogManager.getLogger(Game.class);
 
-	public static boolean onMoveMenu;
+	public static boolean onMoveMenu = false;
 
 	/**
 	 * Starts the game.
@@ -48,13 +48,79 @@ public class Game {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
 
 		TimeObserver timeObserver = new TimeObserver();
 		timeObserver.observe(Time.getInstance());
 		Window.getInstance().getFrame().setVisible(true);
-		openExplorationMenu();
+		openMainMenu();
 
+	}
+
+	public static void openMainMenu() {
+		Window.clearPane(window.getSidePane());
+		Window.addToPane(window.getSidePane(), "1: NEW GAME\n2: LOAD GAME");
+		Window.getInstance().addInputObsever(new InputObserver() {
+			@Override
+			public void inputChanged(InputEvent evt) {
+
+				clearTextField();
+
+				if (isNumeric(evt.getText())) {
+					int command = Integer.parseInt(evt.getText());
+					if (command >= 1 && command <= 2) {
+						switch (command) {
+						case 1:
+							Window.getInstance().removeInputObsever(this);
+							openExplorationMenu();
+							break;
+						case 2:
+							Window.getInstance().removeInputObsever(this);
+							openLoadMenu();
+							break;
+						default:
+							break;
+						}
+					}
+
+				}
+			}
+
+		});
+	}
+
+	public static void openLoadMenu() {
+		Window.clearPane(window.getSidePane());
+		Window.addToPane(window.getSidePane(), "1: LOAD");
+		Window.getInstance().addInputObsever(new InputObserver() {
+			@Override
+			public void inputChanged(InputEvent evt) {
+
+				clearTextField();
+
+				if (isNumeric(evt.getText())) {
+					int command = Integer.parseInt(evt.getText());
+					if (command >= 1 && command <= 2) {
+						try {
+							ObjectInputStream in = new ObjectInputStream(
+									new FileInputStream(new File("save1")));
+							Player.setInstance(
+									((Save) in.readObject()).getPlayer());
+							in.close();
+							System.out.println(
+									Player.getInstance().getLocation());
+						} catch (IOException | ClassNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					Window.getInstance().removeInputObsever(this);
+					Window.getInstance().getMapPane().repaint();
+					openExplorationMenu();
+
+				}
+			}
+
+		});
 	}
 
 	/**
@@ -63,7 +129,7 @@ public class Game {
 	public static void openExplorationMenu() {
 		Window.clearPane(window.getSidePane());
 		Window.addToPane(window.getSidePane(),
-				"1: Explore \n2: Move\n3: Gather\n4: Inventory \n5: Status");
+				"1: Explore \n2: Move\n3: Gather\n4: Inventory \n5: Status\n6: Save");
 
 		Window.getInstance().addInputObsever(new InputObserver() {
 			@Override
@@ -99,6 +165,18 @@ public class Game {
 				case 5: // status
 					window.removeInputObsever(this);
 					openStatusMenu();
+					break;
+				case 6: // save
+					try {
+						ObjectOutputStream out = new ObjectOutputStream(
+								new FileOutputStream(new File("save1")));
+						out.writeObject(new Save());
+						out.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					window.removeInputObsever(this);
 					break;
 				default:
 					Window.appendToPane(Window.getInstance().getTextPane(),

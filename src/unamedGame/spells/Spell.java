@@ -4,6 +4,7 @@
 package unamedGame.spells;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,7 +18,6 @@ import org.dom4j.io.SAXReader;
 
 import unamedGame.Game;
 import unamedGame.effects.Effect;
-import unamedGame.items.Item;
 import unamedGame.ui.Window;
 
 /**
@@ -26,7 +26,12 @@ import unamedGame.ui.Window;
  * @author c-e-r
  *
  */
-public class Spell {
+public class Spell implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOG = LogManager.getLogger(Game.class);
 

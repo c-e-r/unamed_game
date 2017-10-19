@@ -1,5 +1,6 @@
 package unamedGame.entities;
 
+import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -12,7 +13,12 @@ import java.util.Observer;
  * @author c-e-r
  *
  */
-public class EntityObserver implements Observer {
+public class EntityObserver implements Observer, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9153513366467829508L;
+
 	public void observe(Observable o) {
 	    o.addObserver(this);
 	  }
