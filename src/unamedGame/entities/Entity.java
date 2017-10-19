@@ -319,15 +319,14 @@ public class Entity extends Observable {
 
 		String[] description = null;
 
-		int damage = Calculate.calculateAttackDamage(attacker, weapon);
+		int damage = 0;
 		// Prevent damage from going below 0
-		if (damage < 0) {
-			damage = 0;
-		}
 
 		attackHit = Calculate.calculateAttackHitChance(attacker,
 				weaponHitChance) >= this.getEffectiveDodge();
 		if (attackHit) {
+			damage = Calculate.calculateAttackDamage(attacker, weapon,
+					usingOffhandWeapon);
 			damage = this.takeDamage(damage, weaponDamageType);
 			if (attacker instanceof Player) {
 				description = playerWeaponAttackHitDescription.split("#");
@@ -466,16 +465,15 @@ public class Entity extends Observable {
 
 		String[] description = null;
 
-		int damage = Calculate.calculateSkillAttackDamage(attacker, skill,
-				weaponBaseDamage, weaponVariableDamage);
+		int damage = 0;
 		// Prevent damage from going below 0
-		if (damage < 0) {
-			damage = 0;
-		}
+
 		if (skill.isAttack()) {
 			attackHit = Calculate.calculateSkillAttackHitChance(attacker, skill,
 					weaponHitChance) >= this.getEffectiveDodge();
 			if (attackHit) {
+				damage = Calculate.calculateSkillAttackDamage(attacker, skill,
+						weapon, usingOffhandWeapon);
 				damage = this.takeDamage(damage, weaponDamageType);
 			}
 		}
@@ -629,7 +627,7 @@ public class Entity extends Observable {
 			}
 		}
 
-		boolean spellHit = false;
+		boolean spellHit = true;
 
 		// Get weapon information of weapon if a weapon exists. Otherwise get
 		// innate
@@ -640,32 +638,25 @@ public class Entity extends Observable {
 		int temp = Dice.roll(Dice.HIT_DIE);
 
 		if (spell.isAttack()) {
-			if (attacker.getEffectiveHit() + spellFocusHitChance
-					+ spell.getAttackHitBonus()
-					+ temp >= this.getEffectiveDodge()) {
-				spellHit = true;
+			spellHit = Calculate.calculateSpellAttackHitChance(attacker, spell, spellFocusHitChance) >= this.getEffectiveDodge();
+			spellHit = true;
 
-				if (attacker instanceof Player) {
-					description = spell.getPlayerAttackDescription().split("#");
-				} else {
-					description = spell.getAttackDescription().split("#");
-				}
+		}
+		if (spellHit) {
 
-			} else {
-				if (attacker instanceof Player) {
-					description = spell.getPlayerMissDescription().split("#");
-				} else {
-					description = spell.getMissDescription().split("#");
-				}
-
-			}
-		} else {
 			if (attacker instanceof Player) {
 				description = spell.getPlayerAttackDescription().split("#");
-
 			} else {
 				description = spell.getAttackDescription().split("#");
 			}
+
+		} else {
+			if (attacker instanceof Player) {
+				description = spell.getPlayerMissDescription().split("#");
+			} else {
+				description = spell.getMissDescription().split("#");
+			}
+
 		}
 		// Replace keywords in description with variables
 		for (String string : description) {
@@ -1413,9 +1404,25 @@ public class Entity extends Observable {
 		default:
 			break;
 		}
-
+		int speedDie = Dice.roll(Dice.SPEED_DIE);
+		LOG.debug("speed + speedBonus - equipSpeedPenalty + actionBonus + speedDie[D10]");
+		StringBuilder builder = new StringBuilder();
+		builder.append("Speed roll: ");
+		builder.append(speed);
+		builder.append(" + ");
+		builder.append(speedBonus);
+		builder.append(" - ");
+		builder.append(speedPenalty);
+		builder.append(" + ");
+		builder.append(tempSpeedBonus);
+		builder.append(" + ");
+		builder.append(speedDie);
+		builder.append("[1-");
+		builder.append(Dice.SPEED_DIE);
+		builder.append("]");
+		LOG.debug(builder.toString());
 		return speed + speedBonus - equipSpeedPenalty + tempSpeedBonus
-				+ Dice.roll(Dice.SPEED_DIE);
+				+ speedDie;
 	}
 
 	/**

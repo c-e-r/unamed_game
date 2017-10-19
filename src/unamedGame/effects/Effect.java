@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dom4j.Element;
 
 import unamedGame.Dice;
@@ -24,6 +26,8 @@ import unamedGame.ui.Window;
  *
  */
 public abstract class Effect {
+
+	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	protected List<Effect> effects;
 	protected String name;
@@ -87,63 +91,71 @@ public abstract class Effect {
 	 * @param toSelf
 	 *            if the effect will always apply to the user
 	 * @param playerEffectDescription
-	 *            the description to be displayed when the player gains the effect
-	 * @param playerRepeatEffectDescription
-	 *            the description to be displayed when the effect triggers on the
-	 *            player
-	 * @param effectDescription
-	 *            the description to be displayed when a non-player Entity gains the
+	 *            the description to be displayed when the player gains the
 	 *            effect
+	 * @param playerRepeatEffectDescription
+	 *            the description to be displayed when the effect triggers on
+	 *            the player
+	 * @param effectDescription
+	 *            the description to be displayed when a non-player Entity gains
+	 *            the effect
 	 * @param repeatEffectDescription
 	 *            the description to be displayed when the effect triggers on a
 	 *            non-player entity
 	 * @param resistEffectDescription
-	 *            the description to be displayed when a non-player entity resist
-	 *            the effect when they gain it
+	 *            the description to be displayed when a non-player entity
+	 *            resist the effect when they gain it
 	 * @param playerResistEffectDescription
-	 *            the description to be displayed when the player resists the effect
-	 *            when they gain it
+	 *            the description to be displayed when the player resists the
+	 *            effect when they gain it
 	 * @param resistRepeatEffectDescription
-	 *            the description to be displayed when a non-player Entity resists
-	 *            the effect when it triggers
+	 *            the description to be displayed when a non-player Entity
+	 *            resists the effect when it triggers
 	 * @param playerResistRepeatEffectDescription
-	 *            the description to be displayed when a player resists the effect
-	 *            when it triggers
+	 *            the description to be displayed when a player resists the
+	 *            effect when it triggers
 	 * @param selfDestructTrigger
 	 *            the condition under which the effect will destroy itself
 	 * @param selfDestructDescription
-	 *            the description to be displayed when the effect destroys itself
-	 *            while on a non-player entity
+	 *            the description to be displayed when the effect destroys
+	 *            itself while on a non-player entity
 	 * @param playerSelfDestructDescription
-	 *            the description to be displayed when the effect destroys itself
-	 *            while on the player
+	 *            the description to be displayed when the effect destroys
+	 *            itself while on the player
 	 * @param specialEffectTrigger
 	 *            the condition under which specialActivate will trigger
 	 * @param specialEffectDescription
 	 *            the description to be displayed when the special effect is
 	 *            activates while on a non-player entity
 	 * @param playerSpecialEffectDescription
-	 *            the description to be displayed when the special effect activates
-	 *            while on the player
+	 *            the description to be displayed when the special effect
+	 *            activates while on the player
 	 * @param specialResistEffectDescription
-	 *            the description to be displayed when a non-player entity resists
-	 *            the special effect
+	 *            the description to be displayed when a non-player entity
+	 *            resists the special effect
 	 * @param playerSpecialResistEffectDescription
-	 *            the description to be displayed when the player reists a special
-	 *            effect
+	 *            the description to be displayed when the player reists a
+	 *            special effect
 	 * @param specialResistType
 	 *            the resistType of the special effect
 	 * @param specialAccuracyBonus
 	 *            the accuracy bonus of the special effect
 	 */
-	public Effect(List<Effect> effects, String name, int duration, int increment, int baseAccuracy, String resistType,
-			String repeatType, boolean toSelf, String playerEffectDescription, String playerRepeatEffectDescription,
-			String effectDescription, String repeatEffectDescription, String resistEffectDescription,
-			String playerResistEffectDescription, String resistRepeatEffectDescription,
-			String playerResistRepeatEffectDescription, String selfDestructTrigger, String selfDestructDescription,
-			String playerSelfDestructDescription, String specialEffectTrigger, String specialEffectDescription,
-			String playerSpecialEffectDescription, String specialResistEffectDescription,
-			String playerSpecialResistEffectDescription, String specialResistType, int specialAccuracyBonus) {
+	public Effect(List<Effect> effects, String name, int duration,
+			int increment, int baseAccuracy, String resistType,
+			String repeatType, boolean toSelf, String playerEffectDescription,
+			String playerRepeatEffectDescription, String effectDescription,
+			String repeatEffectDescription, String resistEffectDescription,
+			String playerResistEffectDescription,
+			String resistRepeatEffectDescription,
+			String playerResistRepeatEffectDescription,
+			String selfDestructTrigger, String selfDestructDescription,
+			String playerSelfDestructDescription, String specialEffectTrigger,
+			String specialEffectDescription,
+			String playerSpecialEffectDescription,
+			String specialResistEffectDescription,
+			String playerSpecialResistEffectDescription,
+			String specialResistType, int specialAccuracyBonus) {
 		this.effects = effects;
 		this.duration = duration;
 		this.name = name;
@@ -203,16 +215,21 @@ public abstract class Effect {
 			return true;
 		}
 		int target = accuracy;
+		int resistance = 0;
 		switch (resistType) {
 		case "physical":
-			target -= owner.getEffectivePhysicalResistance();
+			resistance = owner.getEffectivePhysicalResistance();
 			break;
 		case "mental":
-			target -= owner.getEffectiveMentalResistance();
+			resistance = owner.getEffectiveMentalResistance();
 			break;
 
 		}
+		target -= resistance;
 		int temp = Dice.roll(Dice.RESISTANCE_DIE);
+		LOG.debug("d100 < effectAcuracy - targetResistance");
+		LOG.debug("Special effect roll: " + temp + "[1-" + Dice.RESISTANCE_DIE
+				+ "] < " + accuracy + " - " + resistance);
 		return temp < target;
 
 	}
@@ -227,22 +244,28 @@ public abstract class Effect {
 			return true;
 		}
 		int target = specialAccuracy;
+		int resistance = 0;
 		switch (resistType) {
 		case "physical":
-			target -= owner.getEffectivePhysicalResistance();
+			resistance = owner.getEffectivePhysicalResistance();
 			break;
 		case "mental":
-			target -= owner.getEffectiveMentalResistance();
+			resistance = owner.getEffectiveMentalResistance();
 			break;
 
 		}
+		target -= resistance;
 		int temp = Dice.roll(Dice.RESISTANCE_DIE);
+		LOG.debug("d100 < specialEffectAccuracy - targetResistance");
+		LOG.debug("Special effect roll: " + temp + "[1-" + Dice.RESISTANCE_DIE
+				+ "] < " + specialAccuracy + " - " + resistance);
 		return temp < target;
 
 	}
 
 	/**
-	 * Calculates the effects accuracy based on base accuracy and the creators stats
+	 * Calculates the effects accuracy based on base accuracy and the creators
+	 * stats
 	 * 
 	 * @param creator
 	 *            the creator of the effect
@@ -261,7 +284,8 @@ public abstract class Effect {
 			break;
 		}
 		accuracy = baseAccuracy * creatorEffectMult;
-		specialAccuracy = baseAccuracy + specialAccuracyBonus * creatorEffectMult;
+		specialAccuracy = baseAccuracy
+				+ specialAccuracyBonus * creatorEffectMult;
 	}
 
 	/**
@@ -320,7 +344,8 @@ public abstract class Effect {
 	public abstract void firstActivate();
 
 	/**
-	 * Prints the description given to it replacing placeholder words with values
+	 * Prints the description given to it replacing placeholder words with
+	 * values
 	 * 
 	 * @param description
 	 *            the description to print
@@ -328,8 +353,8 @@ public abstract class Effect {
 	public abstract void printDescription(String description);
 
 	/**
-	 * Checks if string is a keyword. If it is it prints it and returns true, if not
-	 * it return false
+	 * Checks if string is a keyword. If it is it prints it and returns true, if
+	 * not it return false
 	 * 
 	 * @param string
 	 *            the string to check for replacement
@@ -339,10 +364,12 @@ public abstract class Effect {
 
 		switch (string) {
 		case "targetName":
-			Window.addToPane(Window.getInstance().getTextPane(), owner.getUseName());
+			Window.addToPane(Window.getInstance().getTextPane(),
+					owner.getUseName());
 			break;
 		case "targetNameCapital":
-			Window.addToPane(Window.getInstance().getTextPane(), Game.capitalizeFirstLetter(owner.getUseName()));
+			Window.addToPane(Window.getInstance().getTextPane(),
+					Game.capitalizeFirstLetter(owner.getUseName()));
 			break;
 		default:
 			return false;
@@ -402,8 +429,8 @@ public abstract class Effect {
 	}
 
 	/**
-	 * Set an observer on the owner to trigger specialActivate when a condition is
-	 * met
+	 * Set an observer on the owner to trigger specialActivate when a condition
+	 * is met
 	 */
 	private void setSpecialEffectObserver() {
 		Effect effect = this;
@@ -417,7 +444,8 @@ public abstract class Effect {
 						effect.specialActivate();
 					} else {
 						if (owner instanceof Player) {
-							printDescription(playerSpecialResistEffectDescription);
+							printDescription(
+									playerSpecialResistEffectDescription);
 
 						} else {
 							printDescription(specialResistEffectDescription);
@@ -449,13 +477,17 @@ public abstract class Effect {
 
 					if (increment > 0) {
 						int newActivateCount;
-						if (Time.getInstance().getTime() > endTime && endTime != 0) {
-							newActivateCount = (endTime - startTime) / increment;
+						if (Time.getInstance().getTime() > endTime
+								&& endTime != 0) {
+							newActivateCount = (endTime - startTime)
+									/ increment;
 
 						} else {
-							newActivateCount = (Time.getInstance().getTime() - startTime) / increment;
+							newActivateCount = (Time.getInstance().getTime()
+									- startTime) / increment;
 						}
-						if (duration == -1 || (activateCount < maxActivateCount && activateCount < newActivateCount)) {
+						if (duration == -1 || (activateCount < maxActivateCount
+								&& activateCount < newActivateCount)) {
 							while (activateCount < newActivateCount) {
 								activateCount++;
 								if (checkResistance()) {
@@ -468,10 +500,12 @@ public abstract class Effect {
 									}
 									active = false;
 									if (owner instanceof Player) {
-										printDescription(playerResistRepeatEffectDescription);
+										printDescription(
+												playerResistRepeatEffectDescription);
 
 									} else {
-										printDescription(resistRepeatEffectDescription);
+										printDescription(
+												resistRepeatEffectDescription);
 									}
 
 								}
@@ -501,7 +535,8 @@ public abstract class Effect {
 
 		int baseAccuracy;
 		if (element.attributeValue("baseAccuracy") != null) {
-			baseAccuracy = Integer.parseInt(element.attributeValue("baseAccuracy"));
+			baseAccuracy = Integer
+					.parseInt(element.attributeValue("baseAccuracy"));
 		} else {
 			baseAccuracy = 0;
 		}
@@ -509,7 +544,8 @@ public abstract class Effect {
 		int specialAccuracyBonus;
 
 		if (element.attributeValue("specialAccuracyBonus") != null) {
-			specialAccuracyBonus = Integer.parseInt(element.attributeValue("specialAccuracyBonus"));
+			specialAccuracyBonus = Integer
+					.parseInt(element.attributeValue("specialAccuracyBonus"));
 		} else {
 			specialAccuracyBonus = 0;
 		}
@@ -547,62 +583,86 @@ public abstract class Effect {
 		switch (element.getTextTrim()) {
 
 		case "increaseStat":
-			return new StatIncreaseEffect(effects, element.attributeValue("name"), duration, baseAccuracy,
-					element.attributeValue("resistType"), element.attributeValue("repeatType"),
+			return new StatIncreaseEffect(effects,
+					element.attributeValue("name"), duration, baseAccuracy,
+					element.attributeValue("resistType"),
+					element.attributeValue("repeatType"),
 					Boolean.parseBoolean(element.attributeValue("toSelf")),
 					element.attributeValue("playerEffectDescription"),
 					element.attributeValue("playerRepeatEffectDescription"),
-					element.attributeValue("effectDescription"), element.attributeValue("repeatEffectDescription"),
+					element.attributeValue("effectDescription"),
+					element.attributeValue("repeatEffectDescription"),
 					element.attributeValue("resistEffectDescription"),
 					element.attributeValue("playerResistEffectDescription"),
 					element.attributeValue("resistRepeatEffectDescription"),
-					element.attributeValue("repeatResistRepeatEffectDescription"),
-					element.attributeValue("selfDestructTrigger"), element.attributeValue("selfDestructDescription"),
+					element.attributeValue(
+							"repeatResistRepeatEffectDescription"),
+					element.attributeValue("selfDestructTrigger"),
+					element.attributeValue("selfDestructDescription"),
 					element.attributeValue("playerSelfDestructDescription"),
-					element.attributeValue("specialEffectTrigger"), element.attributeValue("specialEffectDescription"),
+					element.attributeValue("specialEffectTrigger"),
+					element.attributeValue("specialEffectDescription"),
 					element.attributeValue("playerSpecialEffectDescription"),
 					element.attributeValue("specialResistEffectDescription"),
-					element.attributeValue("playerSpecialResistEffectDescription"),
-					element.attributeValue("specialResistType"), specialAccuracyBonus, element.attributeValue("stat"),
+					element.attributeValue(
+							"playerSpecialResistEffectDescription"),
+					element.attributeValue("specialResistType"),
+					specialAccuracyBonus, element.attributeValue("stat"),
 					Integer.parseInt(element.attributeValue("magnitude")));
 		case "heal":
-			return new HealEffect(effects, element.attributeValue("name"), duration, increment, baseAccuracy,
-					element.attributeValue("resistType"), element.attributeValue("repeatType"),
+			return new HealEffect(effects, element.attributeValue("name"),
+					duration, increment, baseAccuracy,
+					element.attributeValue("resistType"),
+					element.attributeValue("repeatType"),
 					Boolean.parseBoolean(element.attributeValue("toSelf")),
 					element.attributeValue("playerEffectDescription"),
 					element.attributeValue("playerRepeatEffectDescription"),
-					element.attributeValue("effectDescription"), element.attributeValue("repeatEffectDescription"),
+					element.attributeValue("effectDescription"),
+					element.attributeValue("repeatEffectDescription"),
 					element.attributeValue("resistEffectDescription"),
 					element.attributeValue("playerResistEffectDescription"),
 					element.attributeValue("resistRepeatEffectDescription"),
-					element.attributeValue("repeatResistRepeatEffectDescription"),
-					element.attributeValue("selfDestructTrigger"), element.attributeValue("selfDestructDescription"),
+					element.attributeValue(
+							"repeatResistRepeatEffectDescription"),
+					element.attributeValue("selfDestructTrigger"),
+					element.attributeValue("selfDestructDescription"),
 					element.attributeValue("playerSelfDestructDescription"),
-					element.attributeValue("specialEffectTrigger"), element.attributeValue("specialEffectDescription"),
+					element.attributeValue("specialEffectTrigger"),
+					element.attributeValue("specialEffectDescription"),
 					element.attributeValue("playerSpecialEffectDescription"),
 					element.attributeValue("specialResistEffectDescription"),
-					element.attributeValue("playerSpecialResistEffectDescription"),
-					element.attributeValue("specialResistType"), specialAccuracyBonus,
+					element.attributeValue(
+							"playerSpecialResistEffectDescription"),
+					element.attributeValue("specialResistType"),
+					specialAccuracyBonus,
 					Integer.parseInt(element.attributeValue("magnitude")));
 		case "damage":
-			return new DamageEffect(effects, element.attributeValue("name"), duration, increment, baseAccuracy,
-					element.attributeValue("resistType"), element.attributeValue("repeatType"),
+			return new DamageEffect(effects, element.attributeValue("name"),
+					duration, increment, baseAccuracy,
+					element.attributeValue("resistType"),
+					element.attributeValue("repeatType"),
 					Boolean.parseBoolean(element.attributeValue("toSelf")),
 					element.attributeValue("playerEffectDescription"),
 					element.attributeValue("playerRepeatEffectDescription"),
-					element.attributeValue("effectDescription"), element.attributeValue("repeatEffectDescription"),
+					element.attributeValue("effectDescription"),
+					element.attributeValue("repeatEffectDescription"),
 					element.attributeValue("resistEffectDescription"),
 					element.attributeValue("playerResistEffectDescription"),
 					element.attributeValue("resistRepeatEffectDescription"),
-					element.attributeValue("playerResistRepeatEffectDescription"),
-					element.attributeValue("selfDestructTrigger"), element.attributeValue("selfDestructDescription"),
+					element.attributeValue(
+							"playerResistRepeatEffectDescription"),
+					element.attributeValue("selfDestructTrigger"),
+					element.attributeValue("selfDestructDescription"),
 					element.attributeValue("playerSelfDestructDescription"),
-					element.attributeValue("specialEffectTrigger"), element.attributeValue("specialEffectDescription"),
+					element.attributeValue("specialEffectTrigger"),
+					element.attributeValue("specialEffectDescription"),
 					element.attributeValue("playerSpecialEffectDescription"),
 					element.attributeValue("specialResistEffectDescription"),
-					element.attributeValue("playerSpecialResistEffectDescription"),
-					element.attributeValue("specialResistType"), specialAccuracyBonus,
-					element.attributeValue("damageType"), Integer.parseInt(element.attributeValue("magnitude")));
+					element.attributeValue(
+							"playerSpecialResistEffectDescription"),
+					element.attributeValue("specialResistType"),
+					specialAccuracyBonus, element.attributeValue("damageType"),
+					Integer.parseInt(element.attributeValue("magnitude")));
 		default:
 
 			return null;
@@ -672,7 +732,8 @@ public abstract class Effect {
 	}
 
 	/**
-	 * @param endTime the endTime to set
+	 * @param endTime
+	 *            the endTime to set
 	 */
 	public void setEndTime(int endTime) {
 		this.endTime = endTime;
@@ -680,9 +741,10 @@ public abstract class Effect {
 
 	@Override
 	public String toString() {
-		return "LongEffect [startTime=" + startTime + ", endTime=" + endTime + ", increment=" + increment
-				+ ", activateCount=" + activateCount + ", playerEffectDescription=" + playerRepeatEffectDescription
-				+ "]";
+		return "LongEffect [startTime=" + startTime + ", endTime=" + endTime
+				+ ", increment=" + increment + ", activateCount="
+				+ activateCount + ", playerEffectDescription="
+				+ playerRepeatEffectDescription + "]";
 	}
 
 	/**

@@ -845,8 +845,9 @@ public class Game {
 					Skill newSkill = Skill.buildSkill(command[1]);
 					if (newSkill != null) {
 						Player.getInstance().addInnateSkill(newSkill);
+						System.out.println(newSkill);
 						Window.appendToPane(window.getTextPane(),
-								command[1] = " added to innate skill list.");
+								command[1] + " added to innate skill list.");
 					} else {
 						Window.appendToPane(window.getTextPane(),
 								"ERROR: Somthing went wrong while creating a skill. See game.log for more information.");
@@ -858,7 +859,7 @@ public class Game {
 					if (newSpell != null) {
 						Player.getInstance().addKnownSpell(newSpell);
 						Window.appendToPane(window.getTextPane(),
-								command[1] = " added to known spells list.");
+								command[1] + " added to known spells list.");
 					} else {
 						Window.appendToPane(Window.getInstance().getTextPane(),
 								"ERROR: Somthing went wrong while creating a spell. See game.log for more information.");

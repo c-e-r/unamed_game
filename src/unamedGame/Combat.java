@@ -6,6 +6,9 @@ package unamedGame;
 import java.awt.Color;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import unamedGame.entities.Enemy;
 import unamedGame.entities.Player;
 import unamedGame.events.EventReader;
@@ -24,6 +27,8 @@ import unamedGame.ui.Window;
  *
  */
 public class Combat {
+
+	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	private Player player;
 	private Enemy enemy;
@@ -230,9 +235,10 @@ public class Combat {
 				int skillIndex = -2;
 				if (Game.isNumeric(evt.getText())) {
 					skillIndex = Integer.parseInt(evt.getText()) - 1;
+					System.out.println(skillIndex);
 				}
 				if (skillIndex >= 0 && skillIndex < Player.getInstance()
-						.getInventory().size()) {
+						.getCombinedSkills().size()) {
 					if (player.getCurrentStamina() >= player.getCombinedSkills()
 							.get(skillIndex).getStaminaCost()) {
 
@@ -298,9 +304,9 @@ public class Combat {
 					spellIndex = Integer.parseInt(evt.getText()) - 1;
 				}
 				if (spellIndex >= 0 && spellIndex < Player.getInstance()
-						.getInventory().size()) {
-					if (player.getCurrentStamina() >= player.getCombinedSkills()
-							.get(spellIndex).getStaminaCost()) {
+						.getSpells().size()) {
+					if (player.getCurrentMana() >= player.getSpells()
+							.get(spellIndex).getManaCost()) {
 
 						combatTurn(3, spellIndex);
 						Window.getInstance().removeInputObsever(this);
@@ -335,8 +341,13 @@ public class Combat {
 		int enemyCommand = arr[0];
 		int enemyIndex = arr[1];
 
-		if (player.speedCheck(command, index) > enemy.speedCheck(enemyCommand,
-				enemyIndex)) {
+		int playerSpeed = player.speedCheck(command, index);
+		int enemySpeed = enemy.speedCheck(enemyCommand, enemyIndex);
+
+		LOG.debug("Comparing speed: playerSpeed " + playerSpeed + " <><> enemySpeed  "
+				+ enemySpeed);
+		if (playerSpeed > enemySpeed) {
+			LOG.debug("player first");
 			playerAction(command, index);
 			playerLoss = player.isDead();
 			playerWin = enemy.isDead();
@@ -347,6 +358,7 @@ public class Combat {
 			}
 
 		} else {
+			LOG.debug("enemy first");
 			enemyAction(enemyCommand, enemyIndex);
 			playerLoss = player.isDead();
 			playerWin = enemy.isDead();
