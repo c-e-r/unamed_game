@@ -7,8 +7,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dom4j.Element;
@@ -70,8 +68,8 @@ public abstract class Effect implements Serializable {
 	protected String specialResistType;
 	protected int specialAccuracyBonus;
 	protected int specialAccuracy;
-	protected EntityListener selfDestructionObserver;
-	protected EntityListener specialEffectObserver;
+	protected EntityListener selfDestructionListener;
+	protected EntityListener specialEffectListener;
 	protected TimeListener timeListener;
 
 	int maxActivateCount;
@@ -398,7 +396,7 @@ public abstract class Effect implements Serializable {
 	private void setSelfDestructionObserver() {
 		Effect effect = this;
 
-		owner.addEntityListener(selfDestructionObserver = new EntityListener() {
+		owner.addEntityListener(selfDestructionListener = new EntityListener() {
 			/**
 			 * 
 			 */
@@ -419,7 +417,7 @@ public abstract class Effect implements Serializable {
 	 */
 	protected void selfDestruct() {
 		owner.removeEffect(this);
-		specialEffectObserver.setDelete();
+		specialEffectListener.setDelete();
 		timeListener.setDelete();
 		owner.deleteObservers();
 
@@ -446,7 +444,7 @@ public abstract class Effect implements Serializable {
 	private void setSpecialEffectObserver() {
 		Effect effect = this;
 
-		owner.addEntityListener(specialEffectObserver = new EntityListener() {
+		owner.addEntityListener(specialEffectListener = new EntityListener() {
 			/**
 			 * 
 			 */

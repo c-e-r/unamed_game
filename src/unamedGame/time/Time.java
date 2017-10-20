@@ -9,11 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 
-import javax.swing.event.EventListenerList;
-
-import unamedGame.entities.EntityListener;
-import unamedGame.entities.Player;
-
 /**
  * Keeps track of the games current time and contains methods for manipulating
  * that time.
@@ -23,6 +18,10 @@ import unamedGame.entities.Player;
  */
 public class Time extends Observable implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6602346108280243709L;
 	private static Time instance = null;
 
 	/**

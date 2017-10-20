@@ -11,9 +11,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 
 import unamedGame.entities.Enemy;
 import unamedGame.entities.Player;
+import unamedGame.entities.Entity.EquipmentIndex;
 import unamedGame.events.EventReader;
 import unamedGame.events.EventSelector;
 import unamedGame.input.InputEvent;
@@ -22,7 +24,6 @@ import unamedGame.items.Item;
 import unamedGame.skills.Skill;
 import unamedGame.spells.Spell;
 import unamedGame.time.Time;
-import unamedGame.time.TimeListener;
 import unamedGame.ui.Window;
 import unamedGame.util.Colors;
 import unamedGame.world.World;
@@ -73,7 +74,7 @@ public class Game {
 							break;
 						case 2:
 							Window.getInstance().removeInputObsever(this);
-							openLoadMenu();
+							openLoadMenu(() -> openMainMenu());
 							break;
 						default:
 							break;
@@ -86,9 +87,153 @@ public class Game {
 		});
 	}
 
-	public static void openLoadMenu() {
+	public static void openLoadMenu(Runnable back) {
 		Window.clearPane(window.getSidePane());
-		Window.addToPane(window.getSidePane(), "1: LOAD");
+		Window.appendToPane(window.getSidePane(), "LOAD GAME");
+		Window.appendToPane(window.getSidePane(), "0: Back");
+		for (int i = 1; i < 10; i++) {
+			boolean validChoices[] = new boolean[10];
+			if (new File("saves/save" + i + ".sav").exists()) {
+				validChoices[i] = true;
+				try {
+					ObjectInputStream in;
+					in = new ObjectInputStream(new FileInputStream(
+							new File("saves/save" + i + ".sav")));
+					Save save = ((Save) in.readObject());
+					Window.appendToPane(window.getSidePane(),
+							i + ": " + save.getSaveText());
+					Window.appendToPane(window.getSidePane(),
+							"    " + save.getSaveNote());
+					in.close();
+				} catch (IOException | ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				Window.appendToPane(window.getSidePane(),
+						i + ": --Slot Empty--");
+				Window.appendToPane(window.getSidePane(), "");
+			}
+		}
+		Window.getInstance().addInputObsever(new InputObserver() {
+			@Override
+			public void inputChanged(InputEvent evt) {
+
+				clearTextField();
+
+				if (isNumeric(evt.getText())) {
+					int command = Integer.parseInt(evt.getText());
+					if (command == 0) {
+						window.removeInputObsever(this);
+						back.run();
+					}
+					if (command >= 1 && command <= 9) {
+						File file = new File("saves/save" + command + ".sav");
+						if (file.exists()) {
+							try {
+								ObjectInputStream in = new ObjectInputStream(
+										new FileInputStream(file));
+								Save save = ((Save) in.readObject());
+								Player.setInstance(save.getPlayer());
+								Time.setInstance(save.getTime());
+
+								in.close();
+							} catch (IOException | ClassNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							Window.getInstance().removeInputObsever(this);
+							Window.getInstance().getMapPane().repaint();
+							openExplorationMenu();
+						} else {
+							Window.appendToPane(window.getTextPane(),
+									"That slot is empty.");
+						}
+
+					}
+
+				}
+			}
+
+		});
+	}
+
+	public static void openSaveMenu(Runnable back) {
+
+		Window.clearPane(window.getSidePane());
+		Window.appendToPane(window.getSidePane(), "SAVE GAME");
+		Window.appendToPane(window.getSidePane(), "0: Back");
+		for (int i = 1; i < 10; i++) {
+			boolean validChoices[] = new boolean[10];
+			if (new File("saves/save" + i + ".sav").exists()) {
+				validChoices[i] = true;
+				try {
+					ObjectInputStream in;
+					in = new ObjectInputStream(new FileInputStream(
+							new File("saves/save" + i + ".sav")));
+					Save save = ((Save) in.readObject());
+					Window.appendToPane(window.getSidePane(),
+							i + ": " + save.getSaveText());
+					Window.appendToPane(window.getSidePane(),
+							"    " + save.getSaveNote());
+					in.close();
+				} catch (IOException | ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				Window.appendToPane(window.getSidePane(),
+						i + ": --Slot Empty--");
+				Window.appendToPane(window.getSidePane(), "");
+			}
+		}
+		Window.getInstance().addInputObsever(new InputObserver() {
+			@Override
+			public void inputChanged(InputEvent evt) {
+
+				clearTextField();
+
+				if (isNumeric(evt.getText())) {
+					int command = Integer.parseInt(evt.getText());
+					if (command == 0) {
+						window.removeInputObsever(this);
+						back.run();
+					}
+					if (command >= 1 && command <= 9) {
+						File file = new File("saves/save" + command + ".sav");
+
+						if (file.exists()) {
+							openSaveOverwriteConfirmMenu(file, back);
+							window.removeInputObsever(this);
+						} else {
+							try {
+								ObjectOutputStream out = new ObjectOutputStream(
+										new FileOutputStream(file));
+								out.writeObject(new Save());
+								out.close();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+
+							}
+							Window.getInstance().removeInputObsever(this);
+							openSaveMenu(back);
+						}
+
+					}
+
+				}
+			}
+
+		});
+	}
+
+	private static void openSaveOverwriteConfirmMenu(File file,
+			Runnable callerBack) {
+		Window.clearPane(window.getSidePane());
+		Window.addToPane(window.getSidePane(),
+				"OVERWRITE SAVE?\n1: Yes\n2: No");
+
 		Window.getInstance().addInputObsever(new InputObserver() {
 			@Override
 			public void inputChanged(InputEvent evt) {
@@ -98,23 +243,22 @@ public class Game {
 				if (isNumeric(evt.getText())) {
 					int command = Integer.parseInt(evt.getText());
 					if (command >= 1 && command <= 2) {
-						try {
-							ObjectInputStream in = new ObjectInputStream(
-									new FileInputStream(new File("save1")));
-							Save save = ((Save) in.readObject());
-							Player.setInstance(save.getPlayer());
-							Time.setInstance(save.getTime());
+						if (command == 1) {
+							try {
+								ObjectOutputStream out;
+								out = new ObjectOutputStream(
+										new FileOutputStream(file));
+								out.writeObject(new Save());
+								out.close();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 
-							in.close();
-						} catch (IOException | ClassNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
 						}
+						window.removeInputObsever(this);
+						openSaveMenu(callerBack);
 					}
-					Window.getInstance().removeInputObsever(this);
-					Window.getInstance().getMapPane().repaint();
-					openExplorationMenu();
-
 				}
 			}
 
@@ -158,23 +302,15 @@ public class Game {
 					break;
 				case 4: // inventory
 					window.removeInputObsever(this);
-					inventory();
+					openInventoryMenu(() -> openExplorationMenu());
 					break;
 				case 5: // status
 					window.removeInputObsever(this);
-					openStatusMenu();
+					openStatusMenu(() -> openExplorationMenu());
 					break;
 				case 6: // save
-					try {
-						ObjectOutputStream out = new ObjectOutputStream(
-								new FileOutputStream(new File("save1")));
-						out.writeObject(new Save());
-						out.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
 					window.removeInputObsever(this);
+					openSaveMenu(() -> openExplorationMenu());
 					break;
 				default:
 					Window.appendToPane(Window.getInstance().getTextPane(),
@@ -245,7 +381,7 @@ public class Game {
 	 * Opens the out of combat inventory and waits for the player to select an
 	 * item or return to the exploration menu.
 	 */
-	public static void inventory() {
+	public static void openInventoryMenu(Runnable back) {
 
 		Window.clearPane(window.getSidePane());
 		Window.appendToPane(Window.getInstance().getSidePane(),
@@ -278,11 +414,11 @@ public class Game {
 				}
 				if (itemIndex >= 0 && itemIndex < Player.getInstance()
 						.getInventory().size()) {
-					itemChoiceMenu(itemIndex);
+					itemChoiceMenu(itemIndex, () -> openInventoryMenu(back));
 					Window.getInstance().removeInputObsever(this);
 				} else if (itemIndex == -1) {
 					Window.getInstance().removeInputObsever(this);
-					openExplorationMenu();
+					back.run();
 				} else {
 					Window.appendToPane(Window.getInstance().getTextPane(),
 							"Invalid Command");
@@ -299,7 +435,7 @@ public class Game {
 	 * @param itemIndex
 	 *            the index of the item being manipulated
 	 */
-	public static void itemChoiceMenu(int itemIndex) {
+	public static void itemChoiceMenu(int itemIndex, Runnable back) {
 		Window.clearPane(window.getSidePane());
 		Item item = Player.getInstance().getInventoryItem(itemIndex);
 		if (item != null) {
@@ -323,7 +459,7 @@ public class Game {
 					switch (command) {
 					case 0: // back
 						Window.getInstance().removeInputObsever(this);
-						inventory();
+						back.run();
 						break;
 					case 1: // use
 						if (item.isFieldUse()) {
@@ -345,7 +481,7 @@ public class Game {
 											Player.getInstance());
 									Window.getInstance()
 											.removeInputObsever(this);
-									inventory();
+									back.run();
 								}
 
 							}
@@ -387,18 +523,28 @@ public class Game {
 							Window.getInstance().removeInputObsever(this);
 						}
 
-						inventory();
-
+						back.run();
 						break;
-					case 4: // equip
+					case 4: // equip/unequip
 						if (item.isEquippable()) {
 							if (item.isEquipped()) {
 								Player.getInstance()
 										.unequipInventoryItem(itemIndex);
-								inventory();
+								back.run();
 							} else {
-								Player.getInstance()
-										.equipInventoryItem(itemIndex);
+								if (item.getEquipSlot().equals("hand")) {
+									getHandChoice(item,
+											() -> itemChoiceMenu(itemIndex,
+													back));
+								} else if (item.getEquipSlot().equals("held")) {
+									getHeldChoice(item,
+											() -> itemChoiceMenu(itemIndex,
+													back));
+								} else {
+									Player.getInstance()
+											.equipInventoryItem(itemIndex);
+									back.run();
+								}
 
 							}
 							Window.getInstance().removeInputObsever(this);
@@ -420,10 +566,100 @@ public class Game {
 		} else {
 			LOG.error("Somehow you tried to access an item that dosn't exist");
 		}
-
 	}
 
-	private static void openStatusMenu() {
+	public static void getHandChoice(Item item, Runnable back) {
+		Window.clearPane(Window.getInstance().getSidePane());
+		Window.addToPane(Window.getInstance().getSidePane(),
+				"0: Back\n1: Left");
+
+		if (Player.getInstance().getEquipment()[EquipmentIndex.LEFT_HAND
+				.getValue()] != null) {
+			Window.addToPane(Window.getInstance().getSidePane(),
+					" - " + Player.getInstance()
+							.getEquipment()[EquipmentIndex.LEFT_HAND.getValue()]
+									.getName());
+		}
+		Window.addToPane(Window.getInstance().getSidePane(), "\n2: Right");
+		if (Player.getInstance().getEquipment()[EquipmentIndex.RIGHT_HAND
+				.getValue()] != null) {
+			Window.addToPane(Window.getInstance().getSidePane(),
+					" - " + Player.getInstance()
+							.getEquipment()[EquipmentIndex.RIGHT_HAND
+									.getValue()].getName());
+		}
+		Window.appendToPane(Window.getInstance().getTextPane(),
+				"Equip to which hand?");
+		Window.getInstance().addInputObsever(new InputObserver() {
+
+			@Override
+			public void inputChanged(InputEvent evt) {
+				if (Game.isNumeric(evt.getText())) {
+					int hand = Integer.parseInt(evt.getText());
+					if (hand == 0) {
+						Window.getInstance().removeInputObsever(this);
+						back.run();
+					} else if (hand >= 1 && hand <= 2) {
+						Player.getInstance().equipToHand(hand, item);
+						Window.getInstance().removeInputObsever(this);
+						back.run();
+					} else {
+						Window.appendToPane(window.getTextPane(),
+								"Invalid Choice");
+					}
+				}
+			}
+
+		});
+	}
+
+	public static void getHeldChoice(Item item, Runnable back) {
+		Window.clearPane(Window.getInstance().getSidePane());
+		Window.addToPane(Window.getInstance().getSidePane(),
+				"0: Back\n1: Left");
+
+		if (Player.getInstance().getEquipment()[EquipmentIndex.LEFT_HELD
+				.getValue()] != null) {
+			Window.addToPane(Window.getInstance().getSidePane(),
+					" - " + Player.getInstance()
+							.getEquipment()[EquipmentIndex.LEFT_HELD.getValue()]
+									.getName());
+		}
+		Window.addToPane(Window.getInstance().getSidePane(), "\n2: Right");
+		if (Player.getInstance().getEquipment()[EquipmentIndex.RIGHT_HELD
+				.getValue()] != null) {
+			Window.addToPane(Window.getInstance().getSidePane(),
+					" - " + Player.getInstance()
+							.getEquipment()[EquipmentIndex.RIGHT_HELD
+									.getValue()].getName());
+		}
+		Window.addToPane(Window.getInstance().getSidePane(), "\n3: Both");
+		Window.appendToPane(Window.getInstance().getTextPane(),
+				"Hold in which hand?");
+		Window.getInstance().addInputObsever(new InputObserver() {
+
+			@Override
+			public void inputChanged(InputEvent evt) {
+				if (Game.isNumeric(evt.getText())) {
+					int hand = Integer.parseInt(evt.getText());
+					if (hand == 0) {
+						Window.getInstance().removeInputObsever(this);
+						back.run();
+					} else if (hand >= 1 && hand <= 3) {
+						Player.getInstance().equipToHeld(hand, item);
+						Window.getInstance().removeInputObsever(this);
+						back.run();
+					} else {
+						Window.appendToPane(window.getTextPane(),
+								"Invalid Choice");
+					}
+				}
+			}
+
+		});
+	}
+
+	private static void openStatusMenu(Runnable back) {
 		window.swapToPlayerPane();
 		Window.clearPane(window.getPlayerPane());
 		Window.appendToPane(Window.getInstance().getPlayerPane(),
@@ -455,7 +691,7 @@ public class Game {
 					break;
 				case 2: // Spend Stat Points
 					window.removeInputObsever(this);
-					openStatPointMenu();
+					openStatPointMenu(() -> openStatusMenu(back));
 					break;
 				case 3: // Spend Perk Points
 					Window.appendToPane(Window.getInstance().getTextPane(),
@@ -471,7 +707,7 @@ public class Game {
 		});
 	}
 
-	private static void openStatPointMenu() {
+	private static void openStatPointMenu(Runnable back) {
 		Window.clearPane(window.getSidePane());
 		Window.clearPane(window.getTextPane());
 		Window.addToPane(window.getSidePane(),
@@ -636,7 +872,7 @@ public class Game {
 					case 0:
 						window.removeInputObsever(this);
 						print = false;
-						openStatusMenu();
+						back.run();
 						break;
 					case 1:
 						player.setVitality(player.getNewVitality());
@@ -653,7 +889,7 @@ public class Game {
 						window.removeInputObsever(this);
 						print = false;
 
-						openStatusMenu();
+						back.run();
 						break;
 					case 2:
 						cost = (int) Math
@@ -929,7 +1165,6 @@ public class Game {
 					Skill newSkill = Skill.buildSkill(command[1]);
 					if (newSkill != null) {
 						Player.getInstance().addInnateSkill(newSkill);
-						System.out.println(newSkill);
 						Window.appendToPane(window.getTextPane(),
 								command[1] + " added to innate skill list.");
 					} else {
@@ -1012,11 +1247,4 @@ public class Game {
 		Window.clearField(window.getTextField());
 	}
 
-	/*
-	 * prints the status of the player to the textPane
-	 */
-	private static void printStatus() {
-		Window.appendToPane(Window.getInstance().getTextPane(),
-				Player.getInstance().getStatus());
-	}
 }

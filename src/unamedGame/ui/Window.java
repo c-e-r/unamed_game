@@ -53,14 +53,11 @@ public class Window {
 	private JMenu mnSystem;
 	private JMenuItem mntmHelp;
 
-	private String lastCommand;
-
 	private static Window instance = null;
 	private JSplitPane splitPane;
 	private JPanel panel2;
 	private JScrollPane textScrollPane;
 	private JTextPane textPane;
-	private JSplitPane splitPane_1;
 	private JScrollPane mapScrollPane;
 	private JScrollPane sideScrollPane;
 	private JTextPane sidePane;

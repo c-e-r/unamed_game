@@ -12,7 +12,7 @@
     <maxUses>2</maxUses>
     <battleUse>true</battleUse>
     <fieldUse>true</fieldUse>
-    <equippable equipSlot='held'>true</equippable>
+    <equippable equipSlot='hand'>true</equippable>
     <spell>testSpell</spell>
     <effect 
         name='itemNameDamage' 

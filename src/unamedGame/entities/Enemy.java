@@ -28,6 +28,11 @@ import unamedGame.ui.Window;
  */
 public class Enemy extends Entity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6371773878242485513L;
+
 	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	private String description;
@@ -472,7 +477,6 @@ public class Enemy extends Entity {
 				equipment[EquipmentIndex.HEAD.getValue()] = item;
 				item.setEquipped(true);
 			}
-			Game.inventory();
 
 			break;
 		case "body":
@@ -484,7 +488,6 @@ public class Enemy extends Entity {
 				equipment[EquipmentIndex.BODY.getValue()] = item;
 				item.setEquipped(true);
 			}
-			Game.inventory();
 
 			break;
 		case "feet":
@@ -496,7 +499,6 @@ public class Enemy extends Entity {
 				equipment[EquipmentIndex.FEET.getValue()] = item;
 				item.setEquipped(true);
 			}
-			Game.inventory();
 
 			break;
 		case "neck":
@@ -508,7 +510,6 @@ public class Enemy extends Entity {
 				equipment[EquipmentIndex.FEET.getValue()] = item;
 				item.setEquipped(true);
 			}
-			Game.inventory();
 
 			break;
 
