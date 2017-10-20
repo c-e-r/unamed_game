@@ -294,7 +294,7 @@ public class Game {
 					break;
 				case 2: // move
 					window.removeInputObsever(this);
-					move();
+					openMoveMenu(() -> openExplorationMenu());
 					break;
 				case 3: // gather?
 					window.removeInputObsever(this);
@@ -342,7 +342,7 @@ public class Game {
 	/*
 	 * Opens a menu for the player to choose which direction to move.
 	 */
-	private static void move() {
+	private static void openMoveMenu(Runnable back) {
 		onMoveMenu = true;
 		Window.clearPane(window.getSidePane());
 		Window.addToPane(window.getSidePane(),
