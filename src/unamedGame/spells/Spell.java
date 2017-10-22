@@ -111,8 +111,8 @@ public class Spell implements Serializable {
 		playerMissDescription = element.attributeValue("playerMissDescription");
 		spellType = element.attributeValue("spellType");
 
-		if (element.attributeValue("staminaCost") != null) {
-			manaCost = Integer.parseInt(element.attributeValue("staminaCost"));
+		if (element.attributeValue("manaCost") != null) {
+			manaCost = Integer.parseInt(element.attributeValue("manaCost"));
 		}
 
 		isAttack = Boolean.parseBoolean(element.attributeValue("isAttack"));

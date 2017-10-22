@@ -833,13 +833,13 @@ public class Entity extends Observable implements Serializable {
 		int temp = getEffectiveSpeed();
 		target.getAttacked(this, false);
 
-		if (temp >= 10 && getOffhandWeapon() != null) {
+		if (temp >= 10 && getOffhandWeapon() != null && !isWieldingTwoHanded()) {
 			target.getAttacked(this, true);
 		}
 		if (temp >= 20) {
 			target.getAttacked(this, false);
 		}
-		if (temp >= 30 && getOffhandWeapon() != null) {
+		if (temp >= 30 && getOffhandWeapon() != null && !isWieldingTwoHanded()) {
 			target.getAttacked(this, true);
 		}
 		if (temp >= 40) {

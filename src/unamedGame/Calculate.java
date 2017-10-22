@@ -30,7 +30,7 @@ public class Calculate {
 		if (attacker.isWieldingTwoHanded()) {
 			handMultiplier = 1.5;
 		}
-		if (attacker.getEffectiveStrength() < weapon.getStrRequirement()) {
+		if (attacker.getEffectiveStrength() * handMultiplier < weapon.getStrRequirement()) {
 			strRequirementMod = 0.5;
 		}
 		int dieRoll = Dice.roll(weapon.getWeaponVariableDamage());
@@ -66,8 +66,8 @@ public class Calculate {
 		}
 		if (attacker.isWieldingTwoHanded()) {
 			handMultiplier = 1.5;
-		}
-		if (attacker.getEffectiveStrength() < weapon.getStrRequirement()) {
+		} 
+		if (attacker.getEffectiveStrength() * handMultiplier < weapon.getStrRequirement()) {
 			strRequirementMod = 0.5;
 		}
 
