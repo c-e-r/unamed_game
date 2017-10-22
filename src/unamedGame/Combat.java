@@ -98,15 +98,15 @@ public class Combat {
 						Window.getInstance().removeInputObsever(this);
 						break;
 					case 2: // skill
-						skillSelection();
+						skillSelection(() -> getCombatInput());
 						Window.getInstance().removeInputObsever(this);
 						break;
 					case 3: // magic
-						spellSelection();
+						spellSelection(() -> getCombatInput());
 						Window.getInstance().removeInputObsever(this);
 						break;
 					case 4: // item
-						combatInventory();
+						combatInventory(()->getCombatInput());
 						Window.getInstance().removeInputObsever(this);
 						break;
 					case 5: // escape
@@ -197,7 +197,7 @@ public class Combat {
 	/*
 	 * Prints choices and sets an observer to wait for player input.
 	 */
-	private void skillSelection() {
+	private void skillSelection(Runnable back) {
 		Window.clearPane(Window.getInstance().getSidePane());
 		Window.appendToPane(Window.getInstance().getSidePane(),
 				String.format("%-14s%6s%18s", "Name", "Cost", "Description"));
@@ -252,7 +252,7 @@ public class Combat {
 					}
 				} else if (skillIndex == -1) {
 					Window.getInstance().removeInputObsever(this);
-					getCombatInput();
+					back.run();
 				} else {
 					Window.appendToPane(Window.getInstance().getTextPane(),
 							"Invalid Attack");
@@ -265,7 +265,7 @@ public class Combat {
 	/*
 	 * Prints choices and sets an observer to wait for player input.
 	 */
-	private void spellSelection() {
+	private void spellSelection(Runnable back) {
 		Window.clearPane(Window.getInstance().getSidePane());
 		Window.appendToPane(Window.getInstance().getSidePane(),
 				String.format("%-14s%6s%18s", "Name", "Cost", "Description"));
@@ -318,7 +318,7 @@ public class Combat {
 					}
 				} else if (spellIndex == -1) {
 					Window.getInstance().removeInputObsever(this);
-					getCombatInput();
+					back.run();
 				} else {
 					Window.appendToPane(Window.getInstance().getTextPane(),
 							"Invalid Input");
@@ -332,7 +332,7 @@ public class Combat {
 	 * Decides on the order of player and enemy turns and calls methods to do
 	 * their actions.
 	 */
-	private void combatTurn(int command, int index) {
+	void combatTurn(int command, int index) {
 
 		boolean playerLoss = false;
 		boolean playerWin = false;
@@ -508,7 +508,7 @@ public class Combat {
 	 * Opens the combat version of the inventory menu. From here the player can
 	 * select an item to do something with.
 	 */
-	public void combatInventory() {
+	public void combatInventory(Runnable back) {
 
 		Window.clearPane(Window.getInstance().getSidePane());
 		Window.appendToPane(Window.getInstance().getSidePane(),
@@ -541,11 +541,11 @@ public class Combat {
 				}
 				if (itemIndex >= 0 && itemIndex < Player.getInstance()
 						.getInventory().size()) {
-					combatItemChoiceMenu(itemIndex);
+					combatItemChoiceMenu(itemIndex, () -> combatInventory(back));
 					Window.getInstance().removeInputObsever(this);
 				} else if (itemIndex == -1) {
 					Window.getInstance().removeInputObsever(this);
-					getCombatInput();
+					back.run();
 				} else {
 					Window.appendToPane(Window.getInstance().getTextPane(),
 							"Invalid Command");
@@ -559,7 +559,7 @@ public class Combat {
 	 * Opens the combat version of the item choice menu. From here the player
 	 * can choose what to do with the selected item.
 	 */
-	public void combatItemChoiceMenu(int itemIndex) {
+	public void combatItemChoiceMenu(int itemIndex, Runnable back) {
 		Window.clearPane(Window.getInstance().getSidePane());
 		Window.appendToPane(Window.getInstance().getSidePane(),
 				"0: Back \n1: Use\n2: Inspect\n3: Drop\n4: Equip");
@@ -573,7 +573,7 @@ public class Combat {
 				switch (command) {
 				case 0: // back
 					Window.getInstance().removeInputObsever(this);
-					combatInventory();
+					back.run();
 					break;
 				case 1: // use
 					Item item = Player.getInstance()
@@ -603,7 +603,7 @@ public class Combat {
 							"You threw away the " + Player.getInstance()
 									.removeItemFromInventory(itemIndex)
 									.getName());
-					combatInventory();
+					back.run();
 					Window.getInstance().removeInputObsever(this);
 
 					break;

@@ -293,7 +293,7 @@ public class Game {
 				switch (command) {
 				case 0: // debug
 					window.removeInputObsever(this);
-					debug();
+					openDebugMenu(() -> openExplorationMenu());
 					break;
 				case 1: // explore
 					window.removeInputObsever(this);
@@ -469,6 +469,7 @@ public class Game {
 						back.run();
 						break;
 					case 1: // use
+
 						if (item.isFieldUse()) {
 							if (item.getMaxUses() == 0) {
 								Window.appendToPane(
@@ -1121,11 +1122,7 @@ public class Game {
 		});
 	}
 
-	public static void debug() {
-		openDebugMenu();
-	}
-
-	private static void openDebugMenu() {
+	private static void openDebugMenu(Runnable back) {
 		Window.clearPane(window.getSidePane());
 		Window.addToPane(window.getSidePane(),
 				"0: Back \naddItem <itemName>\ngainExp <amount>\nstartEvent <eventName>\naddSkill <skillName>\naddSpell <spellName>\nstartCombat <enemyName>");
@@ -1137,7 +1134,7 @@ public class Game {
 				switch (command[0]) {
 				case "0":
 					window.removeInputObsever(this);
-					openExplorationMenu();
+					back.run();
 					break;
 				case "addItem":
 

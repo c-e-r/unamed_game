@@ -10,8 +10,6 @@ import java.util.List;
 
 import unamedGame.Game;
 import unamedGame.effects.Effect;
-import unamedGame.input.InputEvent;
-import unamedGame.input.InputObserver;
 import unamedGame.items.Item;
 import unamedGame.skills.Skill;
 import unamedGame.spells.Spell;
