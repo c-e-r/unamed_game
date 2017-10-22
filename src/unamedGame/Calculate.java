@@ -43,28 +43,12 @@ public class Calculate {
 
 		LOG.debug(
 				"(((strength + weaponBase + weaponVariable + damageBonus) * damageMultiplier) * handMultipler) * strengthRequirementMod");
-		StringBuilder builder = new StringBuilder();
-		builder.append("Damage roll: ");
-		builder.append("((( ");
-		builder.append(attacker.getEffectiveStrength());
-		builder.append(" + ");
-		builder.append(weapon.getWeaponBaseDamage());
-		builder.append(" + ");
-		builder.append(dieRoll);
-		builder.append("[1-");
-
-		builder.append(weapon.getWeaponVariableDamage());
-		builder.append("] + ");
-		builder.append(attacker.getDamageBonus());
-		builder.append(") * ");
-		builder.append(attacker.getEffectiveDamageMult());
-		builder.append(") * ");
-		builder.append(handMultiplier);
-		builder.append(") * ");
-		builder.append(strRequirementMod);
-		builder.append(" = ");
-		builder.append(damage);
-		LOG.debug(builder.toString());
+		LOG.debug(String.format(
+				"Damage roll: (((%d + %d + %d[1-%d] + %d) * %.2f) * %.2f) * %.2f = %d",
+				attacker.getEffectiveStrength(), weapon.getWeaponBaseDamage(),
+				dieRoll, weapon.getWeaponVariableDamage(),
+				attacker.getDamageBonus(), attacker.getEffectiveDamageMult(),
+				handMultiplier, strRequirementMod, damage));
 
 		if (damage < 0) {
 			return 0;
@@ -99,35 +83,16 @@ public class Calculate {
 				* handMultiplier) * strRequirementMod);
 
 		LOG.debug(
-				"(((strength + weaponBase + weaponVariable + damageBonus + skillBase + skillVariable) * damageMultiplier + skillDamageMultiplier) * handMultipler) * strengthRequirementMod");
-		StringBuilder builder = new StringBuilder();
-		builder.append("Damage roll: ");
-		builder.append("((( ");
-		builder.append(attacker.getEffectiveStrength());
-		builder.append(" + ");
-		builder.append(weapon.getWeaponBaseDamage());
-		builder.append(" + ");
-		builder.append(weaponDieRoll);
-		builder.append("[1-");
-		builder.append(weapon.getWeaponVariableDamage());
-		builder.append("] + ");
-		builder.append(attacker.getDamageBonus());
-		builder.append(" + ");
-		builder.append(skill.getAttackDamageBonus());
-		builder.append(" + ");
-		builder.append(skillDieRoll);
-		builder.append("[1-");
-		builder.append(skill.getAttackVariableDamageBonus());
-		builder.append("]");
-		builder.append(") * ");
-		builder.append(attacker.getEffectiveDamageMult());
-		builder.append(") * ");
-		builder.append(handMultiplier);
-		builder.append(") * ");
-		builder.append(strRequirementMod);
-		builder.append(" = ");
-		builder.append(damage);
-		LOG.debug(builder.toString());
+				"(((strength + weaponBase + weaponVariable + damageBonus + skillBase + skillVariable) * (damageMultiplier + skillDamageMultiplier)) * handMultipler) * strengthRequirementMod");
+		LOG.debug(String.format(
+				"Damage roll: (((%d + %d + %d[1-%d] + %d + %d + %d[1-%d]) * (%.2f + %.2f)) * %.2f) * %.2f = %d",
+				attacker.getEffectiveStrength(), weapon.getWeaponBaseDamage(),
+				weaponDieRoll, weapon.getWeaponVariableDamage(),
+				attacker.getDamageBonus(), skill.getAttackDamageBonus(),
+				skillDieRoll, skill.getAttackVariableDamageBonus(),
+				attacker.getEffectiveDamageMult(), skill.getAttackDamageMult(),
+				handMultiplier, strRequirementMod, damage));
+		;
 
 		if (damage < 0) {
 			return 0;
@@ -141,9 +106,9 @@ public class Calculate {
 		int die = Dice.roll(Dice.HIT_DIE);
 		int hit = attacker.getEffectiveHit() + weaponHitChance + die;
 		LOG.debug("hitChance + weaponHitChance + dieRoll[1-100]");
-		LOG.debug("Attack Hit Roll: " + attacker.getEffectiveHit() + " + "
-				+ weaponHitChance + " + " + die + "[1-" + Dice.HIT_DIE + "] = "
-				+ hit);
+		LOG.debug(String.format("Attack Hit Roll: %d + %d + %d[1-%d] = %d",
+				attacker.getEffectiveHit(), weaponHitChance, die, Dice.HIT_DIE,
+				hit));
 		return hit;
 	}
 
@@ -154,11 +119,10 @@ public class Calculate {
 				+ skill.getAttackHitBonus() + die;
 		LOG.debug(
 				"hitChance + weaponHitChance + skillHitBonus + dieRoll[1-100]");
-		LOG.debug("Skill Hit Roll: " + attacker.getEffectiveHit() + " + "
-				+ weaponHitChance + " + " + skill.getAttackHitBonus() + " + "
-				+ die + "[1-" + Dice.HIT_DIE + "] = " + hit);
+		LOG.debug(String.format("Skill Hit Roll: %d + %d + %d + %d[1-%d] = %d",
+				attacker.getEffectiveHit(), weaponHitChance,
+				skill.getAttackHitBonus(), die, Dice.HIT_DIE, hit));
 		return hit;
-
 	}
 
 	public static int calculateSpellAttackHitChance(Entity attacker,
@@ -168,10 +132,10 @@ public class Calculate {
 				+ spell.getAttackHitBonus() + die;
 
 		LOG.debug(
-				"hitChance + weaponHitChance + skillHitBonus + dieRoll[1-100]");
-		LOG.debug("Spell Hit Roll: " + attacker.getEffectiveHit() + " + "
-				+ spellFocusHitChance + " + " + spell.getAttackHitBonus() + " + "
-				+ die + "[1-" + Dice.HIT_DIE + "] = " + hit);
+				"hitChance + spellFocusHitBonus + spellHitBonus + dieRoll[1-100]");
+		LOG.debug(String.format("Spell Hit Roll: %d + %d + %d + %d[1-%d] = %d",
+				attacker.getEffectiveHit(), spellFocusHitChance,
+				spell.getAttackHitBonus(), die, Dice.HIT_DIE, hit));
 		return hit;
 
 	}
