@@ -40,7 +40,9 @@ public class Save implements Serializable {
 		saveDateTime = LocalDateTime.now();
 		playerName = player.getName();
 		playerLevel = player.getLevel();
-		this.saveNote = saveNote;
+		if (saveNote != null)
+			this.saveNote = saveNote;
+		System.out.println(" :" + saveNote);
 	}
 
 	/**

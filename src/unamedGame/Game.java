@@ -165,6 +165,7 @@ public class Game {
 		Window.appendToPane(window.getSidePane(), "0: Back");
 		for (int i = 1; i < 10; i++) {
 			boolean validChoices[] = new boolean[10];
+
 			if (new File("saves/save" + i + ".sav").exists()) {
 				validChoices[i] = true;
 				try {
@@ -192,9 +193,15 @@ public class Game {
 			public void inputChanged(InputEvent evt) {
 
 				clearTextField();
-
-				if (isNumeric(evt.getText())) {
-					int command = Integer.parseInt(evt.getText());
+				String[] commands = evt.getText().split(" ");
+				String saveNote = "";
+				System.out.println(Arrays.toString(commands));
+				for (int j = 1; j < commands.length; j++) {
+					saveNote += commands[j] + " ";
+					System.out.println(saveNote);
+				}
+				if (isNumeric(commands[0])) {
+					int command = Integer.parseInt(commands[0]);
 					if (command == 0) {
 						window.removeInputObsever(this);
 						back.run();
@@ -203,13 +210,13 @@ public class Game {
 						File file = new File("saves/save" + command + ".sav");
 
 						if (file.exists()) {
-							openSaveOverwriteConfirmMenu(file, back);
+							openSaveOverwriteConfirmMenu(file, back, saveNote);
 							window.removeInputObsever(this);
 						} else {
 							try {
 								ObjectOutputStream out = new ObjectOutputStream(
 										new FileOutputStream(file));
-								out.writeObject(new Save());
+								out.writeObject(new Save(saveNote));
 								out.close();
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
@@ -229,7 +236,7 @@ public class Game {
 	}
 
 	private static void openSaveOverwriteConfirmMenu(File file,
-			Runnable callerBack) {
+			Runnable callerBack, String saveNote) {
 		Window.clearPane(window.getSidePane());
 		Window.addToPane(window.getSidePane(),
 				"OVERWRITE SAVE?\n1: Yes\n2: No");
@@ -248,7 +255,7 @@ public class Game {
 								ObjectOutputStream out;
 								out = new ObjectOutputStream(
 										new FileOutputStream(file));
-								out.writeObject(new Save());
+								out.writeObject(new Save(saveNote));
 								out.close();
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
