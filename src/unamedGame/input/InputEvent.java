@@ -5,16 +5,12 @@ package unamedGame.input;
 
 import java.util.EventObject;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import unamedGame.Game;
 import unamedGame.ui.Window;
 import unamedGame.util.Colors;
 
 public class InputEvent extends EventObject {
 	
-	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	/**
 	 * 

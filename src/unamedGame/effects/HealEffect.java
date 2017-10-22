@@ -15,6 +15,10 @@ import unamedGame.util.Colors;
  */
 public class HealEffect extends Effect {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7183392219956845366L;
 	private int magnitude;
 	private int totalHeal;
 

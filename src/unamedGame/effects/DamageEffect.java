@@ -15,6 +15,10 @@ import unamedGame.util.Colors;
  */
 public class DamageEffect extends Effect {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6069813639114427398L;
 	private int magnitude;
 	private int totalDamage;
 	private String damageType;

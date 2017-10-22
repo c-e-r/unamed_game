@@ -14,7 +14,6 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import unamedGame.entities.Player;
@@ -86,8 +85,6 @@ public class MapPanel extends JPanel {
 
 		Point playerPoint = Player.getInstance().getLocation();
 		CubePoint playerCubePoint = CubePoint.pointToCubePoint(playerPoint);
-		WorldTile playerTile = World.getInstance()
-				.getWorld()[playerPoint.x][playerPoint.y];
 		WorldTile[] tiles = new WorldTile[61];
 
 		for (int i = 0; i < tiles.length; i++) {

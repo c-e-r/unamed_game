@@ -26,6 +26,10 @@ import unamedGame.world.World;
  */
 public class Player extends Entity implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3011027798036421350L;
 	private static Player instance = null;
 
 	public static Player getInstance() {
@@ -36,7 +40,10 @@ public class Player extends Entity implements Serializable {
 		return instance;
 	}
 
-	private boolean canMove;
+	public static void setInstance(Player instance) {
+		Player.instance = instance;
+	}
+
 	private Point location;
 	private int level;
 	private int exp;
@@ -92,7 +99,7 @@ public class Player extends Entity implements Serializable {
 
 	/**
 	 * Moves the player in the given direction passing time and displaying a
-	 * confimation of direction moved
+	 * confirmation of direction moved
 	 * 
 	 * @param direction
 	 */
@@ -102,9 +109,7 @@ public class Player extends Entity implements Serializable {
 			tempLocation = CubePoint.cubePointToPoint(CubePoint.getMoveNeighbor(
 					CubePoint.pointToCubePoint(location), direction));
 			if (World.getInstance().locationExists(tempLocation)) {
-				System.out.println(location);
 				location = tempLocation;
-				System.out.println(location);
 				Time.getInstance().passTime(480);
 			} else {
 				direction = -1;
@@ -286,7 +291,6 @@ public class Player extends Entity implements Serializable {
 				Window.appendToPane(Window.getInstance().getTextPane(),
 						" and equipped your " + item.getName());
 			}
-			Game.inventory();
 
 			break;
 		case "body":
@@ -313,14 +317,7 @@ public class Player extends Entity implements Serializable {
 				Window.appendToPane(Window.getInstance().getTextPane(),
 						" and equipped your " + item.getName());
 			}
-			Game.inventory();
 
-			break;
-		case "hand":
-			getHandChoice(item);
-			break;
-		case "held":
-			getHeldChoice(item);
 			break;
 		case "feet":
 			if (equipment[EquipmentIndex.FEET.getValue()] == null) {
@@ -346,7 +343,6 @@ public class Player extends Entity implements Serializable {
 				Window.appendToPane(Window.getInstance().getTextPane(),
 						" and equipped your " + item.getName());
 			}
-			Game.inventory();
 
 			break;
 		case "neck":
@@ -373,7 +369,6 @@ public class Player extends Entity implements Serializable {
 				Window.appendToPane(Window.getInstance().getTextPane(),
 						" and equipped your " + item.getName());
 			}
-			Game.inventory();
 
 			break;
 
@@ -408,267 +403,84 @@ public class Player extends Entity implements Serializable {
 
 	}
 
-	/**
-	 * Prompts the player to select which hand to equip the given item in and
-	 * equips it
-	 * 
-	 * @param toEquip
-	 *            the item to equip
-	 */
-	public void getHandChoice(Item toEquip) {
-		Window.clearPane(Window.getInstance().getSidePane());
-		Window.addToPane(Window.getInstance().getSidePane(),
-				"0: Back\n1: Left");
-		if (equipment[EquipmentIndex.LEFT_HAND.getValue()] != null) {
-			Window.addToPane(Window.getInstance().getSidePane(), " - "
-					+ equipment[EquipmentIndex.LEFT_HAND.getValue()].getName());
+	public void equipToHand(int hand, Item toEquip) {
+		hand = hand == 1 ? EquipmentIndex.LEFT_HAND.getValue()
+				: EquipmentIndex.RIGHT_HAND.getValue();
+		if (equipment[hand] == null) {
+			equipment[hand] = toEquip;
+			System.out.println(equipment[hand].getName());
+			toEquip.setEquipped(true);
+			Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
+
+			Window.appendToPane(Window.getInstance().getTextPane(),
+					"You equipped your " + toEquip.getName());
+		} else {
+			equipment[hand].setEquipped(false);
+			Player.getInstance()
+					.removeEquipEffects(equipment[hand].getEquipEffects());
+
+			Window.addToPane(Window.getInstance().getTextPane(),
+					"You removed your " + equipment[hand].getName());
+			equipment[hand] = toEquip;
+			toEquip.setEquipped(true);
+			Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
+
+			Window.appendToPane(Window.getInstance().getTextPane(),
+					" and equipped your " + toEquip.getName());
 		}
-		Window.addToPane(Window.getInstance().getSidePane(), "\n2: Right");
-		if (equipment[EquipmentIndex.RIGHT_HAND.getValue()] != null) {
-			Window.addToPane(Window.getInstance().getSidePane(),
-					" - " + equipment[EquipmentIndex.RIGHT_HAND.getValue()]
-							.getName());
-		}
-		Window.appendToPane(Window.getInstance().getTextPane(),
-				"Equip to which hand?");
-		Window.getInstance().addInputObsever(new InputObserver() {
-			@Override
-			public void inputChanged(InputEvent evt) {
-				if (Game.isNumeric(evt.getText())) {
-					int hand = Integer.parseInt(evt.getText());
-					if (hand == 0) {
-						Window.getInstance().removeInputObsever(this);
-						Game.itemChoiceMenu(inventory.indexOf(toEquip));
-					} else if (hand == 1) {
-						if (equipment[EquipmentIndex.LEFT_HAND
-								.getValue()] == null) {
-							equipment[EquipmentIndex.LEFT_HAND
-									.getValue()] = toEquip;
-							toEquip.setEquipped(true);
-							Player.getInstance()
-									.addEquipEffects(toEquip.getEquipEffects());
-
-							Window.appendToPane(
-									Window.getInstance().getTextPane(),
-									"You equipped your " + toEquip.getName());
-						} else {
-							equipment[EquipmentIndex.LEFT_HAND.getValue()]
-									.setEquipped(false);
-							Player.getInstance().removeEquipEffects(
-									equipment[EquipmentIndex.RIGHT_HAND
-											.getValue()].getEquipEffects());
-
-							Window.addToPane(Window.getInstance().getTextPane(),
-									"You removed your "
-											+ equipment[EquipmentIndex.LEFT_HAND
-													.getValue()].getName());
-							equipment[EquipmentIndex.LEFT_HAND
-									.getValue()] = toEquip;
-							toEquip.setEquipped(true);
-							Player.getInstance()
-									.addEquipEffects(toEquip.getEquipEffects());
-
-							Window.appendToPane(
-									Window.getInstance().getTextPane(),
-									" and equipped your " + toEquip.getName());
-						}
-						Window.getInstance().removeInputObsever(this);
-						Game.inventory();
-
-					} else if (hand == 2) {
-						if (equipment[EquipmentIndex.RIGHT_HAND
-								.getValue()] == null) {
-							equipment[EquipmentIndex.RIGHT_HAND
-									.getValue()] = toEquip;
-							toEquip.setEquipped(true);
-							Player.getInstance()
-									.addEquipEffects(toEquip.getEquipEffects());
-
-							Window.appendToPane(
-									Window.getInstance().getTextPane(),
-									"You equipped your " + toEquip.getName());
-						} else {
-							equipment[EquipmentIndex.RIGHT_HAND.getValue()]
-									.setEquipped(false);
-							Player.getInstance().removeEquipEffects(
-									equipment[EquipmentIndex.RIGHT_HAND
-											.getValue()].getEquipEffects());
-
-							Window.addToPane(Window.getInstance().getTextPane(),
-									"You removed your "
-											+ equipment[EquipmentIndex.RIGHT_HAND
-													.getValue()].getName());
-							equipment[EquipmentIndex.RIGHT_HAND
-									.getValue()] = toEquip;
-							toEquip.setEquipped(true);
-							Player.getInstance()
-									.addEquipEffects(toEquip.getEquipEffects());
-
-							Window.appendToPane(
-									Window.getInstance().getTextPane(),
-									" and equipped your " + toEquip.getName());
-
-						}
-						Window.getInstance().removeInputObsever(this);
-						Game.inventory();
-					}
-				}
-			}
-		});
-
 	}
 
-	/**
-	 * Prompts the player to select which hand to hold the given item in and
-	 * equips it
-	 * 
-	 * @param toEquip
-	 *            the item to equip
-	 */
-	public void getHeldChoice(Item toEquip) {
-		Window.clearPane(Window.getInstance().getSidePane());
-		Window.addToPane(Window.getInstance().getSidePane(),
-				"0: Back\n1: Left");
-		if (equipment[EquipmentIndex.LEFT_HELD.getValue()] != null) {
-			Window.addToPane(Window.getInstance().getSidePane(), " - "
-					+ equipment[EquipmentIndex.LEFT_HELD.getValue()].getName());
-		}
-		Window.addToPane(Window.getInstance().getSidePane(), "\n2: Right");
-		if (equipment[EquipmentIndex.RIGHT_HELD.getValue()] != null) {
-			Window.addToPane(Window.getInstance().getSidePane(),
-					" - " + equipment[EquipmentIndex.RIGHT_HELD.getValue()]
-							.getName());
-		}
-		Window.addToPane(Window.getInstance().getSidePane(), "\n3: Both");
-		Window.appendToPane(Window.getInstance().getTextPane(),
-				"Hold in which hand?");
-		Window.getInstance().addInputObsever(new InputObserver() {
-			@Override
-			public void inputChanged(InputEvent evt) {
-				if (Game.isNumeric(evt.getText())) {
-					int hand = Integer.parseInt(evt.getText());
-					if (hand == 0) {
-						Window.getInstance().removeInputObsever(this);
-						Game.itemChoiceMenu(inventory.indexOf(toEquip));
-					} else if (hand == 1) {
-						if (equipment[EquipmentIndex.LEFT_HELD
-								.getValue()] == null) {
-							equipment[EquipmentIndex.LEFT_HELD
-									.getValue()] = toEquip;
-							toEquip.setEquipped(true);
-							Player.getInstance()
-									.addEquipEffects(toEquip.getEquipEffects());
-							Window.appendToPane(
-									Window.getInstance().getTextPane(),
-									"You equipped your " + toEquip.getName());
-						} else {
-							if (equipment[EquipmentIndex.LEFT_HELD
-									.getValue()] != equipment[EquipmentIndex.RIGHT_HELD
-											.getValue()]) {
-								equipment[EquipmentIndex.LEFT_HELD.getValue()]
-										.setEquipped(false);
-							}
+	public void equipToHeld(int hand, Item toEquip) {
+		if (hand != 3) {
+			hand = hand == 1 ? EquipmentIndex.LEFT_HELD.getValue()
+					: EquipmentIndex.RIGHT_HELD.getValue();
+			if (equipment[hand] == null) {
+				equipment[hand] = toEquip;
+				System.out.println(equipment[hand].getName());
+				toEquip.setEquipped(true);
+				Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
 
-							Player.getInstance().removeEquipEffects(
-									equipment[EquipmentIndex.LEFT_HELD
-											.getValue()].getEquipEffects());
-							equipment[EquipmentIndex.LEFT_HELD
-									.getValue()] = toEquip;
-							toEquip.setEquipped(true);
-							Player.getInstance()
-									.addEquipEffects(toEquip.getEquipEffects());
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						"You equipped your " + toEquip.getName());
+			} else {
+				equipment[hand].setEquipped(false);
+				Player.getInstance()
+						.removeEquipEffects(equipment[hand].getEquipEffects());
 
-							Window.appendToPane(
-									Window.getInstance().getTextPane(),
-									"You and equipped your " + toEquip.getName()
-											+ " in your left hand");
-						}
-						Window.getInstance().removeInputObsever(this);
-						Game.inventory();
+				Window.addToPane(Window.getInstance().getTextPane(),
+						"You removed your " + equipment[hand].getName());
+				equipment[hand] = toEquip;
+				toEquip.setEquipped(true);
+				Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
 
-					} else if (hand == 2) {
-						if (equipment[EquipmentIndex.RIGHT_HELD
-								.getValue()] == null) {
-							equipment[EquipmentIndex.RIGHT_HELD
-									.getValue()] = toEquip;
-							toEquip.setEquipped(true);
-							Player.getInstance()
-									.addEquipEffects(toEquip.getEquipEffects());
-
-							Window.appendToPane(
-									Window.getInstance().getTextPane(),
-									"You equipped your " + toEquip.getName()
-											+ " in your right hand");
-						} else {
-							if (equipment[EquipmentIndex.RIGHT_HELD
-									.getValue()] != equipment[EquipmentIndex.LEFT_HELD
-											.getValue()]) {
-								equipment[EquipmentIndex.LEFT_HELD.getValue()]
-										.setEquipped(false);
-							}
-							equipment[EquipmentIndex.RIGHT_HELD.getValue()]
-									.setEquipped(false);
-							Player.getInstance().removeEquipEffects(
-									equipment[EquipmentIndex.RIGHT_HELD
-											.getValue()].getEquipEffects());
-							equipment[EquipmentIndex.RIGHT_HELD
-									.getValue()] = toEquip;
-							toEquip.setEquipped(true);
-							Player.getInstance()
-									.addEquipEffects(toEquip.getEquipEffects());
-
-							Window.appendToPane(
-									Window.getInstance().getTextPane(),
-									"You equipped your " + toEquip.getName());
-
-						}
-						Window.getInstance().removeInputObsever(this);
-						Game.inventory();
-					} else if (hand == 3) {
-						if (equipment[EquipmentIndex.RIGHT_HELD
-								.getValue()] == null) {
-							equipment[EquipmentIndex.RIGHT_HELD
-									.getValue()] = toEquip;
-							toEquip.setEquipped(true);
-						} else {
-							equipment[EquipmentIndex.RIGHT_HELD.getValue()]
-									.setEquipped(false);
-							Player.getInstance().removeEquipEffects(
-									equipment[EquipmentIndex.RIGHT_HELD
-											.getValue()].getEquipEffects());
-							equipment[EquipmentIndex.RIGHT_HELD
-									.getValue()] = toEquip;
-							toEquip.setEquipped(true);
-						}
-						if (equipment[EquipmentIndex.LEFT_HELD
-								.getValue()] == null) {
-							equipment[EquipmentIndex.LEFT_HELD
-									.getValue()] = toEquip;
-							toEquip.setEquipped(true);
-						} else {
-							equipment[EquipmentIndex.LEFT_HELD.getValue()]
-									.setEquipped(false);
-							Player.getInstance().removeEquipEffects(
-									equipment[EquipmentIndex.LEFT_HELD
-											.getValue()].getEquipEffects());
-							equipment[EquipmentIndex.LEFT_HELD
-									.getValue()] = toEquip;
-							toEquip.setEquipped(true);
-						}
-						Player.getInstance()
-								.addEquipEffects(toEquip.getEquipEffects());
-						Window.appendToPane(Window.getInstance().getTextPane(),
-								"You equipped your " + toEquip.getName()
-										+ " in both hands");
-
-						Window.getInstance().removeInputObsever(this);
-						Game.inventory();
-					}
-				}
-
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						" and equipped your " + toEquip.getName());
 			}
-		});
+		} else {
+			if (equipment[EquipmentIndex.RIGHT_HELD.getValue()] != null) {
+				equipment[EquipmentIndex.RIGHT_HELD.getValue()]
+						.setEquipped(false);
+				Player.getInstance().removeEquipEffects(
+						equipment[EquipmentIndex.RIGHT_HELD.getValue()]
+								.getEquipEffects());
+			}
+			if (equipment[EquipmentIndex.LEFT_HELD.getValue()] != null) {
+				equipment[EquipmentIndex.LEFT_HELD.getValue()]
+						.setEquipped(false);
+				Player.getInstance().removeEquipEffects(
+						equipment[EquipmentIndex.LEFT_HELD.getValue()]
+								.getEquipEffects());
+			}
 
+			equipment[EquipmentIndex.RIGHT_HELD.getValue()] = toEquip;
+			equipment[EquipmentIndex.LEFT_HELD.getValue()] = toEquip;
+			toEquip.setEquipped(true);
+
+			Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
+			Window.appendToPane(Window.getInstance().getTextPane(),
+					"You equipped your " + toEquip.getName()
+							+ " in both hands");
+		}
 	}
 
 	/**
@@ -812,6 +624,13 @@ public class Player extends Entity implements Serializable {
 	 */
 	public void setNewStatPoints(int newStatPoints) {
 		this.newStatPoints = newStatPoints;
+	}
+
+	/**
+	 * @return the level
+	 */
+	public int getLevel() {
+		return level;
 	}
 
 }

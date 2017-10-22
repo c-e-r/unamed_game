@@ -3,11 +3,10 @@
  */
 package unamedGame.effects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dom4j.Element;
@@ -16,7 +15,7 @@ import unamedGame.Dice;
 import unamedGame.Game;
 import unamedGame.entities.*;
 import unamedGame.time.Time;
-import unamedGame.time.TimeObserver;
+import unamedGame.time.TimeListener;
 import unamedGame.ui.Window;
 
 /**
@@ -25,7 +24,12 @@ import unamedGame.ui.Window;
  * @author c-e-r
  *
  */
-public abstract class Effect {
+public abstract class Effect implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1153105558946744535L;
 
 	private static final Logger LOG = LogManager.getLogger(Game.class);
 
@@ -64,9 +68,9 @@ public abstract class Effect {
 	protected String specialResistType;
 	protected int specialAccuracyBonus;
 	protected int specialAccuracy;
-	protected EntityObserver selfDestructionObserver;
-	protected EntityObserver specialEffectObserver;
-	protected TimeObserver timeObserver;
+	protected EntityListener selfDestructionListener;
+	protected EntityListener specialEffectListener;
+	protected TimeListener timeListener;
 
 	int maxActivateCount;
 	protected boolean destroyed;
@@ -392,13 +396,17 @@ public abstract class Effect {
 	private void setSelfDestructionObserver() {
 		Effect effect = this;
 
-		owner.addObserver(selfDestructionObserver = new EntityObserver() {
+		owner.addEntityListener(selfDestructionListener = new EntityListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -8406189170907410554L;
+
 			@Override
-			public void update(Observable o, Object arg) {
-				super.update(o, arg);
-				if (selfDestructTrigger.equals((String) arg)) {
+			public void action(String event) {
+				if (selfDestructTrigger.equals(event)) {
 					effect.selfDestruct();
-					owner.deleteObserver(this);
+					setDelete();
 				}
 			}
 		});
@@ -409,7 +417,8 @@ public abstract class Effect {
 	 */
 	protected void selfDestruct() {
 		owner.removeEffect(this);
-		owner.deleteObserver(specialEffectObserver);
+		specialEffectListener.setDelete();
+		timeListener.setDelete();
 		owner.deleteObservers();
 
 		String[] description;
@@ -435,11 +444,15 @@ public abstract class Effect {
 	private void setSpecialEffectObserver() {
 		Effect effect = this;
 
-		owner.addObserver(new EntityObserver() {
+		owner.addEntityListener(specialEffectListener = new EntityListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1389343275668841811L;
+
 			@Override
-			public void update(Observable o, Object arg) {
-				super.update(o, arg);
-				if (specialEffectTrigger.equals((String) arg)) {
+			public void action(String event) {
+				if (specialEffectTrigger.equals(event)) {
 					if (checkSpecialResistance()) {
 						effect.specialActivate();
 					} else {
@@ -467,60 +480,59 @@ public abstract class Effect {
 	private void setTimeObserver() {
 		Effect effect = this;
 
-		Time.getInstance().addObserver(timeObserver = new TimeObserver() {
+		Time.getInstance().addTimeListener(timeListener = new TimeListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 6561115758201409530L;
+
 			@Override
-			public void update(Observable o, Object arg) {
-				if (destroyed) {
-					Time.getInstance().deleteObserver(this);
+			public void action() {
 
-				} else {
+				if (increment > 0) {
+					int newActivateCount;
+					if (Time.getInstance().getTime() > endTime
+							&& endTime != 0) {
+						newActivateCount = (endTime - startTime) / increment;
 
-					if (increment > 0) {
-						int newActivateCount;
-						if (Time.getInstance().getTime() > endTime
-								&& endTime != 0) {
-							newActivateCount = (endTime - startTime)
-									/ increment;
+					} else {
+						newActivateCount = (Time.getInstance().getTime()
+								- startTime) / increment;
+					}
+					if (duration == -1 || (activateCount < maxActivateCount
+							&& activateCount < newActivateCount)) {
+						while (activateCount < newActivateCount) {
+							activateCount++;
+							if (checkResistance()) {
+								active = true;
+								effect.activate();
+							} else {
+								if (repeatType.equals("untilResist")) {
+									owner.removeEffect(effect);
+									setDelete();
+								}
+								active = false;
+								if (owner instanceof Player) {
+									printDescription(
+											playerResistRepeatEffectDescription);
 
-						} else {
-							newActivateCount = (Time.getInstance().getTime()
-									- startTime) / increment;
-						}
-						if (duration == -1 || (activateCount < maxActivateCount
-								&& activateCount < newActivateCount)) {
-							while (activateCount < newActivateCount) {
-								activateCount++;
-								if (checkResistance()) {
-									active = true;
-									effect.activate();
 								} else {
-									if (repeatType.equals("untilResist")) {
-										owner.removeEffect(effect);
-										Time.getInstance().deleteObserver(this);
-									}
-									active = false;
-									if (owner instanceof Player) {
-										printDescription(
-												playerResistRepeatEffectDescription);
-
-									} else {
-										printDescription(
-												resistRepeatEffectDescription);
-									}
-
+									printDescription(
+											resistRepeatEffectDescription);
 								}
 
 							}
+
 						}
 					}
-					if (Time.getInstance().getTime() >= endTime) {
-						owner.removeEffect(effect);
-					}
-					Player.getInstance().recalculateStats();
-
 				}
+				if (Time.getInstance().getTime() >= endTime) {
+					owner.removeEffect(effect);
+				}
+				Player.getInstance().recalculateStats();
 
 			}
+
 		});
 
 	}

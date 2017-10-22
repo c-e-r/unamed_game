@@ -25,3 +25,5 @@ lib
 bin
 
 *.checkstyle
+
+*.sav

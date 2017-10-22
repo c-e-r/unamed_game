@@ -5,8 +5,6 @@ package unamedGame.input;
 
 import java.util.EventListener;
 
-import org.dom4j.DocumentException;
-
 /**
  * @author c-e-r
  *

@@ -55,7 +55,7 @@ public class Combat {
 		this.enemy = enemy;
 		inCombat = true;
 
-		Window.getInstance().swapMapPane();
+		Window.getInstance().swapToPlayerPane();
 		Window.clearPane(Window.getInstance().getTextPane());
 		Window.appendToPane(Window.getInstance().getTextPane(),
 				enemy.getDescription());
@@ -344,8 +344,8 @@ public class Combat {
 		int playerSpeed = player.speedCheck(command, index);
 		int enemySpeed = enemy.speedCheck(enemyCommand, enemyIndex);
 
-		LOG.debug("Comparing speed: playerSpeed " + playerSpeed + " <><> enemySpeed  "
-				+ enemySpeed);
+		LOG.debug("Comparing speed: playerSpeed " + playerSpeed
+				+ " <><> enemySpeed  " + enemySpeed);
 		if (playerSpeed > enemySpeed) {
 			LOG.debug("player first");
 			playerAction(command, index);
@@ -641,7 +641,7 @@ public class Combat {
 			@Override
 			public void inputChanged(InputEvent evt) {
 				EventReader.resumeEvent();
-				Window.getInstance().swapMapPane();
+				Window.getInstance().swapToMapPane();
 				Window.getInstance().removeInputObsever(this);
 			}
 		});

@@ -4,6 +4,7 @@
 package unamedGame.items;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +28,12 @@ import unamedGame.spells.Spell;
  * @author c-e-r
  *
  */
-public class Item {
+public class Item implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3840552122199961294L;
 
 	private static final Logger LOG = LogManager.getLogger(Game.class);
 
@@ -928,6 +934,14 @@ public class Item {
 	 */
 	public String getItemType() {
 		return itemType;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Item [name=" + name  +"]";
 	}
 
 }

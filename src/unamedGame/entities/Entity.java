@@ -3,7 +3,9 @@
  */
 package unamedGame.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 
@@ -25,9 +27,16 @@ import unamedGame.util.Colors;
  * @author c-e-r
  *
  */
-public class Entity extends Observable {
+public class Entity extends Observable implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7904979206847101273L;
 
 	private static final Logger LOG = LogManager.getLogger(Game.class);
+
+	protected List<EntityListener> entityListeners = new ArrayList<EntityListener>();
 
 	protected Item[] equipment;
 
@@ -297,8 +306,6 @@ public class Entity extends Observable {
 
 		triggerEffects("attacked");
 
-		int weaponBaseDamage = 0;
-		int weaponVariableDamage = 1;
 		int weaponHitChance = 0;
 		String weaponDamageType = "null";
 		String weaponAttackHitDescription;
@@ -306,9 +313,9 @@ public class Entity extends Observable {
 		String playerWeaponAttackHitDescription;
 		String playerWeaponAttackMissDescription;
 
-		weaponBaseDamage = weapon.getWeaponBaseDamage();
+		weapon.getWeaponBaseDamage();
 		weaponHitChance = weapon.getWeaponHitChance();
-		weaponVariableDamage = weapon.getWeaponVariableDamage();
+		weapon.getWeaponVariableDamage();
 		weaponDamageType = weapon.getDamageType();
 		weaponAttackHitDescription = weapon.getAttackHitDescription();
 		weaponAttackMissDescription = weapon.getAttackMissDescription();
@@ -427,8 +434,15 @@ public class Entity extends Observable {
 	 *            the reason effects are being triggered
 	 */
 	public void triggerEffects(String reason) {
-		setChanged();
-		notifyObservers((String) reason);
+		for (Iterator<EntityListener> it = entityListeners.iterator(); it
+				.hasNext();) {
+			EntityListener listener = it.next();
+			listener.entityEvent(reason);
+			if (listener.getDelete()) {
+				it.remove();
+			}
+
+		}
 	}
 
 	/**
@@ -444,8 +458,6 @@ public class Entity extends Observable {
 		Item weapon = attacker.getMainWeapon();
 		boolean attackHit = true;
 
-		int weaponBaseDamage = 0;
-		int weaponVariableDamage = 1;
 		int weaponHitChance = 0;
 		String weaponDamageType = "null";
 
@@ -458,9 +470,9 @@ public class Entity extends Observable {
 			weapon = attacker.getMainWeapon();
 		}
 
-		weaponBaseDamage = weapon.getWeaponBaseDamage();
+		weapon.getWeaponBaseDamage();
 		weaponHitChance = weapon.getWeaponHitChance();
-		weaponVariableDamage = weapon.getWeaponVariableDamage();
+		weapon.getWeaponVariableDamage();
 		weaponDamageType = weapon.getDamageType();
 
 		String[] description = null;
@@ -635,10 +647,11 @@ public class Entity extends Observable {
 
 		String[] description = null;
 
-		int temp = Dice.roll(Dice.HIT_DIE);
+		Dice.roll(Dice.HIT_DIE);
 
 		if (spell.isAttack()) {
-			spellHit = Calculate.calculateSpellAttackHitChance(attacker, spell, spellFocusHitChance) >= this.getEffectiveDodge();
+			spellHit = Calculate.calculateSpellAttackHitChance(attacker, spell,
+					spellFocusHitChance) >= this.getEffectiveDodge();
 			spellHit = true;
 
 		}
@@ -1405,7 +1418,8 @@ public class Entity extends Observable {
 			break;
 		}
 		int speedDie = Dice.roll(Dice.SPEED_DIE);
-		LOG.debug("speed + speedBonus - equipSpeedPenalty + actionBonus + speedDie[D10]");
+		LOG.debug(
+				"speed + speedBonus - equipSpeedPenalty + actionBonus + speedDie[D10]");
 		StringBuilder builder = new StringBuilder();
 		builder.append("Speed roll: ");
 		builder.append(speed);
@@ -2334,5 +2348,13 @@ public class Entity extends Observable {
 		}
 
 		return builder.toString();
+	}
+
+	public void addEntityListener(EntityListener listener) {
+		entityListeners.add(listener);
+	}
+
+	public void removeEntityListener(EntityListener listener) {
+		entityListeners.remove(listener);
 	}
 }
