@@ -48,7 +48,7 @@ public abstract class Effect implements Serializable {
 	protected String resistRepeatEffectDescription;
 	protected String playerResistRepeatEffectDescription;
 	protected int baseAccuracy;
-	protected int creatorEffectMult = 1;
+	protected double creatorEffectMult = 1;
 	protected int accuracy;
 	protected String resistType;
 	protected String repeatType;
@@ -287,9 +287,9 @@ public abstract class Effect implements Serializable {
 			creatorEffectMult = 1;
 			break;
 		}
-		accuracy = baseAccuracy * creatorEffectMult;
-		specialAccuracy = baseAccuracy
-				+ specialAccuracyBonus * creatorEffectMult;
+		accuracy = (int) (baseAccuracy * creatorEffectMult);
+		specialAccuracy = (int) (baseAccuracy
+				+ specialAccuracyBonus * creatorEffectMult);
 	}
 
 	/**

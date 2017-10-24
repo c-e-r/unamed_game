@@ -6,6 +6,7 @@ package unamedGame.entities;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import unamedGame.Game;
@@ -74,6 +75,7 @@ public class Player extends Entity implements Serializable {
 		currentMana = maxMana;
 		location = new Point(4, 4);
 		inventory = new ArrayList<Item>();
+		flags = new HashMap<String, Integer>();
 		permanantEffects = new ArrayList<Effect>();
 		equipmentEffects = new ArrayList<Effect>();
 		useName = "you";

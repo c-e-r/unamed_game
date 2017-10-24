@@ -5,6 +5,7 @@ package unamedGame.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
@@ -39,6 +40,7 @@ public class Entity extends Observable implements Serializable {
 	protected List<EntityListener> entityListeners = new ArrayList<EntityListener>();
 
 	protected Item[] equipment;
+	protected HashMap<String, Integer> flags;
 
 	protected List<Item> inventory;
 	protected List<Effect> effects;
@@ -158,12 +160,12 @@ public class Entity extends Observable implements Serializable {
 	protected int physicalResistancePenalty;
 	protected int basePhysicalResistance = 20;
 
-	protected int mentalChanceMult = 1;
-	protected int mentalChanceMultBonus;
-	protected int mentalChanceMultPenalty;
-	protected int physicalChanceMult = 1;
-	protected int physicalChanceMultBonus;
-	protected int physicalChanceMultPenalty;
+	protected double mentalChanceMult = 1;
+	protected double mentalChanceMultBonus;
+	protected double mentalChanceMultPenalty;
+	protected double physicalChanceMult = 1;
+	protected double physicalChanceMultBonus;
+	protected double physicalChanceMultPenalty;
 
 	protected int hit;
 	protected int hitBonus;
@@ -833,13 +835,15 @@ public class Entity extends Observable implements Serializable {
 		int temp = getEffectiveSpeed();
 		target.getAttacked(this, false);
 
-		if (temp >= 10 && getOffhandWeapon() != null && !isWieldingTwoHanded()) {
+		if (temp >= 10 && getOffhandWeapon() != null
+				&& !isWieldingTwoHanded()) {
 			target.getAttacked(this, true);
 		}
 		if (temp >= 20) {
 			target.getAttacked(this, false);
 		}
-		if (temp >= 30 && getOffhandWeapon() != null && !isWieldingTwoHanded()) {
+		if (temp >= 30 && getOffhandWeapon() != null
+				&& !isWieldingTwoHanded()) {
 			target.getAttacked(this, true);
 		}
 		if (temp >= 40) {
@@ -1981,7 +1985,7 @@ public class Entity extends Observable implements Serializable {
 	 * 
 	 * @return the effective maximum stamina
 	 */
-	public int getEffectiveStamina() {
+	public int getEffectiveMaxStamina() {
 		return maxStamina + maxStaminaBonus - maxStaminaPenalty;
 	}
 
@@ -1999,7 +2003,7 @@ public class Entity extends Observable implements Serializable {
 	 * 
 	 * @return the effective maximum mana
 	 */
-	public int getEffectiveMana() {
+	public int getEffectiveMaxMana() {
 		return maxMana + maxManaBonus - maxManaPenalty;
 	}
 
@@ -2112,6 +2116,10 @@ public class Entity extends Observable implements Serializable {
 		return carryCapacityBonus;
 	}
 
+	public int getEffectiveCarryCapacity() {
+		return carryCapacity + carryCapacityBonus - carryCapacityPenalty;
+	}
+
 	/**
 	 * Returns the entity's current stamina
 	 * 
@@ -2164,7 +2172,7 @@ public class Entity extends Observable implements Serializable {
 	 * 
 	 * @return the mentalChanceMult
 	 */
-	public int getMentalChanceMult() {
+	public double getMentalChanceMult() {
 		return mentalChanceMult;
 	}
 
@@ -2173,7 +2181,7 @@ public class Entity extends Observable implements Serializable {
 	 * 
 	 * @return the effective physical chance multiplier
 	 */
-	public int getEffectivePhysicalChanceMult() {
+	public double getEffectivePhysicalChanceMult() {
 		return physicalChanceMult + physicalChanceMultBonus
 				- physicalChanceMultPenalty;
 	}
@@ -2183,7 +2191,7 @@ public class Entity extends Observable implements Serializable {
 	 * 
 	 * @return the physicalChanceMult
 	 */
-	public int getPhysicalChanceMult() {
+	public double getPhysicalChanceMult() {
 		return physicalChanceMult;
 	}
 
@@ -2192,7 +2200,7 @@ public class Entity extends Observable implements Serializable {
 	 * 
 	 * @return the effective mental chance multiplier
 	 */
-	public int getEffectiveMentalChanceMult() {
+	public double getEffectiveMentalChanceMult() {
 		return mentalChanceMult + mentalChanceMultBonus
 				- mentalChanceMultPenalty;
 	}
@@ -2243,6 +2251,180 @@ public class Entity extends Observable implements Serializable {
 	 */
 	public void setLuck(int luck) {
 		this.luck = luck;
+	}
+
+	/**
+	 * Returns the entities effective slashing reduction.
+	 * 
+	 * @return the effective slashing reduction
+	 */
+	public int getEffectiveSlashingReduction() {
+		return slashingReduction + slashingReductionBonus
+				- slashingReductionPenalty;
+	}
+
+	/**
+	 * Returns the entities effective piercing reduction.
+	 * 
+	 * @return the effective pierceing reduction
+	 */
+	public int getEffectivePiercingReduction() {
+		return piercingReduction + piercingReductionBonus
+				- piercingReductionPenalty;
+	}
+
+	/**
+	 * Returns the entities effective bludgeoning reduction.
+	 * 
+	 * @return the effective bludgeoning reduction
+	 */
+	public int getEffectiveBludgeoningReduction() {
+		return bludgeoningReduction + bludgeoningReductionBonus
+				- bludgeoningReductionPenalty;
+	}
+
+	/**
+	 * Returns the entities effective fire reduction.
+	 * 
+	 * @return the effective fire reduction
+	 */
+	public int getEffectiveFireReduction() {
+		return fireReduction + fireReductionBonus - fireReductionPenalty;
+	}
+
+	/**
+	 * Returns the entities effective cold reduction.
+	 * 
+	 * @return the effective cold reduction
+	 */
+	public int getEffectiveColdReduction() {
+		return coldReduction + coldReductionBonus - coldReductionPenalty;
+	}
+
+	/**
+	 * Returns the entities effective electricity reduction.
+	 * 
+	 * @return the effective slash reduction
+	 */
+	public int getEffectiveElectricityReduction() {
+		return electricityReduction + electricityReductionBonus
+				- electricityReductionPenalty;
+	}
+
+	/**
+	 * Returns the entities effective sacred reduction.
+	 * 
+	 * @return the effective sacred reduction
+	 */
+	public int getEffectiveSacredReduction() {
+		return sacredReduction + sacredReductionBonus - sacredReductionPenalty;
+	}
+
+	/**
+	 * Returns the entities effective profane reduction.
+	 * 
+	 * @return the effective profane reduction
+	 */
+	public int getEffectiveProfaneReduction() {
+		return profaneReduction + profaneReductionBonus
+				- profaneReductionPenalty;
+	}
+
+	/**
+	 * Returns the entities effective poison reduction.
+	 * 
+	 * @return the effective poison reduction
+	 */
+	public int getEffectivePoisonReduction() {
+		return poisonReduction + poisonReductionBonus - poisonReductionPenalty;
+	}
+
+	/**
+	 * Returns the entities effective slashing resistance.
+	 * 
+	 * @return the effective slashing resistance
+	 */
+	public double getEffectiveSlashingResistance() {
+		return slashingResistance + slashingResistanceBonus
+				- slashingResistancePenalty;
+	}
+
+	/**
+	 * Returns the entities effective piercing resistance.
+	 * 
+	 * @return the effective piercing resistance
+	 */
+	public double getEffectivePiercingResistance() {
+		return piercingResistance + piercingResistanceBonus
+				- piercingResistancePenalty;
+	}
+
+	/**
+	 * Returns the entities effective bludgeoning resistance.
+	 * 
+	 * @return the effective bludgeoning resistance
+	 */
+	public double getEffectiveBludgeoningResistance() {
+		return bludgeoningResistance + bludgeoningResistanceBonus
+				- bludgeoningResistancePenalty;
+	}
+
+	/**
+	 * Returns the entities effective fire resistance.
+	 * 
+	 * @return the effective fire resistance
+	 */
+	public double getEffectiveFireResistance() {
+		return fireResistance + fireResistanceBonus - fireResistancePenalty;
+	}
+
+	/**
+	 * Returns the entities effective cold resistance.
+	 * 
+	 * @return the effective cold resistance
+	 */
+	public double getEffectiveColdResistance() {
+		return coldResistance + coldResistanceBonus - coldResistancePenalty;
+	}
+
+	/**
+	 * Returns the entities effective electricity resistance.
+	 * 
+	 * @return the effective electricity resistance
+	 */
+	public double getEffectiveElectricityResistance() {
+		return electricityResistance + electricityResistanceBonus
+				- electricityResistancePenalty;
+	}
+
+	/**
+	 * Returns the entities effective sacred resistance.
+	 * 
+	 * @return the effective sacred resistance
+	 */
+	public double getEffectiveSacredResistance() {
+		return sacredResistance + sacredResistanceBonus
+				- sacredResistancePenalty;
+	}
+
+	/**
+	 * Returns the entities effective piercing resistance.
+	 * 
+	 * @return the effective piercing resistance
+	 */
+	public double getEffectiveProfaneResistance() {
+		return profaneResistance + profaneResistanceBonus
+				- profaneResistancePenalty;
+	}
+
+	/**
+	 * Returns the entities effective poison resistance.
+	 * 
+	 * @return the effective poison resistance
+	 */
+	public double getEffectivePoisonResistance() {
+		return poisonResistance + poisonResistanceBonus
+				- poisonResistancePenalty;
 	}
 
 	/**
@@ -2348,6 +2530,166 @@ public class Entity extends Observable implements Serializable {
 		}
 
 		return builder.toString();
+	}
+
+	public boolean checkStat(String statName, String operator, double value) {
+		double stat = getStat(statName);
+		switch (operator) {
+		case "=":
+			return stat == value;
+		case "!=":
+			return stat != value;
+		case "<":
+			return stat < value;
+		case ">":
+			return stat > value;
+		case "<=":
+			return stat <= value;
+		case ">=":
+			return stat >= value;
+		default:
+			return false;
+		}
+	}
+
+	public boolean checkFlag(String flagName, String operator, int value) {
+		int flagValue = getFlagValue(flagName);
+		switch (operator) {
+		case "=":
+			return flagValue == value;
+		case "!=":
+			return flagValue != value;
+		case "<":
+			return flagValue < value;
+		case ">":
+			return flagValue > value;
+		case "<=":
+			return flagValue <= value;
+		case ">=":
+			return flagValue >= value;
+		default:
+			return false;
+		}
+	}
+
+	public double getStat(String statName) {
+		switch (statName) {
+		case "vitality":
+			return getEffectiveVitality();
+		case "strength":
+			return getEffectiveStrength();
+		case "dexterity":
+			return getEffectiveDexterity();
+		case "intellect":
+			return getEffectiveIntellect();
+		case "spirit":
+			return getEffectiveSpirit();
+		case "luck":
+			return getEffectiveLuck();
+		case "currentHealth":
+			return getCurrentHealth();
+		case "maxHealth":
+			return getEffectiveMaxHealth();
+		case "stamina":
+			return getCurrentStamina();
+		case "maxStamina":
+			return getEffectiveMaxStamina();
+		case "speed":
+			return getEffectiveSpeed();
+		case "dodge":
+			return getEffectiveDodge();
+
+		case "slashingReduction":
+			return getEffectiveSlashingReduction();
+		case "piercingReduction":
+			return getEffectivePiercingReduction();
+		case "bludgeoningReduciton":
+			return getEffectiveBludgeoningReduction();
+		case "fireReduction":
+			return getEffectiveFireReduction();
+		case "coldReduction":
+			return getEffectiveColdReduction();
+		case "electricityReduction":
+			return getEffectiveElectricityReduction();
+		case "sacredReduction":
+			return getEffectiveSacredReduction();
+		case "profaneReduction":
+			return getEffectiveProfaneReduction();
+		case "poisonReduction":
+			return getEffectivePoisonReduction();
+
+		case "slashingResistance":
+			return getEffectiveSlashingResistance();
+		case "piercingResistance":
+			return getEffectivePiercingResistance();
+		case "bludgeoningResistance":
+			return getEffectiveBludgeoningResistance();
+		case "fireResistance":
+			return getEffectiveFireResistance();
+		case "coldResistance":
+			return getEffectiveColdResistance();
+		case "electricityResistance":
+			return getEffectiveElectricityResistance();
+		case "sacredResistance":
+			return getEffectiveSacredResistance();
+		case "profaneResistance":
+			return getEffectiveProfaneResistance();
+		case "poisonResistance":
+			return getEffectivePoisonResistance();
+
+		case "mentalResistance":
+			return getEffectiveMentalResistance();
+		case "physicalResistance":
+			return getEffectivePhysicalResistance();
+		case "mentalChance":
+			return getEffectiveMentalChanceMult();
+		case "physicalChance":
+			return getEffectivePhysicalChanceMult();
+		case "hit":
+			return getEffectiveHit();
+		case "damageBonus":
+			return getEffectiveDamageBonus();
+		case "damageMult":
+			return getEffectiveDamageMult();
+		case "healBonus":
+			return getHealBonus();
+		case "healMult":
+			return getHealMult();
+
+		case "carryCapacity":
+			return getEffectiveCarryCapacity();
+		default:
+			break;
+		}
+		return baseDodge;
+
+	}
+
+	public int getFlagValue(String flag) {
+		if (flags.get(flag) != null) {
+			return flags.get(flag);
+		}
+		return 0;
+	}
+
+	public void setFlag(String flag, String operator, int value) {
+		switch (operator) {
+		case "=":
+			setFlagValue(flag, value);
+		case "+":
+			setFlagValue(flag, flags.get(flag) - value);
+		case "-":
+			setFlagValue(flag, flags.get(flag) + value);
+		case "*":
+			setFlagValue(flag, flags.get(flag) * value);
+		case "/":
+			setFlagValue(flag, flags.get(flag) / value);
+		default:
+		}
+	}
+
+	public void setFlagValue(String flag, int value) {
+		flags.put(flag, value);
 	}
 
 	public void addEntityListener(EntityListener listener) {

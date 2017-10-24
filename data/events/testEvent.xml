@@ -2,17 +2,43 @@
 <event>
     <branch number = '0'>
         <text>line 0 </text>
-        <text>line 1
-        <text>line 1.5</text>
-        <addItem>testItem</addItem>
-        </text>
+        <ifStat stat='strength' operator='!=' value='3'>
+            <text>line 1
+                <text>line 1.5</text>
+                <addItem>testItem</addItem>
+            </text>
+        </ifStat>
+        <setFlag flag='testFlag' operator='=' value='1'></setFlag>
+        <ifFlag flag='testFlag' operator='=' value='1'>
+            <ifStat stat='strength' operator='=' value='3'>
+                <text>line 1
+                    <text>line 1.5</text>
+                    <addItem>testItem</addItem>
+                </text>
+            </ifStat>
+        </ifFlag>
         <text>line 2</text>
         <choice>
             <choiceDescription>You have choices</choiceDescription>
             <option branch='1'>choice 1</option>
             <option branch='3'>choice 2</option>
-            <option branch='2'>choice 3</option>
+            <ifFlag flag='testFlag' operator='=' value='1'>
+                <option branch='2'>choice 3</option>
+                <ifFlag flag='testFlag' operator='=' value='1'>
+                    <option branch='2'>choice 4</option>
+                    <ifStat stat='strength' operator='=' value='3'>
+                        <option branch='2'>choice 7</option>
+                    </ifStat>
+                </ifFlag>
+            </ifFlag>
+            <ifStat stat='strength' operator='=' value='3'>
+                <option branch='2'>choice 5</option>
+                <ifFlag flag='testFlag' operator='=' value='1'>
+                    <option branch='2'>choice 6</option>
+                </ifFlag>
+            </ifStat>
         </choice>
+        
     </branch>
    
     

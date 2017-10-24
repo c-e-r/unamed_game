@@ -4,6 +4,7 @@
 package unamedGame.events;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,6 +37,8 @@ public class EventReader {
 
 	private static Element currentElement;
 	private static Element root;
+	private static boolean skipNext;
+	private static boolean stop;
 
 	/**
 	 * Starts an event from the given string. The string must be the file name
@@ -72,13 +75,13 @@ public class EventReader {
 	 */
 	public static void resumeEvent() {
 		Window.clearPane(Window.getInstance().getTextPane());
-		resumeParseEventXML(currentElement);
+		resumeParseEventXML();
 	}
 
 	/*
 	 * Begins parsing the resumed event
 	 */
-	private static void resumeParseEventXML(Element element) {
+	private static void resumeParseEventXML() {
 		nextElement();
 		interpretElement(currentElement);
 		if (currentElement != null) {
@@ -86,7 +89,9 @@ public class EventReader {
 				@Override
 				public void inputChanged(InputEvent evt) {
 					nextElement();
-					if (!interpretElement(currentElement)) {
+					interpretElement(currentElement);
+					if (stop) {
+						stop = false;
 						Window.getInstance().removeInputObsever(this);
 
 					}
@@ -103,20 +108,21 @@ public class EventReader {
 		currentElement = (Element) root
 				.selectSingleNode("//branch[@number='" + branch + "']");
 		nextElement();
-		if (interpretElement(currentElement)) {
-			if (currentElement != null) {
-				Window.getInstance().addInputObsever(new InputObserver() {
-					@Override
-					public void inputChanged(InputEvent evt) {
-						nextElement();
-						if (!interpretElement(currentElement)) {
-							Window.getInstance().removeInputObsever(this);
-						}
-
+		interpretElement(currentElement);
+		if (currentElement != null) {
+			Window.getInstance().addInputObsever(new InputObserver() {
+				@Override
+				public void inputChanged(InputEvent evt) {
+					nextElement();
+					interpretElement(currentElement);
+					if (stop) {
+						stop = false;
+						Window.getInstance().removeInputObsever(this);
 					}
-				});
-			}
+				}
+			});
 		}
+
 	}
 
 	/*
@@ -130,20 +136,23 @@ public class EventReader {
 	 * interprets the element based on the element name and does something
 	 * depending what that is
 	 */
-	private static boolean interpretElement(Element element) {
+	private static void interpretElement(Element element) {
 		switch (element.getName()) {
 		case "text":
 			Window.appendToPane(Window.getInstance().getTextPane(),
 					currentElement.getTextTrim());
-			return true;
+			break;
 		case "end":
 			Game.openExplorationMenu();
-			return false;
+			stop = true;
+			break;
 		case "choice":
 			Window.clearPane(Window.getInstance().getSidePane());
 			String choiceDescription = ((Element) currentElement
 					.selectSingleNode("choiceDescription")).getTextTrim();
 			List<Node> choices = currentElement.selectNodes("option");
+			choices.addAll(getAllIfOptions(currentElement));
+
 			Window.appendToPane(Window.getInstance().getTextPane(),
 					choiceDescription);
 			int i = 1;
@@ -152,11 +161,11 @@ public class EventReader {
 						i++ + ": " + node.getText());
 			}
 			waitForChoice(choices);
-			return false;
+			stop = true;
+			break;
 		case "branch":
 			nextElement();
 			interpretElement(currentElement);
-			return true;
 		case "combat":
 			Enemy newEnemy = Enemy.buildEnemy(element.getText());
 			if (newEnemy != null) {
@@ -166,7 +175,8 @@ public class EventReader {
 						"ERROR: Somthing went wrong while creating an enemy. See game.log for more info.");
 			}
 
-			return false;
+			stop = true;
+			break;
 		case "addItem":
 			Item newItem = Item.buildItem(element.getText());
 			if (newItem != null) {
@@ -178,11 +188,50 @@ public class EventReader {
 				Window.appendToPane(Window.getInstance().getTextPane(),
 						"ERROR: Somthing went wrong adding an item to your inventry. See game.log for more information.");
 			}
-			return true;
+			break;
+		case "ifStat":
+			double value = Double.parseDouble(element.attributeValue("value"));
+			String operator = element.attributeValue("operator");
+			String stat = element.attributeValue("stat");
+
+			if (!Player.getInstance().checkStat(stat, operator, value)) {
+				skipNext = true;
+			}
+			nextElement();
+			interpretElement(currentElement);
+			break;
+		case "ifFlag":
+			int flagValue = Integer.parseInt(element.attributeValue("value"));
+			String flagOperator = element.attributeValue("operator");
+			String flag = element.attributeValue("flag");
+			if (!Player.getInstance().checkFlag(flag, flagOperator,
+					flagValue)) {
+				skipNext = true;
+			}
+			nextElement();
+			interpretElement(currentElement);
+			break;
+		case "setFlag":
+			int setFlagValue = Integer
+					.parseInt(element.attributeValue("value"));
+			String setFlagOperator = element.attributeValue("operator");
+			String setFlagName = element.attributeValue("flag");
+			Player.getInstance().setFlag(setFlagName, setFlagOperator,
+					setFlagValue);
+			nextElement();
+			interpretElement(currentElement);
+			break;
+		case "goto":
+			System.out.println("goto");
+			int branch = Integer.parseInt(element.attributeValue("branch"));
+			currentElement = (Element) root
+					.selectSingleNode("//branch[@number='" + branch + "']");
+			nextElement();
+			interpretElement(currentElement);
+			break;
 		default:
 			LOG.error("Error unrecognized element name: "
 					+ currentElement.getName());
-			return false;
 		}
 
 	}
@@ -223,11 +272,10 @@ public class EventReader {
 	private static Element getNextElement(Element element) {
 		if (element != null) {
 			Iterator<Element> childElements = element.elementIterator();
-			if (childElements.hasNext()) {
-
+			if (!skipNext && childElements.hasNext()) {
 				return childElements.next();
 			}
-
+			skipNext = false;
 			Iterator<Element> elements = element.getParent().elementIterator();
 			while (elements.hasNext() && elements.next() != element) {
 
@@ -248,8 +296,65 @@ public class EventReader {
 				}
 
 			}
+			if (element.getParent().getParent() != null) {
+			}
+			return getNextParentWithSibling(element);
 		}
 		return null;
+	}
+
+	private static List<Node> getAllIfOptions(Node node) {
+		List<Node> choices = new ArrayList<>();
+		List<Node> ifFlagChoices = node.selectNodes("ifFlag");
+		for (Node n : ifFlagChoices) {
+			if (n != null) {
+				int flagValue = Integer
+						.parseInt(((Element) n).attributeValue("value"));
+				String flagOperator = ((Element) n).attributeValue("operator");
+				String flag = ((Element) n).attributeValue("flag");
+				if (Player.getInstance().checkFlag(flag, flagOperator,
+						flagValue)) {
+					choices.addAll(n.selectNodes("option"));
+				}
+
+				List<Node> innerIfChoices = n.selectNodes("./*[starts-with(name(), 'if')]");
+				if (innerIfChoices.size() != 0) {
+					choices.addAll(getAllIfOptions(n));
+				}
+			}
+
+		}
+		List<Node> ifStatChoices = node.selectNodes("ifStat");
+		for (Node n : ifStatChoices) {
+			if (n != null) {
+				int value = Integer
+						.parseInt(((Element) n).attributeValue("value"));
+				String operator = ((Element) n).attributeValue("operator");
+				String stat = ((Element) n).attributeValue("stat");
+				if (Player.getInstance().checkStat(stat, operator, value)) {
+					choices.addAll(n.selectNodes("option"));
+				}
+
+				List<Node> innerIfChoices = n.selectNodes("./*[starts-with(name(), 'if')]");
+				if (innerIfChoices.size() != 0) {
+					choices.addAll(getAllIfOptions(n));
+				}
+			}
+
+		}
+		return choices;
+	}
+
+	private static Element getNextParentWithSibling(Element element) {
+		Iterator<Element> parentElements = element.getParent().getParent()
+				.elementIterator();
+		while (parentElements.hasNext()
+				&& parentElements.next() != element.getParent()) {
+		}
+		if (parentElements.hasNext()) {
+			return parentElements.next();
+		}
+		return getNextParentWithSibling(element.getParent());
 	}
 
 }
