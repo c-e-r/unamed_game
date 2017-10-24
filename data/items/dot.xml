@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <item>
-    <name>dot item</name>
+    <name>dot</name>
     <description>this is a dot item</description>
     <useText>#userNameCapital# uses the dot item</useText>
     <useOnText>#userNameCapital# uses the dot item on #targetName#</useOnText>
@@ -15,7 +15,7 @@
     <equippable equipSlot='hand'>true</equippable>
     <spell>testSpell</spell>
     <effect 
-        name='itemNameDamage' 
+        name='dotDot' 
         magnitude='2' 
         duration='10000'
         increment='2'

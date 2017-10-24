@@ -5,6 +5,7 @@ package unamedGame.events;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class EventReader {
 	private static Element root;
 	private static boolean skipNext;
 	private static boolean stop;
+	private static HashMap<String, Integer> tempFlags;
 
 	/**
 	 * Starts an event from the given string. The string must be the file name
@@ -48,6 +50,8 @@ public class EventReader {
 	 *            a string of the filename of the event
 	 */
 	public static void startEvent(String event) {
+		tempFlags = new HashMap<String, Integer>();
+
 		Window.clearPane(Window.getInstance().getSidePane());
 
 		Window.clearPane(Window.getInstance().getTextPane());
@@ -221,6 +225,67 @@ public class EventReader {
 			nextElement();
 			interpretElement(currentElement);
 			break;
+		case "ifTempFlag":
+			int tempFlagValue = Integer
+					.parseInt(element.attributeValue("value"));
+			String tempFlagOperator = element.attributeValue("operator");
+			String tempFlag = element.attributeValue("flag");
+
+			if (!checkTempFlag(tempFlag, tempFlagOperator, tempFlagValue)) {
+				skipNext = true;
+			}
+			nextElement();
+			interpretElement(currentElement);
+			break;
+		case "setTempFlag":
+			int setTempFlagValue = Integer
+					.parseInt(element.attributeValue("value"));
+			String setTempFlagOperator = element.attributeValue("operator");
+			String setTempFlagName = element.attributeValue("flag");
+			setTempFlag(setTempFlagName, setTempFlagOperator, setTempFlagValue);
+			nextElement();
+			interpretElement(currentElement);
+			break;
+		case "ifEquipped":
+			String equippedItemName = element.attributeValue("itemName");
+			if (!Player.getInstance().checkIfEquipped(equippedItemName)) {
+				skipNext = true;
+			}
+			nextElement();
+			interpretElement(currentElement);
+			break;
+		case "ifEffect":
+			String effectName = element.attributeValue("effectName");
+			if (!Player.getInstance().checkIfEffected(effectName)) {
+				skipNext = true;
+			}
+			nextElement();
+			interpretElement(currentElement);
+			break;
+		case "ifItem":
+			String itemName = element.attributeValue("itemName");
+			if (!Player.getInstance().checkIfInInventory(itemName)) {
+				skipNext = true;
+			}
+			nextElement();
+			interpretElement(currentElement);
+			break;
+		case "ifSkill":
+			String skillName = element.attributeValue("skillName");
+			if (!Player.getInstance().checkIfSkill(skillName)) {
+				skipNext = true;
+			}
+			nextElement();
+			interpretElement(currentElement);
+			break;
+		case "ifSpell":
+			String spellName = element.attributeValue("spellName");
+			if (!Player.getInstance().checkIfSpell(spellName)) {
+				skipNext = true;
+			}
+			nextElement();
+			interpretElement(currentElement);
+			break;
 		case "goto":
 			System.out.println("goto");
 			int branch = Integer.parseInt(element.attributeValue("branch"));
@@ -317,7 +382,8 @@ public class EventReader {
 					choices.addAll(n.selectNodes("option"));
 				}
 
-				List<Node> innerIfChoices = n.selectNodes("./*[starts-with(name(), 'if')]");
+				List<Node> innerIfChoices = n
+						.selectNodes("./*[starts-with(name(), 'if')]");
 				if (innerIfChoices.size() != 0) {
 					choices.addAll(getAllIfOptions(n));
 				}
@@ -335,7 +401,8 @@ public class EventReader {
 					choices.addAll(n.selectNodes("option"));
 				}
 
-				List<Node> innerIfChoices = n.selectNodes("./*[starts-with(name(), 'if')]");
+				List<Node> innerIfChoices = n
+						.selectNodes("./*[starts-with(name(), 'if')]");
 				if (innerIfChoices.size() != 0) {
 					choices.addAll(getAllIfOptions(n));
 				}
@@ -343,6 +410,50 @@ public class EventReader {
 
 		}
 		return choices;
+	}
+
+	public static boolean checkTempFlag(String flagName, String operator,
+			int value) {
+		int flagValue = getTempFlagValue(flagName);
+		switch (operator) {
+		case "=":
+			return flagValue == value;
+		case "!=":
+			return flagValue != value;
+		case "<":
+			return flagValue < value;
+		case ">":
+			return flagValue > value;
+		case "<=":
+			return flagValue <= value;
+		case ">=":
+			return flagValue >= value;
+		default:
+			return false;
+		}
+	}
+
+	public static void setTempFlag(String flag, String operator, int value) {
+		switch (operator) {
+		case "=":
+			tempFlags.put(flag, value);
+		case "+":
+			tempFlags.put(flag, tempFlags.get(flag) - value);
+		case "-":
+			tempFlags.put(flag, tempFlags.get(flag) + value);
+		case "*":
+			tempFlags.put(flag, tempFlags.get(flag) * value);
+		case "/":
+			tempFlags.put(flag, tempFlags.get(flag) / value);
+		default:
+		}
+	}
+
+	public static int getTempFlagValue(String flag) {
+		if (tempFlags.get(flag) != null) {
+			return tempFlags.get(flag);
+		}
+		return 0;
 	}
 
 	private static Element getNextParentWithSibling(Element element) {

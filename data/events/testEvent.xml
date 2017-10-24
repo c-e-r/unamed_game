@@ -17,6 +17,25 @@
                 </text>
             </ifStat>
         </ifFlag>
+        <setTempFlag flag='testFlag' operator='=' value='1'></setTempFlag>
+        <ifTempFlag flag='testFlag' operator='=' value='1'>
+            <text>line 1.9</text>
+        </ifTempFlag>
+        <ifEquipped itemName='dagger'>
+            <text>dagger equipped</text>
+        </ifEquipped>
+        <ifItem itemName='dot'>
+            <text>dot in inventory</text>
+        </ifItem>
+        <ifSkill skillName='bite'>
+            <text>has skill bite</text>
+        </ifSkill>
+        <ifSpell spellName='zap'>
+            <text>has spellzap</text>
+        </ifSpell>
+        <ifEffect effectName='dotDot'>
+            <text>under effect of dot</text>
+        </ifEffect>
         <text>line 2</text>
         <choice>
             <choiceDescription>You have choices</choiceDescription>

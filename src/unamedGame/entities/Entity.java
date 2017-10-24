@@ -2688,6 +2688,56 @@ public class Entity extends Observable implements Serializable {
 		}
 	}
 
+	public boolean checkIfEquipped(String itemName) {
+		for (Item item : equipment) {
+			if (item != null) {
+				if (item.getName().equals(itemName)) {
+					return true;
+				}
+			}
+
+		}
+		return false;
+	}
+
+	public boolean checkIfInInventory(String itemName) {
+		for (Item item : inventory) {
+			if (item.getName().equals(itemName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean checkIfEffected(String effectName) {
+		for (Effect effect : effects) {
+			if (effect.getName().equals(effectName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean checkIfSpell(String spellName) {
+		reloadSpells();
+		for (Spell spell : spells) {
+			if (spell.getName().equals(spellName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean checkIfSkill(String skillName) {
+		reloadSkills();
+		for (Skill skill : combinedSkills) {
+			if (skill.getName().equals(skillName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void setFlagValue(String flag, int value) {
 		flags.put(flag, value);
 	}
