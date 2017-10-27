@@ -2532,41 +2532,43 @@ public class Entity extends Observable implements Serializable {
 		return builder.toString();
 	}
 
-	public boolean checkStat(String statName, String operator, double value) {
+	public boolean checkStat(String statName, String operator, double value,
+			int roll) {
 		double stat = getStat(statName);
 		switch (operator) {
 		case "=":
-			return stat == value;
+			return stat + Dice.roll(roll) == value;
 		case "!=":
-			return stat != value;
+			return stat + Dice.roll(roll) != value;
 		case "<":
-			return stat < value;
+			return stat + Dice.roll(roll) < value;
 		case ">":
-			return stat > value;
+			return stat + Dice.roll(roll) > value;
 		case "<=":
-			return stat <= value;
+			return stat + Dice.roll(roll) <= value;
 		case ">=":
-			return stat >= value;
+			return stat + Dice.roll(roll) >= value;
 		default:
 			return false;
 		}
 	}
 
-	public boolean checkFlag(String flagName, String operator, int value) {
+	public boolean checkFlag(String flagName, String operator, int value,
+			int roll) {
 		int flagValue = getFlagValue(flagName);
 		switch (operator) {
 		case "=":
-			return flagValue == value;
+			return flagValue + Dice.roll(roll) == value;
 		case "!=":
-			return flagValue != value;
+			return flagValue + Dice.roll(roll) != value;
 		case "<":
-			return flagValue < value;
+			return flagValue + Dice.roll(roll) < value;
 		case ">":
-			return flagValue > value;
+			return flagValue + Dice.roll(roll) > value;
 		case "<=":
-			return flagValue <= value;
+			return flagValue + Dice.roll(roll) <= value;
 		case ">=":
-			return flagValue >= value;
+			return flagValue + Dice.roll(roll) >= value;
 		default:
 			return false;
 		}

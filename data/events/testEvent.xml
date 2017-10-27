@@ -37,11 +37,11 @@
                 playerResistRepeatEffectDescription='KYou resisted the effect this turn'
             >damage</effect>
         </addEffect>
-        <ifStat stat='strength' operator='!=' value='3'>
-            <text>line 1
-                <text>line 1.5</text>
-                <addItem>testItem</addItem>
-            </text>
+        <ifRoll roll='2' operator='=' value='1'>
+            <text>roll pass</text>
+        </ifRoll>
+        <ifStat roll='4' stat='strength' operator='&lt;=' value='5'>
+            <text>if stat</text>
         </ifStat>
         <setFlag flag='testFlag' operator='=' value='1'/>
         <ifFlag flag='testFlag' operator='=' value='1'>
@@ -76,9 +76,12 @@
             <choiceDescription>You have choices</choiceDescription>
             <option branch='1'>choice 1</option>
             <option branch='3'>choice 2</option>
+            <ifRoll roll='2' operator='=' value='1'>
+                <option branch='3'>choice roll</option>
+            </ifRoll>
             <ifEffect not='true' effectName='dot'>
                 <option branch='2'>choice 3</option>
-                <ifFlag flag='testFlag' operator='=' value='1'>
+                <ifFlag roll='20' flag='testFlag' operator='=' value='1'>
                     <option branch='2'>choice 4</option>
                     <ifStat stat='strength' operator='=' value='3'>
                         <option branch='2'>choice 7</option>

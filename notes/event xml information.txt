@@ -28,18 +28,25 @@ All event require a 0 branch and an end point
             
             
                             IF STATEMENTS: if an if statement is false the elements inside it will be ignored. If statements can also be used in <choice>.
+        <ifRoll>            check the of the roll against a value
+            roll=''         the size of die to roll
+            operator=''     the operator to use for the check. valid values are =,<=,>=,!=, <, >. NOTE: < and > characters need to be escaped with '&lt;' and '&gt;'
+            value=''        the value to check against
         <ifFlag>            check the value of the flag against a value
             flag=''         the name of the flag to check
             operator=''     the operator to use for the check. valid values are =,<=,>=,!=, <, >. NOTE: < and > characters need to be escaped with '&lt;' and '&gt;'
             value=''        the value to check against
+            roll=''         [OPTIONAL: default 0] the size of die to roll to add to the flag value
         <ifTempFlag>        check the value of the temporary flag against a value
             flag=''         the name of the flag to check
             operator=''     the operator to use for the check. valid values are =,<=,>=,!=, <, >. NOTE: < and > characters need to be escaped with '&lt;' and '&gt;'
             value=''        the value to check against
-        <ifFlag>            check the value of one of the players stats against a value
+            roll=''         [OPTIONAL: default 0] the size of die to roll to add to the flag value
+        <ifStat>            check the value of one of the players stats against a value
             flag=''         the name of the stat to check
             operator=''     the operator to use for the check. valid values are =,<=,>=,!=, <, >. NOTE: < and > characters need to be escaped with '&lt;' and '&gt;'
             value=''        the value to check against
+            roll=''         [OPTIONAL: default 0] the size of die to roll to add to the stat value
         <ifEquipped>        check if an item of the given name is equipped
             itemName=''     the name of the item to check for
             not=''          if set to true will check if an item is not equipped

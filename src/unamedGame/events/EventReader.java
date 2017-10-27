@@ -18,6 +18,7 @@ import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
 import unamedGame.Combat;
+import unamedGame.Dice;
 import unamedGame.Game;
 import unamedGame.effects.Effect;
 import unamedGame.entities.Enemy;
@@ -145,6 +146,7 @@ public class EventReader {
 	 */
 	private static void interpretElement(Element element) {
 		boolean not;
+		int roll = 0;
 
 		switch (element.getName()) {
 		case "text":
@@ -232,23 +234,42 @@ public class EventReader {
 						"ERROR: Something went wrong adding an effect to the player. See game.log for more information.");
 			}
 			break;
+		case "ifRoll":
+			if (element.attributeValue("roll") != null) {
+				roll = Integer.parseInt(element.attributeValue("roll"));
+			}
+			int rollValue = Integer.parseInt(element.attributeValue("value"));
+			String rollOperator = element.attributeValue("operator");
+
+			if (!checkRoll(rollOperator, rollValue, roll)) {
+				skipChildren = true;
+			}
+			nextElement();
+			interpretElement(currentElement);
+			break;
 		case "ifStat":
+			if (element.attributeValue("roll") != null) {
+				roll = Integer.parseInt(element.attributeValue("roll"));
+			}
 			double value = Double.parseDouble(element.attributeValue("value"));
 			String operator = element.attributeValue("operator");
 			String stat = element.attributeValue("stat");
-
-			if (!Player.getInstance().checkStat(stat, operator, value)) {
+			System.out.println(roll);
+			if (!Player.getInstance().checkStat(stat, operator, value, roll)) {
 				skipChildren = true;
 			}
 			nextElement();
 			interpretElement(currentElement);
 			break;
 		case "ifFlag":
+			if (element.attributeValue("roll") != null) {
+				roll = Integer.parseInt(element.attributeValue("roll"));
+			}
 			int flagValue = Integer.parseInt(element.attributeValue("value"));
 			String flagOperator = element.attributeValue("operator");
 			String flag = element.attributeValue("flag");
-			if (!Player.getInstance().checkFlag(flag, flagOperator,
-					flagValue)) {
+			if (!Player.getInstance().checkFlag(flag, flagOperator, flagValue,
+					roll)) {
 				skipChildren = true;
 			}
 			nextElement();
@@ -265,12 +286,16 @@ public class EventReader {
 			interpretElement(currentElement);
 			break;
 		case "ifTempFlag":
+			if (element.attributeValue("roll") != null) {
+				roll = Integer.parseInt(element.attributeValue("roll"));
+			}
 			int tempFlagValue = Integer
 					.parseInt(element.attributeValue("value"));
 			String tempFlagOperator = element.attributeValue("operator");
 			String tempFlag = element.attributeValue("flag");
 
-			if (!checkTempFlag(tempFlag, tempFlagOperator, tempFlagValue)) {
+			if (!checkTempFlag(tempFlag, tempFlagOperator, tempFlagValue,
+					roll)) {
 				skipChildren = true;
 			}
 			nextElement();
@@ -414,16 +439,75 @@ public class EventReader {
 
 	private static List<Node> getAllIfOptions(Node node) {
 		boolean not;
+		int roll = 0;
+
 		List<Node> choices = new ArrayList<>();
+		List<Node> ifRollChoices = node.selectNodes("ifRoll");
+		for (Node n : ifRollChoices) {
+			if (n != null) {
+				if (((Element) n).attributeValue("roll") != null) {
+					roll = Integer
+							.parseInt(((Element) n).attributeValue("roll"));
+				} else {
+					roll = 0;
+				}
+				int rollValue = Integer
+						.parseInt(((Element) n).attributeValue("value"));
+				String rollOperator = ((Element) n).attributeValue("operator");
+				if (checkRoll(rollOperator, rollValue, roll)) {
+					choices.addAll(n.selectNodes("option"));
+
+					List<Node> innerIfChoices = n
+							.selectNodes("./*[starts-with(name(), 'if')]");
+					if (innerIfChoices.size() != 0) {
+						choices.addAll(getAllIfOptions(n));
+					}
+				}
+
+			}
+
+		}
 		List<Node> ifFlagChoices = node.selectNodes("ifFlag");
 		for (Node n : ifFlagChoices) {
 			if (n != null) {
+				if (((Element) n).attributeValue("roll") != null) {
+					roll = Integer
+							.parseInt(((Element) n).attributeValue("roll"));
+				} else {
+					roll = 0;
+				}
 				int flagValue = Integer
 						.parseInt(((Element) n).attributeValue("value"));
 				String flagOperator = ((Element) n).attributeValue("operator");
 				String flag = ((Element) n).attributeValue("flag");
 				if (Player.getInstance().checkFlag(flag, flagOperator,
-						flagValue)) {
+						flagValue, roll)) {
+					choices.addAll(n.selectNodes("option"));
+
+					List<Node> innerIfChoices = n
+							.selectNodes("./*[starts-with(name(), 'if')]");
+					if (innerIfChoices.size() != 0) {
+						choices.addAll(getAllIfOptions(n));
+					}
+				}
+
+			}
+
+		}
+		List<Node> ifTempFlagChoices = node.selectNodes("ifTempFlag");
+		for (Node n : ifTempFlagChoices) {
+			if (n != null) {
+				if (((Element) n).attributeValue("roll") != null) {
+					roll = Integer
+							.parseInt(((Element) n).attributeValue("roll"));
+				} else {
+					roll = 0;
+				}
+				int tempFlagValue = Integer
+						.parseInt(((Element) n).attributeValue("value"));
+				String tempFlagOperator = ((Element) n).attributeValue("operator");
+				String tempFlag = ((Element) n).attributeValue("flag");
+				if (checkTempFlag(tempFlag, tempFlagOperator, tempFlagValue, roll)) {
 					choices.addAll(n.selectNodes("option"));
 
 					List<Node> innerIfChoices = n
@@ -439,11 +523,18 @@ public class EventReader {
 		List<Node> ifStatChoices = node.selectNodes("ifStat");
 		for (Node n : ifStatChoices) {
 			if (n != null) {
+				if (((Element) n).attributeValue("roll") != null) {
+					roll = Integer
+							.parseInt(((Element) n).attributeValue("roll"));
+				} else {
+					roll = 0;
+				}
 				int value = Integer
 						.parseInt(((Element) n).attributeValue("value"));
 				String operator = ((Element) n).attributeValue("operator");
 				String stat = ((Element) n).attributeValue("stat");
-				if (Player.getInstance().checkStat(stat, operator, value)) {
+				if (Player.getInstance().checkStat(stat, operator, value,
+						roll)) {
 					choices.addAll(n.selectNodes("option"));
 
 					List<Node> innerIfChoices = n
@@ -535,21 +626,40 @@ public class EventReader {
 	}
 
 	public static boolean checkTempFlag(String flagName, String operator,
-			int value) {
+			int value, int roll) {
 		int flagValue = getTempFlagValue(flagName);
 		switch (operator) {
 		case "=":
-			return flagValue == value;
+			return flagValue + Dice.roll(roll) == value;
 		case "!=":
-			return flagValue != value;
+			return flagValue + Dice.roll(roll) != value;
 		case "<":
-			return flagValue < value;
+			return flagValue + Dice.roll(roll) < value;
 		case ">":
-			return flagValue > value;
+			return flagValue + Dice.roll(roll) > value;
 		case "<=":
-			return flagValue <= value;
+			return flagValue + Dice.roll(roll) <= value;
 		case ">=":
-			return flagValue >= value;
+			return flagValue + Dice.roll(roll) >= value;
+		default:
+			return false;
+		}
+	}
+
+	public static boolean checkRoll(String operator, int value, int roll) {
+		switch (operator) {
+		case "=":
+			return Dice.roll(roll) == value;
+		case "!=":
+			return Dice.roll(roll) != value;
+		case "<":
+			return Dice.roll(roll) < value;
+		case ">":
+			return Dice.roll(roll) > value;
+		case "<=":
+			return Dice.roll(roll) <= value;
+		case ">=":
+			return Dice.roll(roll) >= value;
 		default:
 			return false;
 		}
