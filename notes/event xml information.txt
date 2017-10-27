@@ -5,9 +5,12 @@ All event require a 0 branch and an end point
         number=''           the branch's identifying number.
         <text>              the text will be printed to the text pane
         <addItem>           adds the specified item to the players inventory
+        <addSkill>          adds the specified skill to the players innate skill list
+        <addSpell>          adds the specified spell to the players known spell list
+        <addEffect>         creates an effect from the element and applies it to the player. See effect xml information for more information
         <combat>            starts combat with the specified enemy
         <goto>              goes to the specified branch
-            brach=''        the branch to go to    
+            branch=''        the branch to go to    
         <choice>            contains a <choiceDescription> and a number of options
             <choiceDescription> contains text that will be printed along with the options
             <option>        contains the description of the option. options will be displayed in order

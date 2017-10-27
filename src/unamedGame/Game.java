@@ -1199,7 +1199,16 @@ public class Game {
 					}
 
 					break;
+				case "time":
+					window.removeInputObsever(this);
+					Time.getInstance().passTime(1);
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"Time passed.");
+					back.run();
+					break;
 				default:
+					Window.appendToPane(Window.getInstance().getTextPane(),
+							"Invalid debug command");
 					break;
 				}
 

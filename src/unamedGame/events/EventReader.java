@@ -19,11 +19,14 @@ import org.dom4j.io.SAXReader;
 
 import unamedGame.Combat;
 import unamedGame.Game;
+import unamedGame.effects.Effect;
 import unamedGame.entities.Enemy;
 import unamedGame.entities.Player;
 import unamedGame.input.InputEvent;
 import unamedGame.input.InputObserver;
 import unamedGame.items.Item;
+import unamedGame.skills.Skill;
+import unamedGame.spells.Spell;
 import unamedGame.ui.Window;
 
 /**
@@ -38,7 +41,7 @@ public class EventReader {
 
 	private static Element currentElement;
 	private static Element root;
-	private static boolean skipNext;
+	private static boolean skipChildren;
 	private static boolean stop;
 	private static HashMap<String, Integer> tempFlags;
 
@@ -186,13 +189,47 @@ public class EventReader {
 		case "addItem":
 			Item newItem = Item.buildItem(element.getText());
 			if (newItem != null) {
-				Item item = Player.getInstance().addItemToInventory(newItem);
+				Player.getInstance().addItemToInventory(newItem);
 				Window.appendToPane(Window.getInstance().getTextPane(),
-						Game.capitalizeFirstLetter(item.getName())
+						Game.capitalizeFirstLetter(newItem.getName())
 								+ " added to inventory");
 			} else {
 				Window.appendToPane(Window.getInstance().getTextPane(),
-						"ERROR: Somthing went wrong adding an item to your inventry. See game.log for more information.");
+						"ERROR: Something went wrong adding an item to your inventory. See game.log for more information.");
+			}
+			break;
+		case "addSkill":
+			Skill newSkill = Skill.buildSkill(element.getText());
+			if (newSkill != null) {
+				Player.getInstance().addInnateSkill(newSkill);
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(
+								"Gained Skill: " + newSkill.getName()));
+			} else {
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						"ERROR: Something went wrong adding a skill to your innate skills. See game.log for more information.");
+			}
+			break;
+		case "addSpell":
+			Spell newSpell = Spell.buildSpell(element.getText());
+			if (newSpell != null) {
+				Player.getInstance().addKnownSpell(newSpell);
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						Game.capitalizeFirstLetter(
+								"Learned Spell: " + newSpell.getName()));
+			} else {
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						"ERROR: Something went wrong adding a spell to your known spells. See game.log for more information.");
+			}
+			break;
+		case "addEffect":
+			Effect newEffect = Effect.buildEffect(element);
+			if (newEffect != null) {
+				Player.getInstance().addEffect(newEffect, null);
+				skipChildren = true;
+			} else {
+				Window.appendToPane(Window.getInstance().getTextPane(),
+						"ERROR: Something went wrong adding an effect to the player. See game.log for more information.");
 			}
 			break;
 		case "ifStat":
@@ -201,7 +238,7 @@ public class EventReader {
 			String stat = element.attributeValue("stat");
 
 			if (!Player.getInstance().checkStat(stat, operator, value)) {
-				skipNext = true;
+				skipChildren = true;
 			}
 			nextElement();
 			interpretElement(currentElement);
@@ -212,7 +249,7 @@ public class EventReader {
 			String flag = element.attributeValue("flag");
 			if (!Player.getInstance().checkFlag(flag, flagOperator,
 					flagValue)) {
-				skipNext = true;
+				skipChildren = true;
 			}
 			nextElement();
 			interpretElement(currentElement);
@@ -234,7 +271,7 @@ public class EventReader {
 			String tempFlag = element.attributeValue("flag");
 
 			if (!checkTempFlag(tempFlag, tempFlagOperator, tempFlagValue)) {
-				skipNext = true;
+				skipChildren = true;
 			}
 			nextElement();
 			interpretElement(currentElement);
@@ -252,7 +289,7 @@ public class EventReader {
 			not = Boolean.parseBoolean(element.attributeValue("not"));
 			String equippedItemName = element.attributeValue("itemName");
 			if (not ^ !Player.getInstance().checkIfEquipped(equippedItemName)) {
-				skipNext = true;
+				skipChildren = true;
 			}
 			nextElement();
 			interpretElement(currentElement);
@@ -261,7 +298,7 @@ public class EventReader {
 			not = Boolean.parseBoolean(element.attributeValue("not"));
 			String effectName = element.attributeValue("effectName");
 			if (not ^ !Player.getInstance().checkIfEffected(effectName)) {
-				skipNext = true;
+				skipChildren = true;
 			}
 			nextElement();
 			interpretElement(currentElement);
@@ -270,7 +307,7 @@ public class EventReader {
 			not = Boolean.parseBoolean(element.attributeValue("not"));
 			String itemName = element.attributeValue("itemName");
 			if (not ^ !Player.getInstance().checkIfInInventory(itemName)) {
-				skipNext = true;
+				skipChildren = true;
 			}
 			nextElement();
 			interpretElement(currentElement);
@@ -279,7 +316,7 @@ public class EventReader {
 			not = Boolean.parseBoolean(element.attributeValue("not"));
 			String skillName = element.attributeValue("skillName");
 			if (not ^ !Player.getInstance().checkIfSkill(skillName)) {
-				skipNext = true;
+				skipChildren = true;
 			}
 			nextElement();
 			interpretElement(currentElement);
@@ -288,7 +325,7 @@ public class EventReader {
 			not = Boolean.parseBoolean(element.attributeValue("not"));
 			String spellName = element.attributeValue("spellName");
 			if (not ^ !Player.getInstance().checkIfSpell(spellName)) {
-				skipNext = true;
+				skipChildren = true;
 			}
 			nextElement();
 			interpretElement(currentElement);
@@ -344,10 +381,10 @@ public class EventReader {
 	private static Element getNextElement(Element element) {
 		if (element != null) {
 			Iterator<Element> childElements = element.elementIterator();
-			if (!skipNext && childElements.hasNext()) {
+			if (!skipChildren && childElements.hasNext()) {
 				return childElements.next();
 			}
-			skipNext = false;
+			skipChildren = false;
 			Iterator<Element> elements = element.getParent().elementIterator();
 			while (elements.hasNext() && elements.next() != element) {
 
