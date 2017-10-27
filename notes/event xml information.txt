@@ -6,8 +6,50 @@ All event require a 0 branch and an end point
         <text>              the text will be printed to the text pane
         <addItem>           adds the specified item to the players inventory
         <combat>            starts combat with the specified enemy
+        <goto>              goes to the specified branch
+            brach=''        the branch to go to    
         <choice>            contains a <choiceDescription> and a number of options
             <choiceDescription> contains text that will be printed along with the options
             <option>        contains the description of the option. options will be displayed in order
                 branch=''   the branch that the option will lead to
+                
+        <setFlag>           sets the specified player flag to a new value or creates it if it dosnt exist
+            flag=''         the name of the flag to set
+            operator=''     the operator to use. valid values are =,+,-,*,/
+            value=''        the value to set
+            
+        <setTempFlag>           sets the specified temporary flag to a new value or creates it if it dosnt exist. temporary flags are cleared when the event ends
+            flag=''         the name of the flag to set
+            operator=''     the operator to use. valid values are =,+,-,*,/
+            value=''        the value to set
+            
+            
+                            IF STATEMENTS: if an if statement is false the elements inside it will be ignored. If statements can also be used in <choice>.
+        <ifFlag>            check the value of the flag against a value
+            flag=''         the name of the flag to check
+            operator=''     the operator to use for the check. valid values are =,<=,>=,!=, <, >. NOTE: < and > characters need to be escaped with '&lt;' and '&gt;'
+            value=''        the value to check against
+        <ifTempFlag>        check the value of the temporary flag against a value
+            flag=''         the name of the flag to check
+            operator=''     the operator to use for the check. valid values are =,<=,>=,!=, <, >. NOTE: < and > characters need to be escaped with '&lt;' and '&gt;'
+            value=''        the value to check against
+        <ifFlag>            check the value of one of the players stats against a value
+            flag=''         the name of the stat to check
+            operator=''     the operator to use for the check. valid values are =,<=,>=,!=, <, >. NOTE: < and > characters need to be escaped with '&lt;' and '&gt;'
+            value=''        the value to check against
+        <ifEquipped>        check if an item of the given name is equipped
+            itemName=''     the name of the item to check for
+            not=''          if set to true will check if an item is not equipped
+        <ifEffect>          check if an effect of the given name is currently on the player
+            itemName=''     the name of the effect to check for
+            not=''          if set to true will check if the effect is not there
+        <ifItem>            check if an item of the given name is in the players inventory
+            itemName=''     the name of the item to check for
+            not=''          if set to true will check if an item is not in the players inventory
+        <ifSkill>           check if the player has a skill of the given name
+            itemName=''     the name of the skill to check for
+            not=''          if set to true will check if the player does not have the skill
+        <ifSpell>           check if the player has a spell of the given name
+            itemName=''     the name of the spell to check for
+            not=''          if set to true will check if the player does not have the spell
         <end>               ends the event
