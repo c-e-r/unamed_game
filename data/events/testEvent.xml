@@ -8,7 +8,7 @@
                 <addItem>testItem</addItem>
             </text>
         </ifStat>
-        <setFlag flag='testFlag' operator='=' value='1'></setFlag>
+        <setFlag flag='testFlag' operator='=' value='1'/>
         <ifFlag flag='testFlag' operator='=' value='1'>
             <ifStat stat='strength' operator='=' value='3'>
                 <text>line 1
@@ -21,14 +21,14 @@
         <ifTempFlag flag='testFlag' operator='=' value='1'>
             <text>line 1.9</text>
         </ifTempFlag>
-        <ifEquipped itemName='dagger'>
-            <text>dagger equipped</text>
+        <ifEquipped not='true' itemName='dagger'>
+            <text>not dagger equipped</text>
         </ifEquipped>
         <ifItem itemName='dot'>
             <text>dot in inventory</text>
         </ifItem>
-        <ifSkill skillName='bite'>
-            <text>has skill bite</text>
+        <ifSkill not='true' skillName='bite'>
+            <text>not has skill bite</text>
         </ifSkill>
         <ifSpell spellName='zap'>
             <text>has spellzap</text>
@@ -41,7 +41,7 @@
             <choiceDescription>You have choices</choiceDescription>
             <option branch='1'>choice 1</option>
             <option branch='3'>choice 2</option>
-            <ifFlag flag='testFlag' operator='=' value='1'>
+            <ifEffect not='true' effectName='dot'>
                 <option branch='2'>choice 3</option>
                 <ifFlag flag='testFlag' operator='=' value='1'>
                     <option branch='2'>choice 4</option>
@@ -49,7 +49,7 @@
                         <option branch='2'>choice 7</option>
                     </ifStat>
                 </ifFlag>
-            </ifFlag>
+            </ifEffect>
             <ifStat stat='strength' operator='=' value='3'>
                 <option branch='2'>choice 5</option>
                 <ifFlag flag='testFlag' operator='=' value='1'>

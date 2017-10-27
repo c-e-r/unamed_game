@@ -141,6 +141,8 @@ public class EventReader {
 	 * depending what that is
 	 */
 	private static void interpretElement(Element element) {
+		boolean not;
+
 		switch (element.getName()) {
 		case "text":
 			Window.appendToPane(Window.getInstance().getTextPane(),
@@ -247,40 +249,45 @@ public class EventReader {
 			interpretElement(currentElement);
 			break;
 		case "ifEquipped":
+			not = Boolean.parseBoolean(element.attributeValue("not"));
 			String equippedItemName = element.attributeValue("itemName");
-			if (!Player.getInstance().checkIfEquipped(equippedItemName)) {
+			if (not ^ !Player.getInstance().checkIfEquipped(equippedItemName)) {
 				skipNext = true;
 			}
 			nextElement();
 			interpretElement(currentElement);
 			break;
 		case "ifEffect":
+			not = Boolean.parseBoolean(element.attributeValue("not"));
 			String effectName = element.attributeValue("effectName");
-			if (!Player.getInstance().checkIfEffected(effectName)) {
+			if (not ^ !Player.getInstance().checkIfEffected(effectName)) {
 				skipNext = true;
 			}
 			nextElement();
 			interpretElement(currentElement);
 			break;
 		case "ifItem":
+			not = Boolean.parseBoolean(element.attributeValue("not"));
 			String itemName = element.attributeValue("itemName");
-			if (!Player.getInstance().checkIfInInventory(itemName)) {
+			if (not ^ !Player.getInstance().checkIfInInventory(itemName)) {
 				skipNext = true;
 			}
 			nextElement();
 			interpretElement(currentElement);
 			break;
 		case "ifSkill":
+			not = Boolean.parseBoolean(element.attributeValue("not"));
 			String skillName = element.attributeValue("skillName");
-			if (!Player.getInstance().checkIfSkill(skillName)) {
+			if (not ^ !Player.getInstance().checkIfSkill(skillName)) {
 				skipNext = true;
 			}
 			nextElement();
 			interpretElement(currentElement);
 			break;
 		case "ifSpell":
+			not = Boolean.parseBoolean(element.attributeValue("not"));
 			String spellName = element.attributeValue("spellName");
-			if (!Player.getInstance().checkIfSpell(spellName)) {
+			if (not ^ !Player.getInstance().checkIfSpell(spellName)) {
 				skipNext = true;
 			}
 			nextElement();
@@ -369,6 +376,7 @@ public class EventReader {
 	}
 
 	private static List<Node> getAllIfOptions(Node node) {
+		boolean not;
 		List<Node> choices = new ArrayList<>();
 		List<Node> ifFlagChoices = node.selectNodes("ifFlag");
 		for (Node n : ifFlagChoices) {
@@ -380,13 +388,14 @@ public class EventReader {
 				if (Player.getInstance().checkFlag(flag, flagOperator,
 						flagValue)) {
 					choices.addAll(n.selectNodes("option"));
+
+					List<Node> innerIfChoices = n
+							.selectNodes("./*[starts-with(name(), 'if')]");
+					if (innerIfChoices.size() != 0) {
+						choices.addAll(getAllIfOptions(n));
+					}
 				}
 
-				List<Node> innerIfChoices = n
-						.selectNodes("./*[starts-with(name(), 'if')]");
-				if (innerIfChoices.size() != 0) {
-					choices.addAll(getAllIfOptions(n));
-				}
 			}
 
 		}
@@ -399,7 +408,23 @@ public class EventReader {
 				String stat = ((Element) n).attributeValue("stat");
 				if (Player.getInstance().checkStat(stat, operator, value)) {
 					choices.addAll(n.selectNodes("option"));
+
+					List<Node> innerIfChoices = n
+							.selectNodes("./*[starts-with(name(), 'if')]");
+					if (innerIfChoices.size() != 0) {
+						choices.addAll(getAllIfOptions(n));
+					}
 				}
+
+			}
+
+		}
+		List<Node> ifEquippedChoices = node.selectNodes("ifEquipped");
+		for (Node n : ifEquippedChoices) {
+			not = Boolean.parseBoolean(((Element) n).attributeValue("not"));
+			if (not ^ Player.getInstance().checkIfEquipped(
+					((Element) n).attributeValue("itemName"))) {
+				choices.addAll(n.selectNodes("option"));
 
 				List<Node> innerIfChoices = n
 						.selectNodes("./*[starts-with(name(), 'if')]");
@@ -408,6 +433,66 @@ public class EventReader {
 				}
 			}
 
+		}
+		List<Node> ifItemChoices = node.selectNodes("ifItem");
+		for (Node n : ifItemChoices) {
+			not = Boolean.parseBoolean(((Element) n).attributeValue("not"));
+
+			if (not ^ Player.getInstance().checkIfInInventory(
+					((Element) n).attributeValue("itemName"))) {
+				choices.addAll(n.selectNodes("option"));
+
+				List<Node> innerIfChoices = n
+						.selectNodes("./*[starts-with(name(), 'if')]");
+				if (innerIfChoices.size() != 0) {
+					choices.addAll(getAllIfOptions(n));
+				}
+			}
+		}
+		List<Node> ifSkillChoices = node.selectNodes("ifSkill");
+		for (Node n : ifSkillChoices) {
+			not = Boolean.parseBoolean(((Element) n).attributeValue("not"));
+
+			if (not ^ Player.getInstance()
+					.checkIfSkill(((Element) n).attributeValue("skillName"))) {
+				choices.addAll(n.selectNodes("option"));
+
+				List<Node> innerIfChoices = n
+						.selectNodes("./*[starts-with(name(), 'if')]");
+				if (innerIfChoices.size() != 0) {
+					choices.addAll(getAllIfOptions(n));
+				}
+			}
+		}
+		List<Node> ifSpellChoices = node.selectNodes("ifSpell");
+		for (Node n : ifSpellChoices) {
+			not = Boolean.parseBoolean(((Element) n).attributeValue("not"));
+
+			if (not ^ Player.getInstance()
+					.checkIfSpell(((Element) n).attributeValue("spellName"))) {
+				choices.addAll(n.selectNodes("option"));
+
+				List<Node> innerIfChoices = n
+						.selectNodes("./*[starts-with(name(), 'if')]");
+				if (innerIfChoices.size() != 0) {
+					choices.addAll(getAllIfOptions(n));
+				}
+			}
+		}
+		List<Node> ifEffectChoices = node.selectNodes("ifEffect");
+		for (Node n : ifEffectChoices) {
+			not = Boolean.parseBoolean(((Element) n).attributeValue("not"));
+
+			if (not ^ Player.getInstance().checkIfEffected(
+					((Element) n).attributeValue("effectName"))) {
+				choices.addAll(n.selectNodes("option"));
+
+				List<Node> innerIfChoices = n
+						.selectNodes("./*[starts-with(name(), 'if')]");
+				if (innerIfChoices.size() != 0) {
+					choices.addAll(getAllIfOptions(n));
+				}
+			}
 		}
 		return choices;
 	}
