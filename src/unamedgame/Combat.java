@@ -600,66 +600,66 @@ public class Combat {
      */
     public void combatItemChoiceMenu(int itemIndex, Runnable back) {
         Window.clearPane(Window.getInstance().getSidePane());
+        Item item = Player.getInstance().getInventoryItem(itemIndex);
+
         Window.appendToPane(Window.getInstance().getSidePane(),
-                "0: Back \n1: Use\n2: Inspect\n3: Drop\n4: Equip");
-        Window.getInstance().addInputObsever(new InputObserver() {
-            @Override
-            public void inputChanged(InputEvent evt) {
-                int command = -1;
-                if (Game.isNumeric(evt.getText())) {
-                    command = Integer.parseInt(evt.getText());
-                }
-                switch (command) {
-                case 0: // back
-                    Window.getInstance().removeInputObsever(this);
-                    back.run();
-                    break;
-                case 1: // use
-                    Item item = Player.getInstance()
-                            .getInventoryItem(itemIndex);
-                    if (item.isBattleUse()) {
-                        if (item.getUses() <= 0) {
+                "0: Back\n1: Use\n2: Inspect\n3: Drop");
+
+        if (item != null) {
+            Window.getInstance().addInputObsever(new InputObserver() {
+                @Override
+                public void inputChanged(InputEvent evt) {
+                    int command = -1;
+                    if (Game.isNumeric(evt.getText())) {
+                        command = Integer.parseInt(evt.getText());
+                    }
+                    switch (command) {
+                    case 0: // back
+                        Window.getInstance().removeInputObsever(this);
+                        back.run();
+                        break;
+                    case 1: // use
+                        Item item = Player.getInstance()
+                                .getInventoryItem(itemIndex);
+                        if (item.isBattleUse()) {
+                            if (item.getUses() <= 0) {
+                                Window.appendToPane(
+                                        Window.getInstance().getTextPane(),
+                                        "That item is out of uses.");
+
+                            } else {
+                                combatTurn(4, itemIndex);
+                                Window.getInstance().removeInputObsever(this);
+                            }
+                        } else {
                             Window.appendToPane(
                                     Window.getInstance().getTextPane(),
-                                    "That item is out of uses.");
-
-                        } else {
-                            combatTurn(4, itemIndex);
-                            Window.getInstance().removeInputObsever(this);
+                                    "You cant use that item in battle!");
                         }
-                    } else {
+                        break;
+                    case 2: // inspect
                         Window.appendToPane(Window.getInstance().getTextPane(),
-                                "You cant use that item in battle!");
+                                Player.getInstance()
+                                        .getItemDescription(itemIndex));
+
+                        break;
+                    case 3: // drop
+                        Window.appendToPane(Window.getInstance().getTextPane(),
+                                "You threw away the " + Player.getInstance()
+                                        .removeItemFromInventory(itemIndex)
+                                        .getName());
+                        back.run();
+                        Window.getInstance().removeInputObsever(this);
+
+                        break;
+                    default:
+                        Window.appendToPane(Window.getInstance().getTextPane(),
+                                "Invalid Command");
+                        break;
                     }
-                    break;
-                case 2: // inspect
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            Player.getInstance().getItemDescription(itemIndex));
-
-                    break;
-                case 3: // drop
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "You threw away the " + Player.getInstance()
-                                    .removeItemFromInventory(itemIndex)
-                                    .getName());
-                    back.run();
-                    Window.getInstance().removeInputObsever(this);
-
-                    break;
-                case 4: // equip
-                    Window.getInstance().removeInputObsever(this);
-
-                    break;
-                case 5:
-                    Window.getInstance().removeInputObsever(this);
-                    break;
-                default:
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "Invalid Command");
-                    break;
                 }
-            }
-        });
+            });
+        }
     }
 
     /**
