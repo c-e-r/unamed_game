@@ -40,5 +40,6 @@
         <playerAttackMissDescription>You attack #targetName# with your claws but miss</playerAttackMissDescription>
         <description>this is a test innateWeapon</description>
     </innateWeapon>
-
+    <item>dagger</item>
+    <item>testItem</item>
 </enemy>

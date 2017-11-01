@@ -32,7 +32,6 @@ public class Dice {
 		return 0;
 		}
 		result = rand.nextInt(d) + 1;
-		System.out.println(result);
 		return result;
 	}
 

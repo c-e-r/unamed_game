@@ -54,6 +54,7 @@ public class Combat {
     private Player player;
     private Enemy enemy;
     private int returnPoint;
+    private Runnable back;
 
     /**
      * Starts a combat loop between the player and given Enemy.
@@ -63,8 +64,8 @@ public class Combat {
      * @param returnPoint
      *            the location to go after combat as an int
      */
-    public Combat(Enemy enemy, int returnPoint) {
-        this.returnPoint = returnPoint;
+    public Combat(Enemy enemy, Runnable back) {
+        this.back = back;
         player = Player.getInstance();
         this.enemy = enemy;
         inCombat = true;
@@ -517,21 +518,31 @@ public class Combat {
      * Ends the combat as a victory.
      */
     private void endCombatWin() {
+        inCombat = false;
         player.gainExp(enemy.getExpValue());
         Window.clearPane(Window.getInstance().getSidePane());
         Window.appendToPane(Window.getInstance().getTextPane(),
                 enemy.getDeathDescription());
-        switch (returnPoint) {
-        case FROM_EXPLORATION:
-            Game.openExplorationMenu();
-            break;
-        case FROM_EVENT:
-            backToEvent();
-            break;
-        default:
-            Game.openExplorationMenu();
+        if (enemy.getInventory().size() != 0) {
+            Window.appendToPane(Window.getInstance().getTextPane(),
+                    Game.capitalizeFirstLetter(enemy.getUseName())
+                            + " had some items. Take them?.");
+            Game.openLootMenu(enemy, back);
+
+        } else {
+            Window.appendToPane(Window.getInstance().getTextPane(),
+                    Game.capitalizeFirstLetter(enemy.getUseName())
+                            + " did not have any items..");
+            Window.getInstance().addInputObsever(new InputObserver() {
+                @Override
+                public void inputChanged(InputEvent evt) {
+                    Window.getInstance().removeInputObsever(this);
+                    backToEvent();
+                    back.run();
+                }
+            });
+
         }
-        inCombat = true;
     }
 
     /**
@@ -674,15 +685,8 @@ public class Combat {
     /**
      * Sends the player back to the event they came from.
      */
-    private void backToEvent() {
-
-        Window.getInstance().addInputObsever(new InputObserver() {
-            @Override
-            public void inputChanged(InputEvent evt) {
-                EventReader.resumeEvent();
-                Window.getInstance().swapToMapPane();
-                Window.getInstance().removeInputObsever(this);
-            }
-        });
+    public static void backToEvent() {
+        EventReader.resumeEvent();
+        Window.getInstance().swapToMapPane();
     }
 }

@@ -83,6 +83,8 @@ public class EventReader {
      */
     public static void resumeEvent() {
         Window.clearPane(Window.getInstance().getTextPane());
+        Window.clearPane(Window.getInstance().getSidePane());
+
         resumeParseEventXML();
     }
 
@@ -189,7 +191,7 @@ public class EventReader {
         case "combat":
             Enemy newEnemy = Enemy.buildEnemy(element.getText());
             if (newEnemy != null) {
-                new Combat(newEnemy, Combat.FROM_EVENT);
+                new Combat(newEnemy, () -> Combat.backToEvent());
             } else {
                 Window.appendToPane(Window.getInstance().getTextPane(),
                         "ERROR: Somthing went wrong while creating an enemy. See game.log for more info.");

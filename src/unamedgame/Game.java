@@ -14,6 +14,7 @@ import java.io.ObjectOutputStream;
 import java.util.Arrays;
 
 import unamedgame.entities.Enemy;
+import unamedgame.entities.Entity;
 import unamedgame.entities.Player;
 import unamedgame.entities.Entity.EquipmentIndex;
 import unamedgame.events.EventReader;
@@ -621,7 +622,9 @@ public class Game {
 
     /**
      * Opens a menu to select which hand to equip an item on.
-     * @param item the item to equip
+     * 
+     * @param item
+     *            the item to equip
      * @param back
      *            A Runnable that when run will return to the previous menu.
      */
@@ -672,7 +675,9 @@ public class Game {
 
     /**
      * Opens a menu for the player to select which hand to hold an item in.
-     * @param item the item to equip
+     * 
+     * @param item
+     *            the item to equip
      * @param back
      *            A Runnable that when run will return to the previous menu.
      */
@@ -724,6 +729,7 @@ public class Game {
 
     /**
      * Opens the status menu.
+     * 
      * @param back
      *            A Runnable that when run will return to the previous menu.
      */
@@ -777,6 +783,7 @@ public class Game {
 
     /**
      * Opens the stat point spending menu.
+     * 
      * @param back
      *            A Runnable that when run will return to the previous menu.
      */
@@ -1189,6 +1196,7 @@ public class Game {
 
     /**
      * Opens the debug menu.
+     * 
      * @param back
      *            A Runnable that when run will return to the previous menu.
      */
@@ -1262,7 +1270,7 @@ public class Game {
                     window.removeInputObsever(this);
                     Enemy newEnemy = Enemy.buildEnemy(command[1]);
                     if (newEnemy != null) {
-                        new Combat(newEnemy, Combat.FROM_EXPLORATION);
+                        new Combat(newEnemy, ()-> openExplorationMenu());
                     } else {
                         Window.appendToPane(Window.getInstance().getTextPane(),
                                 "ERROR: Somthing went wrong while creating an enemy. See game.log for more info.");
@@ -1285,6 +1293,99 @@ public class Game {
             }
 
         });
+    }
+
+    public static void openLootMenu(Entity entity, Runnable back) {
+        Window.clearPane(window.getSidePane());
+        Window.appendToPane(Window.getInstance().getSidePane(), capitalizeFirstLetter(entity.getUseName() + "'s inventory"));
+        Window.appendToPane(Window.getInstance().getSidePane(),
+                String.format("%-24s%10s%13s", "Name", "Weight", "Uses Left"));
+        Window.appendToPane(Window.getInstance().getSidePane(),
+                "------------------------------------------------");
+        Window.appendToPane(Window.getInstance().getSidePane(),
+                String.format("0: Back"));
+        int i = 1;
+        for (Item item : entity.getInventory()) {
+            if (i % 2 != 0) {
+                Window.appendToPaneBackground(
+                        Window.getInstance().getSidePane(),
+                        i++ + ": " + item.getItemInfo(),
+                        new Color(244, 244, 244));
+
+            } else {
+                Window.appendToPane(Window.getInstance().getSidePane(),
+                        i++ + ": " + item.getItemInfo());
+
+            }
+
+        }
+        Window.getInstance().addInputObsever(new InputObserver() {
+            @Override
+            public void inputChanged(InputEvent evt) {
+                int itemIndex = -2;
+                if (isNumeric(evt.getText())) {
+                    itemIndex = Integer.parseInt(evt.getText()) - 1;
+                }
+                if (itemIndex >= 0
+                        && itemIndex < entity.getInventory().size()) {
+                    lootChoiceMenu(entity, itemIndex,
+                            () -> openLootMenu(entity, back));
+                    Window.getInstance().removeInputObsever(this);
+                } else if (itemIndex == -1) {
+                    Window.getInstance().removeInputObsever(this);
+                    back.run();
+                } else {
+                    Window.appendToPane(Window.getInstance().getTextPane(),
+                            "Invalid Command");
+
+                }
+            }
+        });
+    }
+
+    public static void lootChoiceMenu(Entity entity, int itemIndex,
+            Runnable back) {
+        Window.clearPane(window.getSidePane());
+        Item item = entity.getInventoryItem(itemIndex);
+        if (item != null) {
+            Window.appendToPane(Window.getInstance().getSidePane(),
+                    "0: Back\n1: Take\n2: Inspect");
+            Window.getInstance().addInputObsever(new InputObserver() {
+                @Override
+                public void inputChanged(InputEvent evt) {
+                    int command = -1;
+                    if (isNumeric(evt.getText())) {
+                        command = Integer.parseInt(evt.getText());
+                    }
+
+                    switch (command) {
+                    case 0: // back
+                        Window.getInstance().removeInputObsever(this);
+                        back.run();
+                        break;
+                    case 1: // take
+                        entity.removeItemFromInventory(itemIndex);
+                        Player.getInstance().addItemToInventory(item);
+                        Window.appendToPane(Window.getInstance().getTextPane(),
+                                capitalizeFirstLetter(item.getName()) + " taken.");
+                        Window.getInstance().removeInputObsever(this);
+                        back.run();
+                        break;
+                    case 2: // inspect
+                        Window.appendToPane(Window.getInstance().getTextPane(),
+                                entity.getItemDescription(itemIndex));
+                        break;
+                    default:
+                        Window.appendToPane(Window.getInstance().getTextPane(),
+                                "Invalid Command");
+                        break;
+                    }
+
+                }
+            });
+        } else {
+            LOG.error("Somehow you tried to access an item that dosn't exist");
+        }
     }
 
     /**

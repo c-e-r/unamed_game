@@ -204,7 +204,8 @@ public final class Enemy extends Entity {
      * 
      * @param fileName
      *            the name of the enemy xml file
-     * @throws DocumentException if the file can not be loaded or is invalid
+     * @throws DocumentException
+     *             if the file can not be loaded or is invalid
      */
     public void loadEnemyFromXML(String fileName) throws DocumentException {
         SAXReader reader = new SAXReader();
@@ -425,30 +426,32 @@ public final class Enemy extends Entity {
                 Item newItem = Item.buildItem(element.getText());
                 if (newItem != null) {
                     addItemToInventory(newItem);
-                    if (element.attributeValue("equip").equals("true")) {
+                    if (element.attributeValue("equip") != null) {
+                        if (element.attributeValue("equip").equals("true")) {
 
-                        int itemIndex = inventory.size() - 1;
-                        Item item = inventory.get(itemIndex);
-                        if (item.getEquipSlot().equals("hand")) {
-                            if (equipment[EquipmentIndex.LEFT_HAND
-                                    .getValue()] == null) {
-                                equipHandItem(item, "left");
-                            } else if (equipment[EquipmentIndex.RIGHT_HAND
-                                    .getValue()] == null) {
-                                equipHandItem(item, "right");
+                            int itemIndex = inventory.size() - 1;
+                            Item item = inventory.get(itemIndex);
+                            if (item.getEquipSlot().equals("hand")) {
+                                if (equipment[EquipmentIndex.LEFT_HAND
+                                        .getValue()] == null) {
+                                    equipHandItem(item, "left");
+                                } else if (equipment[EquipmentIndex.RIGHT_HAND
+                                        .getValue()] == null) {
+                                    equipHandItem(item, "right");
+                                }
+                            } else if (item.getEquipSlot().equals("held")) {
+                                if (equipment[EquipmentIndex.LEFT_HELD
+                                        .getValue()] == null) {
+                                    equipHeldItem(item, "left");
+
+                                } else if (equipment[EquipmentIndex.RIGHT_HELD
+                                        .getValue()] == null) {
+                                    equipHeldItem(item, "right");
+                                }
+
+                            } else {
+                                equipInventoryItem(itemIndex);
                             }
-                        } else if (item.getEquipSlot().equals("held")) {
-                            if (equipment[EquipmentIndex.LEFT_HELD
-                                    .getValue()] == null) {
-                                equipHeldItem(item, "left");
-
-                            } else if (equipment[EquipmentIndex.RIGHT_HELD
-                                    .getValue()] == null) {
-                                equipHeldItem(item, "right");
-                            }
-
-                        } else {
-                            equipInventoryItem(itemIndex);
                         }
                     }
                 } else {
@@ -620,7 +623,9 @@ public final class Enemy extends Entity {
 
     /**
      * Gets a list of the enemies skills for a certain type.
-     * @param type the type to get skills for
+     * 
+     * @param type
+     *            the type to get skills for
      * @return the list of skills
      */
     public List<Skill> getSkillsOfType(String type) {
@@ -632,9 +637,12 @@ public final class Enemy extends Entity {
         }
         return temp;
     }
+
     /**
      * Gets a list of the enemies spells for a certain type.
-     * @param type the type to get spells for
+     * 
+     * @param type
+     *            the type to get spells for
      * @return the list of spells
      */
     public List<Spell> getSpellsOfType(String type) {
@@ -649,7 +657,9 @@ public final class Enemy extends Entity {
 
     /**
      * Gets a list of the enemies items for a certain type.
-     * @param type the type to get items for
+     * 
+     * @param type
+     *            the type to get items for
      * @return the list of items
      */
     public List<Item> getItemsOfType(String type) {
@@ -664,6 +674,7 @@ public final class Enemy extends Entity {
 
     /**
      * Returns the chance for the enemy to attack.
+     * 
      * @return the attackChance
      */
     public int getAttackChance() {
@@ -672,6 +683,7 @@ public final class Enemy extends Entity {
 
     /**
      * Returns the chance for the enemy to use a skill.
+     * 
      * @return the skillChance
      */
     public int getSkillChance() {
@@ -680,6 +692,7 @@ public final class Enemy extends Entity {
 
     /**
      * Returns the chance for the enemy to use a spell.
+     * 
      * @return the spellChance
      */
     public int getSpellChance() {
@@ -688,6 +701,7 @@ public final class Enemy extends Entity {
 
     /**
      * Returns the chance for the enemy to use an item.
+     * 
      * @return the itemChance
      */
     public int getItemChance() {
@@ -696,6 +710,7 @@ public final class Enemy extends Entity {
 
     /**
      * Returns the chance for an enemy to use a buff skill, spell, or item.
+     * 
      * @return the buffChance
      */
     public int getBuffChance() {
@@ -704,6 +719,7 @@ public final class Enemy extends Entity {
 
     /**
      * Returns the chance for an enemy to use a debuff skill, spell, or item.
+     * 
      * @return the debuffChance
      */
     public int getDebuffChance() {
@@ -711,7 +727,9 @@ public final class Enemy extends Entity {
     }
 
     /**
-     * Returns the chance for an enemy to use an offensive skill, spell, or item.
+     * Returns the chance for an enemy to use an offensive skill, spell, or
+     * item.
+     * 
      * @return the offensiveChance
      */
     public int getOffensiveChance() {
@@ -720,6 +738,7 @@ public final class Enemy extends Entity {
 
     /**
      * Returns the chance for an enemy to use a healing skill, spell, or item.
+     * 
      * @return the healChance
      */
     public int getHealChance() {
@@ -728,6 +747,7 @@ public final class Enemy extends Entity {
 
     /**
      * Returns the amount of exp awarded when the enemy is defeated.
+     * 
      * @return the expValue
      */
     public int getExpValue() {
