@@ -127,32 +127,25 @@ public final class Player extends Entity implements Serializable {
             }
             switch (direction) {
             case -1:
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "You can't go there.");
+                Window.appendText("You can't go there.\n");
                 break;
             case 0:
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "You travel northwest.");
+                Window.appendText("You travel northwest.\n");
                 break;
             case 1:
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "You travel north.");
+                Window.appendText("You travel north.\n");
                 break;
             case 2:
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "You travel northeast.");
+                Window.appendText("You travel northeast.\n");
                 break;
             case 3:
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "You travel southeast.");
+                Window.appendText("You travel southeast.\n");
                 break;
             case 4:
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "You travel south.");
+                Window.appendText("You travel south.\n");
                 break;
             case 5:
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "You travel southwest.");
+                Window.appendText("You travel southwest.\n");
                 break;
 
             default:
@@ -173,8 +166,7 @@ public final class Player extends Entity implements Serializable {
         int expToGain = 0;
         int expRemainder = 0;
         expGain *= expMult;
-        Window.appendToPane(Window.getInstance().getTextPane(),
-                "You gained " + expGain + " exp.");
+        Window.appendText("You gained " + expGain + " exp.\n");
         while (expGain > 0) {
             if (exp + expGain > expToNextLevel) {
                 expRemainder = exp + expGain - expToNextLevel;
@@ -255,27 +247,25 @@ public final class Player extends Entity implements Serializable {
         for (String string : description) {
             switch (string) {
             case "userName":
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        user.getUseName());
+                Window.appendText(user.getUseName());
                 break;
             case "userNameCapital":
-                Window.addToPane(Window.getInstance().getTextPane(),
+                Window.appendText(
                         Game.capitalizeFirstLetter(user.getUseName()));
                 break;
             case "targetName":
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        this.getUseName());
+                Window.appendText(this.getUseName());
                 break;
             case "targetNameCapital":
-                Window.addToPane(Window.getInstance().getTextPane(),
+                Window.appendText(
                         Game.capitalizeFirstLetter(this.getUseName()));
                 break;
             default:
-                Window.addToPane(Window.getInstance().getTextPane(), string);
+                Window.appendText(string);
                 break;
             }
         }
-        Window.appendToPane(Window.getInstance().getTextPane(), "");
+        Window.appendText("\n");
 
         item.use(user, this);
 
@@ -297,21 +287,18 @@ public final class Player extends Entity implements Serializable {
                 item.setEquipped(true);
                 addEquipEffects(item.getEquipEffects());
 
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "You equipped your " + item.getName());
+                Window.appendText("You equipped your " + item.getName() + "\n");
             } else {
                 equipment[EquipmentIndex.HEAD.getValue()].setEquipped(false);
                 removeEquipEffects(equipment[EquipmentIndex.HEAD.getValue()]
                         .getEquipEffects());
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        "You removed your "
-                                + equipment[EquipmentIndex.HEAD.getValue()]
-                                        .getName());
+                Window.appendText("You removed your "
+                        + equipment[EquipmentIndex.HEAD.getValue()].getName());
                 equipment[EquipmentIndex.HEAD.getValue()] = item;
                 item.setEquipped(true);
                 addEquipEffects(item.getEquipEffects());
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        " and equipped your " + item.getName());
+                Window.appendText(
+                        " and equipped your " + item.getName() + "\n");
             }
 
             break;
@@ -321,23 +308,20 @@ public final class Player extends Entity implements Serializable {
                 item.setEquipped(true);
                 addEquipEffects(item.getEquipEffects());
 
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "You equipped your " + item.getName());
+                Window.appendText("You equipped your " + item.getName() + "\n");
             } else {
                 equipment[EquipmentIndex.BODY.getValue()].setEquipped(false);
                 removeEquipEffects(equipment[EquipmentIndex.BODY.getValue()]
                         .getEquipEffects());
 
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        "You removed your "
-                                + equipment[EquipmentIndex.BODY.getValue()]
-                                        .getName());
+                Window.appendText("You removed your "
+                        + equipment[EquipmentIndex.BODY.getValue()].getName());
                 equipment[EquipmentIndex.BODY.getValue()] = item;
                 item.setEquipped(true);
                 addEquipEffects(item.getEquipEffects());
 
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        " and equipped your " + item.getName());
+                Window.appendText(
+                        " and equipped your " + item.getName() + "\n");
             }
 
             break;
@@ -347,23 +331,20 @@ public final class Player extends Entity implements Serializable {
                 item.setEquipped(true);
                 addEquipEffects(item.getEquipEffects());
 
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "You equipped your " + item.getName());
+                Window.appendText("You equipped your " + item.getName() + "\n");
             } else {
                 equipment[EquipmentIndex.FEET.getValue()].setEquipped(false);
                 removeEquipEffects(equipment[EquipmentIndex.FEET.getValue()]
                         .getEquipEffects());
 
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        "You removed your "
-                                + equipment[EquipmentIndex.FEET.getValue()]
-                                        .getName());
+                Window.appendText("You removed your "
+                        + equipment[EquipmentIndex.FEET.getValue()].getName());
                 equipment[EquipmentIndex.FEET.getValue()] = item;
                 item.setEquipped(true);
                 addEquipEffects(item.getEquipEffects());
 
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        " and equipped your " + item.getName());
+                Window.appendText(
+                        " and equipped your " + item.getName() + "\n");
             }
 
             break;
@@ -373,23 +354,20 @@ public final class Player extends Entity implements Serializable {
                 item.setEquipped(true);
                 addEquipEffects(item.getEquipEffects());
 
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "You equipped your " + item.getName());
+                Window.appendText("You equipped your " + item.getName() + "\n");
             } else {
                 equipment[EquipmentIndex.NECK.getValue()].setEquipped(false);
                 removeEquipEffects(equipment[EquipmentIndex.NECK.getValue()]
                         .getEquipEffects());
 
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        "You removed your "
-                                + equipment[EquipmentIndex.NECK.getValue()]
-                                        .getName());
+                Window.appendText("You removed your "
+                        + equipment[EquipmentIndex.NECK.getValue()].getName());
                 equipment[EquipmentIndex.NECK.getValue()] = item;
                 item.setEquipped(true);
                 addEquipEffects(item.getEquipEffects());
 
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        " and equipped your " + item.getName());
+                Window.appendText(
+                        " and equipped your " + item.getName() + "\n");
             }
 
             break;
@@ -415,8 +393,8 @@ public final class Player extends Entity implements Serializable {
                         .removeEquipEffects(toRemove.getEquipEffects());
 
                 toRemove.setEquipped(false);
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "You unequipped your " + toRemove.getName());
+                Window.appendText(
+                        "You unequipped your " + toRemove.getName() + "\n");
                 reloadSkills();
 
             }
@@ -442,21 +420,18 @@ public final class Player extends Entity implements Serializable {
             toEquip.setEquipped(true);
             Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
 
-            Window.appendToPane(Window.getInstance().getTextPane(),
-                    "You equipped your " + toEquip.getName());
+            Window.appendText("You equipped your " + toEquip.getName() + "\n");
         } else {
             equipment[hand].setEquipped(false);
             Player.getInstance()
                     .removeEquipEffects(equipment[hand].getEquipEffects());
 
-            Window.addToPane(Window.getInstance().getTextPane(),
-                    "You removed your " + equipment[hand].getName());
+            Window.appendText("You removed your " + equipment[hand].getName());
             equipment[hand] = toEquip;
             toEquip.setEquipped(true);
             Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
 
-            Window.appendToPane(Window.getInstance().getTextPane(),
-                    " and equipped your " + toEquip.getName());
+            Window.appendText(" and equipped your " + toEquip.getName() + "\n");
         }
     }
 
@@ -478,21 +453,21 @@ public final class Player extends Entity implements Serializable {
                 toEquip.setEquipped(true);
                 Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
 
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "You equipped your " + toEquip.getName());
+                Window.appendText(
+                        "You equipped your " + toEquip.getName() + "\n");
             } else {
                 equipment[hand].setEquipped(false);
                 Player.getInstance()
                         .removeEquipEffects(equipment[hand].getEquipEffects());
 
-                Window.addToPane(Window.getInstance().getTextPane(),
+                Window.appendText(
                         "You removed your " + equipment[hand].getName());
                 equipment[hand] = toEquip;
                 toEquip.setEquipped(true);
                 Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
 
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        " and equipped your " + toEquip.getName());
+                Window.appendText(
+                        " and equipped your " + toEquip.getName() + "\n");
             }
         } else {
             if (equipment[EquipmentIndex.RIGHT_HELD.getValue()] != null) {
@@ -515,9 +490,8 @@ public final class Player extends Entity implements Serializable {
             toEquip.setEquipped(true);
 
             Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
-            Window.appendToPane(Window.getInstance().getTextPane(),
-                    "You equipped your " + toEquip.getName()
-                            + " in both hands");
+            Window.appendText("You equipped your " + toEquip.getName()
+                    + " in both hands");
         }
     }
 

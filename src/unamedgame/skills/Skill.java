@@ -70,7 +70,9 @@ public final class Skill implements Serializable {
 
     /**
      * Builds and returns a skill from the given filename.
-     * @param skillName the filename to get the skill from
+     * 
+     * @param skillName
+     *            the filename to get the skill from
      * @return the skill
      */
     public static Skill buildSkill(String skillName) {
@@ -90,8 +92,10 @@ public final class Skill implements Serializable {
     /**
      * Load a skills information from an xml file.
      * 
-     * @param filename the filename of the skill
-     * @throws DocumentException if the file cant be found or is invalid
+     * @param filename
+     *            the filename of the skill
+     * @throws DocumentException
+     *             if the file cant be found or is invalid
      */
     public void loadSkillFromXML(String filename) throws DocumentException {
         SAXReader reader = new SAXReader();
@@ -180,8 +184,8 @@ public final class Skill implements Serializable {
                 if (newHitSkill != null) {
                     addHitSkill(newHitSkill);
                 } else {
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "ERROR: Somthing went wrong when creating a skill. See game.log for more information.");
+                    Window.appendText(
+                            "ERROR: Somthing went wrong when creating a skill. See game.log for more information.\n");
                 }
                 break;
             case "missSkill":
@@ -189,8 +193,8 @@ public final class Skill implements Serializable {
                 if (newMissSkill != null) {
                     addMissSkill(newMissSkill);
                 } else {
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "ERROR: Somthing went wrong when creating a skill. See game.log for more information.");
+                    Window.appendText(
+                            "ERROR: Somthing went wrong when creating a skill. See game.log for more information.\n");
                 }
                 break;
             case "alwaysSkill":
@@ -198,8 +202,8 @@ public final class Skill implements Serializable {
                 if (newAlwaysSkill != null) {
                     addAlwaysSkill(newAlwaysSkill);
                 } else {
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "ERROR: Somthing went wrong when creating a skill. See game.log for more information.");
+                    Window.appendText(
+                            "ERROR: Somthing went wrong when creating a skill. See game.log for more information.\n");
                 }
                 break;
             default:
@@ -328,6 +332,7 @@ public final class Skill implements Serializable {
 
     /**
      * Returns the attack damage bonus.
+     * 
      * @return the attackDamageBonus
      */
     public int getAttackDamageBonus() {
@@ -336,6 +341,7 @@ public final class Skill implements Serializable {
 
     /**
      * Returns the variable attack damage bonus.
+     * 
      * @return the attackVariableDamageBonus
      */
     public int getAttackVariableDamageBonus() {
@@ -454,6 +460,7 @@ public final class Skill implements Serializable {
 
     /**
      * Returns the skills type.
+     * 
      * @return the skillType
      */
     public String getSkillType() {
@@ -462,6 +469,7 @@ public final class Skill implements Serializable {
 
     /**
      * Returns the if its an offhand skill.
+     * 
      * @return the offhandSkill
      */
     public boolean isOffhandSkill() {

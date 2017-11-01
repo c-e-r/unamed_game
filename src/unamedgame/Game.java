@@ -68,8 +68,8 @@ public class Game {
      * Opens the games main menu.
      */
     public static void openMainMenu() {
-        Window.clearPane(window.getSidePane());
-        Window.addToPane(window.getSidePane(), "1: NEW GAME\n2: LOAD GAME");
+        Window.clearSide();
+        Window.appendSide("1: NEW GAME\n2: LOAD GAME\n");
         Window.getInstance().addInputObsever(new InputObserver() {
             @Override
             public void inputChanged(InputEvent evt) {
@@ -106,9 +106,9 @@ public class Game {
      *            A Runnable that when run will return to the previous menu.
      */
     public static void openLoadMenu(Runnable back) {
-        Window.clearPane(window.getSidePane());
-        Window.appendToPane(window.getSidePane(), "LOAD GAME");
-        Window.appendToPane(window.getSidePane(), "0: Back");
+        Window.clearSide();
+        Window.appendSide("LOAD GAME\n");
+        Window.appendSide("0: Back\n");
         for (int i = 1; i < MAX_SAVES + 1; i++) {
             boolean[] validChoices = new boolean[MAX_SAVES + 1];
             if (new File("saves/save" + i + ".sav").exists()) {
@@ -118,19 +118,16 @@ public class Game {
                     in = new ObjectInputStream(new FileInputStream(
                             new File("saves/save" + i + ".sav")));
                     Save save = ((Save) in.readObject());
-                    Window.appendToPane(window.getSidePane(),
-                            i + ": " + save.getSaveText());
-                    Window.appendToPane(window.getSidePane(),
-                            "    " + save.getSaveNote());
+                    Window.appendSide(i + ": " + save.getSaveText() + "\n");
+                    Window.appendSide("    " + save.getSaveNote() + "\n");
                     in.close();
                 } catch (IOException | ClassNotFoundException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             } else {
-                Window.appendToPane(window.getSidePane(),
-                        i + ": --Slot Empty--");
-                Window.appendToPane(window.getSidePane(), "");
+                Window.appendSide(i + ": --Slot Empty--\n");
+                Window.appendSide("\n");
             }
         }
         Window.getInstance().addInputObsever(new InputObserver() {
@@ -164,8 +161,7 @@ public class Game {
                             Window.getInstance().getMapPane().repaint();
                             openExplorationMenu();
                         } else {
-                            Window.appendToPane(window.getTextPane(),
-                                    "That slot is empty.");
+                            Window.appendText("That slot is empty.\n");
                         }
 
                     }
@@ -185,9 +181,9 @@ public class Game {
 
     public static void openSaveMenu(Runnable back) {
 
-        Window.clearPane(window.getSidePane());
-        Window.appendToPane(window.getSidePane(), "SAVE GAME");
-        Window.appendToPane(window.getSidePane(), "0: Back");
+        Window.clearSide();
+        Window.appendSide("SAVE GAME\n");
+        Window.appendSide("0: Back\n");
         for (int i = 1; i < MAX_SAVES + 1; i++) {
             boolean[] validChoices = new boolean[MAX_SAVES + 1];
 
@@ -198,19 +194,16 @@ public class Game {
                     in = new ObjectInputStream(new FileInputStream(
                             new File("saves/save" + i + ".sav")));
                     Save save = ((Save) in.readObject());
-                    Window.appendToPane(window.getSidePane(),
-                            i + ": " + save.getSaveText());
-                    Window.appendToPane(window.getSidePane(),
-                            "    " + save.getSaveNote());
+                    Window.appendSide(i + ": " + save.getSaveText() + "\n");
+                    Window.appendSide("    " + save.getSaveNote() + "\n");
                     in.close();
                 } catch (IOException | ClassNotFoundException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             } else {
-                Window.appendToPane(window.getSidePane(),
-                        i + ": --Slot Empty--");
-                Window.appendToPane(window.getSidePane(), "");
+                Window.appendSide(i + ": --Slot Empty--\n");
+                Window.appendSide("\n");
             }
         }
         Window.getInstance().addInputObsever(new InputObserver() {
@@ -272,9 +265,8 @@ public class Game {
      */
     private static void openSaveOverwriteConfirmMenu(File file, Runnable back,
             String saveNote) {
-        Window.clearPane(window.getSidePane());
-        Window.addToPane(window.getSidePane(),
-                "OVERWRITE SAVE?\n1: Yes\n2: No");
+        Window.clearSide();
+        Window.appendSide("OVERWRITE SAVE?\n1: Yes\n2: No\n");
 
         Window.getInstance().addInputObsever(new InputObserver() {
             @Override
@@ -311,9 +303,9 @@ public class Game {
      * Opens the main exploration menu and waits for player input.
      */
     public static void openExplorationMenu() {
-        Window.clearPane(window.getSidePane());
-        Window.addToPane(window.getSidePane(),
-                "1: Explore \n2: Move\n3: Gather\n4: Inventory \n5: Status\n6: Save");
+        Window.clearSide();
+        Window.appendSide(
+                "1: Explore \n2: Move\n3: Gather\n4: Inventory \n5: Status\n6: Save\n");
 
         Window.getInstance().addInputObsever(new InputObserver() {
             @Override
@@ -355,8 +347,7 @@ public class Game {
                     openSaveMenu(() -> openExplorationMenu());
                     break;
                 default:
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "Invalid Command");
+                    Window.appendText("Invalid Command\n");
                     break;
                 }
 
@@ -373,8 +364,7 @@ public class Game {
                     .getTile(Player.getInstance().getLocation())
                     .getEventFiles());
         } catch (FileNotFoundException e) {
-            Window.appendToPane(Window.getInstance().getTextPane(),
-                    "ERROR: " + e.getMessage());
+            Window.appendText("ERROR: " + e.getMessage() + "\n");
             Game.openExplorationMenu();
             LOG.error("Event list file not found.", e);
             e.printStackTrace();
@@ -390,10 +380,10 @@ public class Game {
      */
     private static void openMoveMenu(Runnable back) {
         onMoveMenu = true;
-        Window.clearPane(window.getSidePane());
-        Window.addToPane(window.getSidePane(),
-                "1: Northwest\n2: North\n3: Northeast\n4: Southeast\n5: South\n6: Southwest");
-        Window.appendToPane(Window.getInstance().getTextPane(), "Move where?");
+        Window.clearSide();
+        Window.appendSide(
+                "1: Northwest\n2: North\n3: Northeast\n4: Southeast\n5: South\n6: Southwest\n");
+        Window.appendText("Move where?\n");
 
         Window.getInstance().addInputObsever(new InputObserver() {
             @Override
@@ -433,24 +423,20 @@ public class Game {
      */
     public static void openInventoryMenu(Runnable back) {
 
-        Window.clearPane(window.getSidePane());
-        Window.appendToPane(Window.getInstance().getSidePane(),
-                String.format("%-24s%10s%13s", "Name", "Weight", "Uses Left"));
-        Window.appendToPane(Window.getInstance().getSidePane(),
-                "------------------------------------------------");
-        Window.appendToPane(Window.getInstance().getSidePane(),
-                String.format("0: Back"));
+        Window.clearSide();
+        Window.appendSide(String.format("%-24s%10s%13s\n", "Name", "Weight",
+                "Uses Left"));
+        Window.appendSide("------------------------------------------------\n");
+        Window.appendSide(String.format("0: Back\n"));
         int i = 1;
         for (Item item : Player.getInstance().getInventory()) {
             if (i % 2 != 0) {
-                Window.appendToPaneBackground(
-                        Window.getInstance().getSidePane(),
-                        i++ + ": " + item.getItemInfo(),
+                Window.appendSideBackground(
+                        i++ + ": " + item.getItemInfo() + "\n",
                         new Color(244, 244, 244));
 
             } else {
-                Window.appendToPane(Window.getInstance().getSidePane(),
-                        i++ + ": " + item.getItemInfo());
+                Window.appendSide(i++ + ": " + item.getItemInfo() + "\n");
 
             }
 
@@ -470,8 +456,7 @@ public class Game {
                     Window.getInstance().removeInputObsever(this);
                     back.run();
                 } else {
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "Invalid Command");
+                    Window.appendSide("Invalid Command\n");
 
                 }
             }
@@ -489,16 +474,16 @@ public class Game {
      * 
      */
     public static void itemChoiceMenu(int itemIndex, Runnable back) {
-        Window.clearPane(window.getSidePane());
+        Window.clearSide();
         Item item = Player.getInstance().getInventoryItem(itemIndex);
         if (item != null) {
             if (item.isEquipped()) {
-                Window.appendToPane(Window.getInstance().getSidePane(),
-                        "0: Back\n1: Use\n2: Inspect\n3: Drop\n4: Uneqip");
+                Window.appendSide(
+                        "0: Back\n1: Use\n2: Inspect\n3: Drop\n4: Uneqip\n");
 
             } else {
-                Window.appendToPane(Window.getInstance().getSidePane(),
-                        "0: Back\n1: Use\n2: Inspect\n3: Drop\n4: Equip");
+                Window.appendSide(
+                        "0: Back\n1: Use\n2: Inspect\n3: Drop\n4: Equip\n");
 
             }
             Window.getInstance().addInputObsever(new InputObserver() {
@@ -517,14 +502,11 @@ public class Game {
                     case 1: // use
                         if (item.isFieldUse()) {
                             if (item.getMaxUses() == 0) {
-                                Window.appendToPane(
-                                        Window.getInstance().getTextPane(),
-                                        "That item is not usable.");
+                                Window.appendText("That item is not usable.\n");
                             } else {
                                 if (item.getUses() <= 0) {
-                                    Window.appendToPane(
-                                            Window.getInstance().getTextPane(),
-                                            "That item is out of uses.");
+                                    Window.appendText(
+                                            "That item is out of uses.\n");
 
                                 } else {
                                     Player.getInstance().applyItemEffects(
@@ -540,38 +522,33 @@ public class Game {
                             }
 
                         } else {
-                            Window.appendToPane(
-                                    Window.getInstance().getTextPane(),
-                                    "You cant use that item here.");
+                            Window.appendText("You cant use that item here.\n");
                         }
 
                         break;
                     case 2: // inspect
-                        Window.appendToPane(Window.getInstance().getTextPane(),
-                                Player.getInstance()
-                                        .getItemDescription(itemIndex));
+                        Window.appendText(Player.getInstance()
+                                .getItemDescription(itemIndex) + "\n");
                         break;
                     case 3: // drop
                         if (item.isEquipped()) {
                             Player.getInstance()
                                     .unequipInventoryItem(itemIndex);
-                            Window.appendToPane(
-                                    Window.getInstance().getTextPane(),
+                            Window.appendText(
                                     "You threw away the "
                                             + Player.getInstance()
                                                     .removeItemFromInventory(
                                                             itemIndex)
                                                     .getName()
-                                            + ".");
+                                            + ".\n");
                         } else {
-                            Window.appendToPane(
-                                    Window.getInstance().getTextPane(),
+                            Window.appendText(
                                     "You threw away the "
                                             + Player.getInstance()
                                                     .removeItemFromInventory(
                                                             itemIndex)
                                                     .getName()
-                                            + ".");
+                                            + ".\n");
                             Window.getInstance().removeInputObsever(this);
                         }
 
@@ -601,15 +578,12 @@ public class Game {
                             }
                             Window.getInstance().removeInputObsever(this);
                         } else {
-                            Window.appendToPane(
-                                    Window.getInstance().getTextPane(),
-                                    "You cant equip that item!");
+                            Window.appendText("You cant equip that item!\n");
                         }
 
                         break;
                     default:
-                        Window.appendToPane(Window.getInstance().getTextPane(),
-                                "Invalid Command");
+                        Window.appendText("Invalid Command\n");
                         break;
                     }
 
@@ -629,27 +603,23 @@ public class Game {
      *            A Runnable that when run will return to the previous menu.
      */
     public static void getHandChoice(Item item, Runnable back) {
-        Window.clearPane(Window.getInstance().getSidePane());
-        Window.addToPane(Window.getInstance().getSidePane(),
-                "0: Back\n1: Left");
+        Window.clearSide();
+        Window.appendSide("0: Back\n1: Left");
 
         if (Player.getInstance().getEquipment()[EquipmentIndex.LEFT_HAND
                 .getValue()] != null) {
-            Window.addToPane(Window.getInstance().getSidePane(),
-                    " - " + Player.getInstance()
-                            .getEquipment()[EquipmentIndex.LEFT_HAND.getValue()]
-                                    .getName());
+            Window.appendSide(" - " + Player.getInstance()
+                    .getEquipment()[EquipmentIndex.LEFT_HAND.getValue()]
+                            .getName());
         }
-        Window.addToPane(Window.getInstance().getSidePane(), "\n2: Right");
+        Window.appendSide("\n2: Right");
         if (Player.getInstance().getEquipment()[EquipmentIndex.RIGHT_HAND
                 .getValue()] != null) {
-            Window.addToPane(Window.getInstance().getSidePane(),
-                    " - " + Player.getInstance()
-                            .getEquipment()[EquipmentIndex.RIGHT_HAND
-                                    .getValue()].getName());
+            Window.appendSide(" - " + Player.getInstance()
+                    .getEquipment()[EquipmentIndex.RIGHT_HAND.getValue()]
+                            .getName());
         }
-        Window.appendToPane(Window.getInstance().getTextPane(),
-                "Equip to which hand?");
+        Window.appendText("Equip to which hand?\n");
         Window.getInstance().addInputObsever(new InputObserver() {
 
             @Override
@@ -664,8 +634,7 @@ public class Game {
                         Window.getInstance().removeInputObsever(this);
                         back.run();
                     } else {
-                        Window.appendToPane(window.getTextPane(),
-                                "Invalid Choice");
+                        Window.appendText("Invalid Choice\n");
                     }
                 }
             }
@@ -682,28 +651,24 @@ public class Game {
      *            A Runnable that when run will return to the previous menu.
      */
     public static void getHeldChoice(Item item, Runnable back) {
-        Window.clearPane(Window.getInstance().getSidePane());
-        Window.addToPane(Window.getInstance().getSidePane(),
-                "0: Back\n1: Left");
+        Window.clearSide();
+        Window.appendSide("0: Back\n1: Left");
 
         if (Player.getInstance().getEquipment()[EquipmentIndex.LEFT_HELD
                 .getValue()] != null) {
-            Window.addToPane(Window.getInstance().getSidePane(),
-                    " - " + Player.getInstance()
-                            .getEquipment()[EquipmentIndex.LEFT_HELD.getValue()]
-                                    .getName());
+            Window.appendSide(" - " + Player.getInstance()
+                    .getEquipment()[EquipmentIndex.LEFT_HELD.getValue()]
+                            .getName());
         }
-        Window.addToPane(Window.getInstance().getSidePane(), "\n2: Right");
+        Window.appendSide("\n2: Right");
         if (Player.getInstance().getEquipment()[EquipmentIndex.RIGHT_HELD
                 .getValue()] != null) {
-            Window.addToPane(Window.getInstance().getSidePane(),
-                    " - " + Player.getInstance()
-                            .getEquipment()[EquipmentIndex.RIGHT_HELD
-                                    .getValue()].getName());
+            Window.appendSide(" - " + Player.getInstance()
+                    .getEquipment()[EquipmentIndex.RIGHT_HELD.getValue()]
+                            .getName());
         }
-        Window.addToPane(Window.getInstance().getSidePane(), "\n3: Both");
-        Window.appendToPane(Window.getInstance().getTextPane(),
-                "Hold in which hand?");
+        Window.appendSide("\n3: Both");
+        Window.appendText("Hold in which hand?\n");
         Window.getInstance().addInputObsever(new InputObserver() {
 
             @Override
@@ -718,8 +683,7 @@ public class Game {
                         Window.getInstance().removeInputObsever(this);
                         back.run();
                     } else {
-                        Window.appendToPane(window.getTextPane(),
-                                "Invalid Choice");
+                        Window.appendText("Invalid Choice\n");
                     }
                 }
             }
@@ -735,13 +699,12 @@ public class Game {
      */
     private static void openStatusMenu(Runnable back) {
         window.swapToPlayerPane();
-        Window.clearPane(window.getPlayerPane());
-        Window.appendToPane(Window.getInstance().getPlayerPane(),
-                Player.getInstance().getStatus());
+        Window.clearPlayer();
+        Window.appendPlayer(Player.getInstance().getStatus());
 
-        Window.clearPane(window.getSidePane());
-        Window.addToPane(window.getSidePane(),
-                "0: Back\n1: View Perks\n2: Spend Stat Points\n3: Spend Perk Points");
+        Window.clearSide();
+        Window.appendPlayer(
+                "0: Back\n1: View Perks\n2: Spend Stat Points\n3: Spend Perk Points\n");
 
         Window.getInstance().addInputObsever(new InputObserver() {
             @Override
@@ -760,20 +723,17 @@ public class Game {
                     openExplorationMenu();
                     break;
                 case 1: // View Perks
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "This command is not implemented yet");
+                    Window.appendText("This command is not implemented yet\n");
                     break;
                 case 2: // Spend Stat Points
                     window.removeInputObsever(this);
                     openStatPointMenu(() -> openStatusMenu(back));
                     break;
                 case 3: // Spend Perk Points
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "This command is not implemented yet");
+                    Window.appendText("This command is not implemented yet\n");
                     break;
                 default:
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "Invalid Command");
+                    Window.appendText("Invalid Command\n");
                     break;
                 }
             }
@@ -788,10 +748,10 @@ public class Game {
      *            A Runnable that when run will return to the previous menu.
      */
     private static void openStatPointMenu(Runnable back) {
-        Window.clearPane(window.getSidePane());
-        Window.clearPane(window.getTextPane());
-        Window.addToPane(window.getSidePane(),
-                "0: Cancel\n1: Finish\n2: + Vitality\n3: + Strength\n4: + Dexterity\n5: + Intellect\n6: + Spirit\n7: + Luck");
+        Window.clearSide();
+        Window.clearText();
+        Window.appendSide(
+                "0: Cancel\n1: Finish\n2: + Vitality\n3: + Strength\n4: + Dexterity\n5: + Intellect\n6: + Spirit\n7: + Luck\n");
         Player player = Player.getInstance();
         int curVitality = player.getVitality();
         int curStrength = player.getStrength();
@@ -808,136 +768,119 @@ public class Game {
         player.setNewLuck(curLuck);
         player.setNewStatPoints(player.getStatPoints());
 
-        Window.appendToPane(window.getTextPane(),
-                "Points Remaining: " + player.getNewStatPoints());
-        Window.appendToPane(window.getTextPane(), "STAT CURRENT NEW COST");
+        Window.appendText(
+                "Points Remaining: " + player.getNewStatPoints() + "\n");
+        Window.appendText("STAT CURRENT NEW COST\n");
 
-        Window.addToPane(window.getTextPane(),
-                "VIT   " + curVitality + " -----> ");
+        Window.appendText("VIT   " + curVitality + " -----> ");
         if (player.getNewVitality() > curVitality) {
-            Window.addToPane(window.getTextPane(),
-                    Integer.toString(player.getNewVitality()),
+            Window.appendText(Integer.toString(player.getNewVitality()),
                     Colors.STAT_POINT_INCREASE);
         } else {
-            Window.addToPane(window.getTextPane(),
-                    Integer.toString(player.getNewVitality()));
+            Window.appendText(Integer.toString(player.getNewVitality()));
         }
         if (Math.ceil((double) player.getNewVitality() / 5) > player
                 .getNewStatPoints()) {
-            Window.appendToPane(window.getTextPane(),
+            Window.appendText(
                     "   (" + (int) Math
-                            .ceil((double) player.getNewVitality() / 5) + ")",
+                            .ceil((double) player.getNewVitality() / 5) + ")\n",
                     Colors.STAT_POINT_CANT_AFFORD);
         } else {
-            Window.appendToPane(window.getTextPane(), "   ("
+            Window.appendText("   ("
                     + (int) Math.ceil((double) player.getNewVitality() / 5)
-                    + ")");
+                    + ")\n");
         }
 
-        Window.addToPane(window.getTextPane(),
-                "STR   " + curStrength + " -----> ");
+        Window.appendText("STR   " + curStrength + " -----> ");
         if (player.getNewStrength() > curStrength) {
-            Window.addToPane(window.getTextPane(),
-                    Integer.toString(player.getNewStrength()),
+            Window.appendText(Integer.toString(player.getNewStrength()),
                     Colors.STAT_POINT_INCREASE);
         } else {
-            Window.addToPane(window.getTextPane(),
-                    Integer.toString(player.getNewStrength()));
+            Window.appendText(Integer.toString(player.getNewStrength()));
         }
         if (Math.ceil((double) player.getNewStrength() / 5) > player
                 .getNewStatPoints()) {
-            Window.appendToPane(window.getTextPane(),
+            Window.appendText(
                     "   (" + (int) Math
-                            .ceil((double) player.getNewStrength() / 5) + ")",
+                            .ceil((double) player.getNewStrength() / 5) + ")\n",
                     Colors.STAT_POINT_CANT_AFFORD);
         } else {
-            Window.appendToPane(window.getTextPane(), "   ("
+            Window.appendText("   ("
                     + (int) Math.ceil((double) player.getNewStrength() / 5)
-                    + ")");
+                    + ")\n");
         }
 
-        Window.addToPane(window.getTextPane(),
-                "DEX   " + curDexterity + " -----> ");
+        Window.appendText("DEX   " + curDexterity + " -----> ");
         if (player.getNewDexterity() > curDexterity) {
-            Window.addToPane(window.getTextPane(),
-                    Integer.toString(player.getNewDexterity()),
+            Window.appendText(Integer.toString(player.getNewDexterity()),
                     Colors.STAT_POINT_INCREASE);
         } else {
-            Window.addToPane(window.getTextPane(),
-                    Integer.toString(player.getNewDexterity()));
+            Window.appendText(Integer.toString(player.getNewDexterity()));
         }
         if (Math.ceil((double) player.getNewDexterity() / 5) > player
                 .getNewStatPoints()) {
-            Window.appendToPane(window.getTextPane(),
-                    "   (" + (int) Math
-                            .ceil((double) player.getNewDexterity() / 5) + ")",
-                    Colors.STAT_POINT_CANT_AFFORD);
-        } else {
-            Window.appendToPane(window.getTextPane(), "   ("
+            Window.appendText("   ("
                     + (int) Math.ceil((double) player.getNewDexterity() / 5)
-                    + ")");
+                    + ")\n", Colors.STAT_POINT_CANT_AFFORD);
+        } else {
+            Window.appendText("   ("
+                    + (int) Math.ceil((double) player.getNewDexterity() / 5)
+                    + ")\n");
         }
 
-        Window.addToPane(window.getTextPane(),
-                "INT   " + curIntellect + " -----> ");
+        Window.appendText("INT   " + curIntellect + " -----> ");
         if (player.getNewIntellect() > curIntellect) {
-            Window.addToPane(window.getTextPane(),
-                    Integer.toString(player.getNewIntellect()),
+            Window.appendText(Integer.toString(player.getNewIntellect()),
                     Colors.STAT_POINT_INCREASE);
         } else {
-            Window.addToPane(window.getTextPane(),
-                    Integer.toString(player.getNewIntellect()));
+            Window.appendText(Integer.toString(player.getNewIntellect()));
         }
         if (Math.ceil((double) player.getNewIntellect() / 5) > player
                 .getNewStatPoints()) {
-            Window.appendToPane(window.getTextPane(),
-                    "   (" + (int) Math
-                            .ceil((double) player.getNewIntellect() / 5) + ")",
-                    Colors.STAT_POINT_CANT_AFFORD);
-        } else {
-            Window.appendToPane(window.getTextPane(), "   ("
+            Window.appendText("   ("
                     + (int) Math.ceil((double) player.getNewIntellect() / 5)
-                    + ")");
+                    + ")\n", Colors.STAT_POINT_CANT_AFFORD);
+        } else {
+            Window.appendText("   ("
+                    + (int) Math.ceil((double) player.getNewIntellect() / 5)
+                    + ")\n");
         }
 
-        Window.addToPane(window.getTextPane(),
-                "SPR   " + curSpirit + " -----> ");
+        Window.appendText("SPR   " + curSpirit + " -----> ");
         if (player.getNewSpirit() > curSpirit) {
-            Window.addToPane(window.getTextPane(),
-                    Integer.toString(player.getNewSpirit()),
+            Window.appendText(Integer.toString(player.getNewSpirit()),
                     Colors.STAT_POINT_INCREASE);
         } else {
-            Window.addToPane(window.getTextPane(),
-                    Integer.toString(player.getNewSpirit()));
+            Window.appendText(Integer.toString(player.getNewSpirit()));
         }
         if (Math.ceil((double) player.getNewSpirit() / 5) > player
                 .getNewStatPoints()) {
-            Window.appendToPane(window.getTextPane(), "   ("
-                    + (int) Math.ceil((double) player.getNewSpirit() / 5) + ")",
+            Window.appendText(
+                    "   (" + (int) Math.ceil((double) player.getNewSpirit() / 5)
+                            + ")\n",
                     Colors.STAT_POINT_CANT_AFFORD);
         } else {
-            Window.appendToPane(window.getTextPane(),
+            Window.appendText(
                     "   (" + (int) Math.ceil((double) player.getNewSpirit() / 5)
-                            + ")");
+                            + ")\n");
         }
 
-        Window.addToPane(window.getTextPane(), "LCK   " + curLuck + " -----> ");
+        Window.appendText("LCK   " + curLuck + " -----> ");
         if (player.getNewLuck() > curLuck) {
-            Window.addToPane(window.getTextPane(),
-                    Integer.toString(player.getNewLuck()),
+            Window.appendText(Integer.toString(player.getNewLuck()),
                     Colors.STAT_POINT_INCREASE);
         } else {
-            Window.addToPane(window.getTextPane(),
-                    Integer.toString(player.getNewLuck()));
+            Window.appendText(Integer.toString(player.getNewLuck()));
         }
         if (Math.ceil((double) player.getNewLuck() / 5) > player
                 .getNewStatPoints()) {
-            Window.appendToPane(window.getTextPane(), "   ("
-                    + (int) Math.ceil((double) player.getNewLuck() / 5) + ")",
+            Window.appendText("   ("
+                    + (int) Math.ceil((double) player.getNewLuck() / 5) + ")\n",
                     Colors.STAT_POINT_CANT_AFFORD);
         } else {
-            Window.appendToPane(window.getTextPane(), "   ("
-                    + (int) Math.ceil((double) player.getNewLuck() / 5) + ")");
+            Window.appendText(
+                    "   (" + (int) Math.ceil((double) player.getNewLuck() / 5)
+                            + ")\n");
         }
         Window.getInstance().addInputObsever(new InputObserver() {
             @Override
@@ -1034,157 +977,144 @@ public class Game {
                     }
 
                 }
-                Window.clearPane(window.getTextPane());
 
+                Window.clearText();
                 if (print) {
-                    Window.appendToPane(window.getTextPane(),
-                            "Points Remaining: " + player.getNewStatPoints());
-                    Window.appendToPane(window.getTextPane(),
-                            "STAT CURRENT NEW COST");
-                    Window.addToPane(window.getTextPane(),
-                            "VIT   " + curVitality + " -----> ");
+                    Window.appendText("Points Remaining: "
+                            + player.getNewStatPoints() + "\n");
+                    Window.appendText("STAT CURRENT NEW COST\n");
+
+                    Window.appendText("VIT   " + curVitality + " -----> ");
                     if (player.getNewVitality() > curVitality) {
-                        Window.addToPane(window.getTextPane(),
+                        Window.appendText(
                                 Integer.toString(player.getNewVitality()),
                                 Colors.STAT_POINT_INCREASE);
                     } else {
-                        Window.addToPane(window.getTextPane(),
+                        Window.appendText(
                                 Integer.toString(player.getNewVitality()));
                     }
                     if (Math.ceil((double) player.getNewVitality() / 5) > player
                             .getNewStatPoints()) {
-                        Window.appendToPane(window.getTextPane(),
-                                "   (" + (int) Math.ceil(
+                        Window.appendText("   ("
+                                + (int) Math.ceil(
                                         (double) player.getNewVitality() / 5)
-                                        + ")",
-                                Colors.STAT_POINT_CANT_AFFORD);
+                                + ")\n", Colors.STAT_POINT_CANT_AFFORD);
                     } else {
-                        Window.appendToPane(window.getTextPane(),
-                                "   (" + (int) Math.ceil(
+                        Window.appendText("   ("
+                                + (int) Math.ceil(
                                         (double) player.getNewVitality() / 5)
-                                        + ")");
+                                + ")\n");
                     }
 
-                    Window.addToPane(window.getTextPane(),
-                            "STR   " + curStrength + " -----> ");
+                    Window.appendText("STR   " + curStrength + " -----> ");
                     if (player.getNewStrength() > curStrength) {
-                        Window.addToPane(window.getTextPane(),
+                        Window.appendText(
                                 Integer.toString(player.getNewStrength()),
                                 Colors.STAT_POINT_INCREASE);
                     } else {
-                        Window.addToPane(window.getTextPane(),
+                        Window.appendText(
                                 Integer.toString(player.getNewStrength()));
                     }
                     if (Math.ceil((double) player.getNewStrength() / 5) > player
                             .getNewStatPoints()) {
-                        Window.appendToPane(window.getTextPane(),
-                                "   (" + (int) Math.ceil(
+                        Window.appendText("   ("
+                                + (int) Math.ceil(
                                         (double) player.getNewStrength() / 5)
-                                        + ")",
-                                Colors.STAT_POINT_CANT_AFFORD);
+                                + ")\n", Colors.STAT_POINT_CANT_AFFORD);
                     } else {
-                        Window.appendToPane(window.getTextPane(),
-                                "   (" + (int) Math.ceil(
+                        Window.appendText("   ("
+                                + (int) Math.ceil(
                                         (double) player.getNewStrength() / 5)
-                                        + ")");
+                                + ")\n");
                     }
 
-                    Window.addToPane(window.getTextPane(),
-                            "DEX   " + curDexterity + " -----> ");
+                    Window.appendText("DEX   " + curDexterity + " -----> ");
                     if (player.getNewDexterity() > curDexterity) {
-                        Window.addToPane(window.getTextPane(),
+                        Window.appendText(
                                 Integer.toString(player.getNewDexterity()),
                                 Colors.STAT_POINT_INCREASE);
                     } else {
-                        Window.addToPane(window.getTextPane(),
+                        Window.appendText(
                                 Integer.toString(player.getNewDexterity()));
                     }
                     if (Math.ceil(
                             (double) player.getNewDexterity() / 5) > player
                                     .getNewStatPoints()) {
-                        Window.appendToPane(window.getTextPane(),
-                                "   (" + (int) Math.ceil(
+                        Window.appendText("   ("
+                                + (int) Math.ceil(
                                         (double) player.getNewDexterity() / 5)
-                                        + ")",
-                                Colors.STAT_POINT_CANT_AFFORD);
+                                + ")\n", Colors.STAT_POINT_CANT_AFFORD);
                     } else {
-                        Window.appendToPane(window.getTextPane(),
-                                "   (" + (int) Math.ceil(
+                        Window.appendText("   ("
+                                + (int) Math.ceil(
                                         (double) player.getNewDexterity() / 5)
-                                        + ")");
+                                + ")\n");
                     }
 
-                    Window.addToPane(window.getTextPane(),
-                            "INT   " + curIntellect + " -----> ");
+                    Window.appendText("INT   " + curIntellect + " -----> ");
                     if (player.getNewIntellect() > curIntellect) {
-                        Window.addToPane(window.getTextPane(),
+                        Window.appendText(
                                 Integer.toString(player.getNewIntellect()),
                                 Colors.STAT_POINT_INCREASE);
                     } else {
-                        Window.addToPane(window.getTextPane(),
+                        Window.appendText(
                                 Integer.toString(player.getNewIntellect()));
                     }
                     if (Math.ceil(
                             (double) player.getNewIntellect() / 5) > player
                                     .getNewStatPoints()) {
-                        Window.appendToPane(window.getTextPane(),
-                                "   (" + (int) Math.ceil(
+                        Window.appendText("   ("
+                                + (int) Math.ceil(
                                         (double) player.getNewIntellect() / 5)
-                                        + ")",
-                                Colors.STAT_POINT_CANT_AFFORD);
+                                + ")\n", Colors.STAT_POINT_CANT_AFFORD);
                     } else {
-                        Window.appendToPane(window.getTextPane(),
-                                "   (" + (int) Math.ceil(
+                        Window.appendText("   ("
+                                + (int) Math.ceil(
                                         (double) player.getNewIntellect() / 5)
-                                        + ")");
+                                + ")\n");
                     }
 
-                    Window.addToPane(window.getTextPane(),
-                            "SPR   " + curSpirit + " -----> ");
+                    Window.appendText("SPR   " + curSpirit + " -----> ");
                     if (player.getNewSpirit() > curSpirit) {
-                        Window.addToPane(window.getTextPane(),
+                        Window.appendText(
                                 Integer.toString(player.getNewSpirit()),
                                 Colors.STAT_POINT_INCREASE);
                     } else {
-                        Window.addToPane(window.getTextPane(),
+                        Window.appendText(
                                 Integer.toString(player.getNewSpirit()));
                     }
                     if (Math.ceil((double) player.getNewSpirit() / 5) > player
                             .getNewStatPoints()) {
-                        Window.appendToPane(window.getTextPane(),
-                                "   (" + (int) Math.ceil(
+                        Window.appendText("   ("
+                                + (int) Math.ceil(
                                         (double) player.getNewSpirit() / 5)
-                                        + ")",
-                                Colors.STAT_POINT_CANT_AFFORD);
+                                + ")\n", Colors.STAT_POINT_CANT_AFFORD);
                     } else {
-                        Window.appendToPane(window.getTextPane(),
-                                "   (" + (int) Math.ceil(
+                        Window.appendText("   ("
+                                + (int) Math.ceil(
                                         (double) player.getNewSpirit() / 5)
-                                        + ")");
+                                + ")\n");
                     }
 
-                    Window.addToPane(window.getTextPane(),
-                            "LCK   " + curLuck + " -----> ");
+                    Window.appendText("LCK   " + curLuck + " -----> ");
                     if (player.getNewLuck() > curLuck) {
-                        Window.addToPane(window.getTextPane(),
-                                Integer.toString(player.getNewLuck()),
+                        Window.appendText(Integer.toString(player.getNewLuck()),
                                 Colors.STAT_POINT_INCREASE);
                     } else {
-                        Window.addToPane(window.getTextPane(),
+                        Window.appendText(
                                 Integer.toString(player.getNewLuck()));
                     }
                     if (Math.ceil((double) player.getNewLuck() / 5) > player
                             .getNewStatPoints()) {
-                        Window.appendToPane(window.getTextPane(),
-                                "   (" + (int) Math
+                        Window.appendText("   ("
+                                + (int) Math
                                         .ceil((double) player.getNewLuck() / 5)
-                                        + ")",
-                                Colors.STAT_POINT_CANT_AFFORD);
+                                + ")\n", Colors.STAT_POINT_CANT_AFFORD);
                     } else {
-                        Window.appendToPane(window.getTextPane(),
-                                "   (" + (int) Math
+                        Window.appendText("   ("
+                                + (int) Math
                                         .ceil((double) player.getNewLuck() / 5)
-                                        + ")");
+                                + ")\n");
                     }
 
                 }
@@ -1201,9 +1131,9 @@ public class Game {
      *            A Runnable that when run will return to the previous menu.
      */
     private static void openDebugMenu(Runnable back) {
-        Window.clearPane(window.getSidePane());
-        Window.addToPane(window.getSidePane(),
-                "0: Back \naddItem <itemName>\ngainExp <amount>\nstartEvent <eventName>\naddSkill <skillName>\naddSpell <spellName>\nstartCombat <enemyName>");
+        Window.clearSide();
+        Window.appendSide(
+                "0: Back \naddItem <itemName>\ngainExp <amount>\nstartEvent <eventName>\naddSkill <skillName>\naddSpell <spellName>\nstartCombat <enemyName>\n");
 
         Window.getInstance().addInputObsever(new InputObserver() {
             @Override
@@ -1219,11 +1149,11 @@ public class Game {
                     Item newItem = Item.buildItem(command[1]);
                     if (newItem != null) {
                         Player.getInstance().addItemToInventory(newItem);
-                        Window.appendToPane(window.getTextPane(),
-                                command[1] + " added to inventory.");
+                        Window.appendText(
+                                command[1] + " added to inventory.\n");
                     } else {
-                        Window.appendToPane(window.getTextPane(),
-                                "ERROR: Somthing went wrong adding an item to your inventory. See game.log for more information.");
+                        Window.appendText(
+                                "ERROR: Somthing went wrong adding an item to your inventory. See game.log for more information.\n");
 
                     }
                     break;
@@ -1231,11 +1161,9 @@ public class Game {
                     if (isNumeric(command[1])) {
                         Player.getInstance()
                                 .gainExp(Integer.parseInt(command[1]));
-                        Window.appendToPane(window.getTextPane(),
-                                "You gained " + command[1] + "exp");
+                        Window.appendText("You gained " + command[1] + "exp\n");
                     } else {
-                        Window.appendToPane(window.getTextPane(),
-                                "That command needs a number.");
+                        Window.appendText("That command needs a number.\n");
                     }
                     break;
                 case "startEvent":
@@ -1247,11 +1175,11 @@ public class Game {
                     Skill newSkill = Skill.buildSkill(command[1]);
                     if (newSkill != null) {
                         Player.getInstance().addInnateSkill(newSkill);
-                        Window.appendToPane(window.getTextPane(),
-                                command[1] + " added to innate skill list.");
+                        Window.appendText(
+                                command[1] + " added to innate skill list.\n");
                     } else {
-                        Window.appendToPane(window.getTextPane(),
-                                "ERROR: Somthing went wrong while creating a skill. See game.log for more information.");
+                        Window.appendText(
+                                "ERROR: Somthing went wrong while creating a skill. See game.log for more information.\n");
                     }
 
                     break;
@@ -1259,34 +1187,32 @@ public class Game {
                     Spell newSpell = Spell.buildSpell(command[1]);
                     if (newSpell != null) {
                         Player.getInstance().addKnownSpell(newSpell);
-                        Window.appendToPane(window.getTextPane(),
-                                command[1] + " added to known spells list.");
+                        Window.appendText(
+                                command[1] + " added to known spells list.\n");
                     } else {
-                        Window.appendToPane(Window.getInstance().getTextPane(),
-                                "ERROR: Somthing went wrong while creating a spell. See game.log for more information.");
+                        Window.appendText(
+                                "ERROR: Somthing went wrong while creating a spell. See game.log for more information.\n");
                     }
                     break;
                 case "startCombat":
                     window.removeInputObsever(this);
                     Enemy newEnemy = Enemy.buildEnemy(command[1]);
                     if (newEnemy != null) {
-                        new Combat(newEnemy, ()-> openExplorationMenu());
+                        new Combat(newEnemy, () -> openExplorationMenu());
                     } else {
-                        Window.appendToPane(Window.getInstance().getTextPane(),
-                                "ERROR: Somthing went wrong while creating an enemy. See game.log for more info.");
+                        Window.appendText(
+                                "ERROR: Somthing went wrong while creating an enemy. See game.log for more info.\n");
                     }
 
                     break;
                 case "time":
                     window.removeInputObsever(this);
                     Time.getInstance().passTime(1);
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "Time passed.");
+                    Window.appendText("Time passed.\n");
                     back.run();
                     break;
                 default:
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "Invalid debug command");
+                    Window.appendText("Invalid debug command\n");
                     break;
                 }
 
@@ -1296,25 +1222,22 @@ public class Game {
     }
 
     public static void openLootMenu(Entity entity, Runnable back) {
-        Window.clearPane(window.getSidePane());
-        Window.appendToPane(Window.getInstance().getSidePane(), capitalizeFirstLetter(entity.getUseName() + "'s inventory"));
-        Window.appendToPane(Window.getInstance().getSidePane(),
-                String.format("%-24s%10s%13s", "Name", "Weight", "Uses Left"));
-        Window.appendToPane(Window.getInstance().getSidePane(),
-                "------------------------------------------------");
-        Window.appendToPane(Window.getInstance().getSidePane(),
-                String.format("0: Back"));
+        Window.clearSide();
+        Window.appendSide(
+                capitalizeFirstLetter(entity.getUseName() + "'s inventory\n"));
+        Window.appendSide(String.format("%-24s%10s%13s", "Name", "Weight",
+                "Uses Left\n"));
+        Window.appendSide("------------------------------------------------\n");
+        Window.appendSide(String.format("0: Back\n"));
         int i = 1;
         for (Item item : entity.getInventory()) {
             if (i % 2 != 0) {
-                Window.appendToPaneBackground(
-                        Window.getInstance().getSidePane(),
-                        i++ + ": " + item.getItemInfo(),
+                Window.appendSideBackground(
+                        i++ + ": " + item.getItemInfo() + "\n",
                         new Color(244, 244, 244));
 
             } else {
-                Window.appendToPane(Window.getInstance().getSidePane(),
-                        i++ + ": " + item.getItemInfo());
+                Window.appendSide(i++ + ": " + item.getItemInfo());
 
             }
 
@@ -1335,8 +1258,7 @@ public class Game {
                     Window.getInstance().removeInputObsever(this);
                     back.run();
                 } else {
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "Invalid Command");
+                    Window.appendText("Invalid Command\n");
 
                 }
             }
@@ -1345,11 +1267,10 @@ public class Game {
 
     public static void lootChoiceMenu(Entity entity, int itemIndex,
             Runnable back) {
-        Window.clearPane(window.getSidePane());
+        Window.clearSide();
         Item item = entity.getInventoryItem(itemIndex);
         if (item != null) {
-            Window.appendToPane(Window.getInstance().getSidePane(),
-                    "0: Back\n1: Take\n2: Inspect");
+            Window.appendSide("0: Back\n1: Take\n2: Inspect\n");
             Window.getInstance().addInputObsever(new InputObserver() {
                 @Override
                 public void inputChanged(InputEvent evt) {
@@ -1366,18 +1287,17 @@ public class Game {
                     case 1: // take
                         entity.removeItemFromInventory(itemIndex);
                         Player.getInstance().addItemToInventory(item);
-                        Window.appendToPane(Window.getInstance().getTextPane(),
-                                capitalizeFirstLetter(item.getName()) + " taken.");
+                        Window.appendText(capitalizeFirstLetter(item.getName())
+                                + " taken.\n");
                         Window.getInstance().removeInputObsever(this);
                         back.run();
                         break;
                     case 2: // inspect
-                        Window.appendToPane(Window.getInstance().getTextPane(),
-                                entity.getItemDescription(itemIndex));
+                        Window.appendText(
+                                entity.getItemDescription(itemIndex) + "\n");
                         break;
                     default:
-                        Window.appendToPane(Window.getInstance().getTextPane(),
-                                "Invalid Command");
+                        Window.appendText("Invalid Command\n");
                         break;
                     }
 
@@ -1428,7 +1348,7 @@ public class Game {
      * Clears the text windows textfield.
      */
     public static void clearTextField() {
-        Window.clearField(window.getTextField());
+        Window.clearTextField();
     }
 
     /**

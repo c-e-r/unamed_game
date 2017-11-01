@@ -56,9 +56,9 @@ public class EventReader {
     public static void startEvent(String event) {
         tempFlags = new HashMap<String, Integer>();
 
-        Window.clearPane(Window.getInstance().getSidePane());
+        Window.clearSide();
 
-        Window.clearPane(Window.getInstance().getTextPane());
+        Window.clearText();
         SAXReader reader = new SAXReader();
         try {
             File inputFile = new File("data/events/" + event + ".xml");
@@ -69,8 +69,7 @@ public class EventReader {
             parseEventXML(root, 0);
 
         } catch (DocumentException e) {
-            Window.appendToPane(Window.getInstance().getTextPane(),
-                    "ERROR: " + e.getMessage());
+            Window.appendText("ERROR: " + e.getMessage() + "\n");
             Game.openExplorationMenu();
             LOG.error("Error loading event xml file", e);
             e.printStackTrace();
@@ -82,8 +81,8 @@ public class EventReader {
      * Resumes the paused event.
      */
     public static void resumeEvent() {
-        Window.clearPane(Window.getInstance().getTextPane());
-        Window.clearPane(Window.getInstance().getSidePane());
+        Window.clearText();
+        Window.clearSide();
 
         resumeParseEventXML();
     }
@@ -160,26 +159,25 @@ public class EventReader {
 
         switch (element.getName()) {
         case "text":
-            Window.appendToPane(Window.getInstance().getTextPane(),
-                    currentElement.getTextTrim());
+            Window.appendText(currentElement.getTextTrim() + "\n");
             break;
         case "end":
-            Game.openExplorationMenu();
+            Window.clearSide();
+            Window.clearText();
             stop = true;
+            Game.openExplorationMenu();
             break;
         case "choice":
-            Window.clearPane(Window.getInstance().getSidePane());
+            Window.clearSide();
             String choiceDescription = ((Element) currentElement
                     .selectSingleNode("choiceDescription")).getTextTrim();
             List<Node> choices = currentElement.selectNodes("option");
             choices.addAll(getAllIfOptions(currentElement));
 
-            Window.appendToPane(Window.getInstance().getTextPane(),
-                    choiceDescription);
+            Window.appendText(choiceDescription + "\n");
             int i = 1;
             for (Node node : choices) {
-                Window.appendToPane(Window.getInstance().getSidePane(),
-                        i++ + ": " + node.getText());
+                Window.appendSide(i++ + ": " + node.getText() + "\n");
             }
             waitForChoice(choices);
             stop = true;
@@ -193,8 +191,8 @@ public class EventReader {
             if (newEnemy != null) {
                 new Combat(newEnemy, () -> Combat.backToEvent());
             } else {
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "ERROR: Somthing went wrong while creating an enemy. See game.log for more info.");
+                Window.appendText(
+                        "ERROR: Somthing went wrong while creating an enemy. See game.log for more info.\n");
             }
 
             stop = true;
@@ -203,36 +201,33 @@ public class EventReader {
             Item newItem = Item.buildItem(element.getText());
             if (newItem != null) {
                 Player.getInstance().addItemToInventory(newItem);
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        Game.capitalizeFirstLetter(newItem.getName())
-                                + " added to inventory");
+                Window.appendText(Game.capitalizeFirstLetter(newItem.getName())
+                        + " added to inventory\n");
             } else {
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "ERROR: Something went wrong adding an item to your inventory. See game.log for more information.");
+                Window.appendText(
+                        "ERROR: Something went wrong adding an item to your inventory. See game.log for more information.\n");
             }
             break;
         case "addSkill":
             Skill newSkill = Skill.buildSkill(element.getText());
             if (newSkill != null) {
                 Player.getInstance().addInnateSkill(newSkill);
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        Game.capitalizeFirstLetter(
-                                "Gained Skill: " + newSkill.getName()));
+                Window.appendText(Game.capitalizeFirstLetter(
+                        "Gained Skill: " + newSkill.getName()) + "\n");
             } else {
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "ERROR: Something went wrong adding a skill to your innate skills. See game.log for more information.");
+                Window.appendText(
+                        "ERROR: Something went wrong adding a skill to your innate skills. See game.log for more information.\n");
             }
             break;
         case "addSpell":
             Spell newSpell = Spell.buildSpell(element.getText());
             if (newSpell != null) {
                 Player.getInstance().addKnownSpell(newSpell);
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        Game.capitalizeFirstLetter(
-                                "Learned Spell: " + newSpell.getName()));
+                Window.appendText(Game.capitalizeFirstLetter(
+                        "Learned Spell: " + newSpell.getName()) + "\n");
             } else {
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "ERROR: Something went wrong adding a spell to your known spells. See game.log for more information.");
+                Window.appendText(
+                        "ERROR: Something went wrong adding a spell to your known spells. See game.log for more information.\n");
             }
             break;
         case "addEffect":
@@ -241,8 +236,8 @@ public class EventReader {
                 Player.getInstance().addEffect(newEffect, null);
                 skipChildren = true;
             } else {
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        "ERROR: Something went wrong adding an effect to the player. See game.log for more information.");
+                Window.appendText(
+                        "ERROR: Something went wrong adding an effect to the player. See game.log for more information.\n");
             }
             break;
         case "ifRoll":
@@ -400,11 +395,10 @@ public class EventReader {
                             .get(Integer.parseInt(evt.getText()) - 1))
                                     .attributeValue("branch"));
                     Window.getInstance().removeInputObsever(this);
-                    Window.clearPane(Window.getInstance().getSidePane());
+                    Window.clearSide();
                     parseEventXML(root, choice);
                 } else {
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "Invalid choice");
+                    Window.appendText("Invalid choice\n");
 
                 }
 
@@ -680,9 +674,13 @@ public class EventReader {
 
     /**
      * Check a random roll against the value.
-     * @param operator the operator to use
-     * @param value the value to compare to
-     * @param roll the roll
+     * 
+     * @param operator
+     *            the operator to use
+     * @param value
+     *            the value to compare to
+     * @param roll
+     *            the roll
      * @return the result
      */
     public static boolean checkRoll(String operator, int value, int roll) {
@@ -706,9 +704,13 @@ public class EventReader {
 
     /**
      * Sets a temporary flag with the given value.
-     * @param flag the flag to set
-     * @param operator the operator to use
-     * @param value the value to set
+     * 
+     * @param flag
+     *            the flag to set
+     * @param operator
+     *            the operator to use
+     * @param value
+     *            the value to set
      */
     public static void setTempFlag(String flag, String operator, int value) {
         switch (operator) {
@@ -733,7 +735,9 @@ public class EventReader {
 
     /**
      * Returns the flag value if the flag exists or 0 it it does not.
-     * @param flag the flag to get
+     * 
+     * @param flag
+     *            the flag to get
      * @return the flag value
      */
     public static int getTempFlagValue(String flag) {
@@ -745,7 +749,9 @@ public class EventReader {
 
     /**
      * Recursively looks for a parent with a sibling of the given element.
-     * @param element the element to start from
+     * 
+     * @param element
+     *            the element to start from
      * @return the first parents sibling it finds
      */
     private static Element getNextParentWithSibling(Element element) {

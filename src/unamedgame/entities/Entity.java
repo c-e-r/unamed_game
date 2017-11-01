@@ -358,40 +358,36 @@ public class Entity extends Observable implements Serializable {
         for (String string : description) {
             switch (string) {
             case "userName":
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        attacker.getUseName());
+                Window.appendText(attacker.getUseName());
                 break;
             case "userNameCapital":
-                Window.addToPane(Window.getInstance().getTextPane(),
+                Window.appendText(
                         Game.capitalizeFirstLetter(attacker.getUseName()));
                 break;
             case "targetName":
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        this.getUseName());
+                Window.appendText(this.getUseName());
                 break;
             case "targetNameCapital":
-                Window.addToPane(Window.getInstance().getTextPane(),
+                Window.appendText(
                         Game.capitalizeFirstLetter(this.getUseName()));
                 break;
             case "damage":
                 if (damage == 0) {
-                    Window.addToPane(Window.getInstance().getTextPane(),
-                            Integer.toString(damage), Colors.DAMAGE_BLOCK);
+                    Window.appendText(Integer.toString(damage),
+                            Colors.DAMAGE_BLOCK);
                 } else {
-                    Window.addToPane(Window.getInstance().getTextPane(),
-                            Integer.toString(damage), Colors.DAMAGE);
+                    Window.appendText(Integer.toString(damage), Colors.DAMAGE);
                 }
                 break;
             case "weaponName":
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        Game.capitalizeFirstLetter(weapon.getName()));
+                Window.appendText(Game.capitalizeFirstLetter(weapon.getName()));
                 break;
             default:
-                Window.addToPane(Window.getInstance().getTextPane(), string);
+                Window.appendText(string);
                 break;
             }
         }
-        Window.appendToPane(Window.getInstance().getTextPane(), "");
+        Window.appendText("\n");
 
         // Apply attack effects if the attack hit
         if (weapon != null && attackHit) {
@@ -516,42 +512,38 @@ public class Entity extends Observable implements Serializable {
         for (String string : description) {
             switch (string) {
             case "userName":
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        attacker.getUseName());
+                Window.appendText(attacker.getUseName());
                 break;
             case "userNameCapital":
-                Window.addToPane(Window.getInstance().getTextPane(),
+                Window.appendText(
                         Game.capitalizeFirstLetter(attacker.getUseName()));
                 break;
             case "targetName":
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        this.getUseName());
+                Window.appendText(this.getUseName());
                 break;
             case "targetNameCapital":
-                Window.addToPane(Window.getInstance().getTextPane(),
+                Window.appendText(
                         Game.capitalizeFirstLetter(this.getUseName()));
                 break;
             case "damage":
                 if (damage == 0) {
-                    Window.addToPane(Window.getInstance().getTextPane(),
-                            Integer.toString(damage), Colors.DAMAGE_BLOCK);
+                    Window.appendText(Integer.toString(damage),
+                            Colors.DAMAGE_BLOCK);
                 } else {
-                    Window.addToPane(Window.getInstance().getTextPane(),
-                            Integer.toString(damage), Colors.DAMAGE);
+                    Window.appendText(Integer.toString(damage), Colors.DAMAGE);
                 }
                 break;
             case "weaponName":
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        Game.capitalizeFirstLetter(weapon.getName()));
+                Window.appendText(Game.capitalizeFirstLetter(weapon.getName()));
                 break;
             default:
-                Window.addToPane(Window.getInstance().getTextPane(), string);
+                Window.appendText(string);
                 break;
 
             }
 
         }
-        Window.appendToPane(Window.getInstance().getTextPane(), "");
+        Window.appendText("\n");
         // Apply weapon attack effects if weapon attack hit
         if (weapon != null && attackHit) {
             for (Effect effect : weapon.getAttackEffects()) {
@@ -682,33 +674,31 @@ public class Entity extends Observable implements Serializable {
         for (String string : description) {
             switch (string) {
             case "userName":
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        attacker.getUseName());
+                Window.appendText(attacker.getUseName());
                 break;
             case "userNameCapital":
-                Window.addToPane(Window.getInstance().getTextPane(),
+                Window.appendText(
                         Game.capitalizeFirstLetter(attacker.getUseName()));
                 break;
             case "targetName":
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        this.getUseName());
+                Window.appendText(this.getUseName());
                 break;
             case "targetNameCapital":
-                Window.addToPane(Window.getInstance().getTextPane(),
+                Window.appendText(
                         Game.capitalizeFirstLetter(this.getUseName()));
                 break;
             case "spellFocusName":
-                Window.addToPane(Window.getInstance().getTextPane(),
+                Window.appendText(
                         Game.capitalizeFirstLetter(spellFocus.getName()));
                 break;
             default:
-                Window.addToPane(Window.getInstance().getTextPane(), string);
+                Window.appendText(string);
                 break;
 
             }
 
         }
-        Window.appendToPane(Window.getInstance().getTextPane(), "");
+        Window.appendText("\n");
         // Apply spell attack effects if weapon attack hit
         if (spellFocus != null && spellHit) {
             for (Effect effect : spellFocus.getSpellEffects()) {
@@ -1634,19 +1624,17 @@ public class Entity extends Observable implements Serializable {
                     effect2.setEndTime(effect.getDuration()
                             + Time.getInstance().getTime());
                     if (this instanceof Player) {
-                        Window.appendToPane(Window.getInstance().getTextPane(),
-                                Game.capitalizeFirstLetter(
-                                        "You are already under the effects of "
-                                                + effect2.getName())
-                                        + ", duration increased");
+                        Window.appendText(Game.capitalizeFirstLetter(
+                                "You are already under the effects of "
+                                        + effect2.getName())
+                                + ", duration increased\n");
 
                     } else {
-                        Window.appendToPane(Window.getInstance().getTextPane(),
-                                Game.capitalizeFirstLetter(Game
-                                        .capitalizeFirstLetter(useName)
+                        Window.appendText(Game.capitalizeFirstLetter(
+                                Game.capitalizeFirstLetter(useName)
                                         + " is already under the effects of "
                                         + effect2.getName())
-                                        + ", duration increased");
+                                + ", duration increased\n");
 
                     }
 
@@ -1654,17 +1642,15 @@ public class Entity extends Observable implements Serializable {
             }
         } else {
             if (this instanceof Player) {
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        Game.capitalizeFirstLetter(
-                                "You are already under the effects of "
-                                        + effect.getName()));
+                Window.appendText(Game.capitalizeFirstLetter(
+                        "You are already under the effects of "
+                                + effect.getName()) + "\n");
 
             } else {
-                Window.appendToPane(Window.getInstance().getTextPane(),
-                        Game.capitalizeFirstLetter(
-                                Game.capitalizeFirstLetter(useName)
-                                        + " is already under the effects of "
-                                        + effect.getName()));
+                Window.appendText(Game.capitalizeFirstLetter(
+                        Game.capitalizeFirstLetter(useName)
+                                + " is already under the effects of "
+                                + effect.getName()) + "\n");
 
             }
 
@@ -2597,13 +2583,17 @@ public class Entity extends Observable implements Serializable {
     }
 
     /**
-      * Checks the specified stat against the given value with the given
+     * Checks the specified stat against the given value with the given
      * operator.
      * 
-     * @param flagName the name of the flag
-     * @param operator the operator to use
-     * @param value the value to compare to
-     * @param roll the roll
+     * @param flagName
+     *            the name of the flag
+     * @param operator
+     *            the operator to use
+     * @param value
+     *            the value to compare to
+     * @param roll
+     *            the roll
      * @return if the check passed or failed
      */
     public boolean checkFlag(String flagName, String operator, int value,
@@ -2629,6 +2619,7 @@ public class Entity extends Observable implements Serializable {
 
     /**
      * Gets the stat from the given string.
+     * 
      * @param statName
      * @return the stat as a double
      */
@@ -2727,7 +2718,9 @@ public class Entity extends Observable implements Serializable {
 
     /**
      * Gets the specified flags value.
-     * @param flag the flag to get
+     * 
+     * @param flag
+     *            the flag to get
      * @return the value of the flag
      */
     public int getFlagValue(String flag) {
@@ -2739,9 +2732,13 @@ public class Entity extends Observable implements Serializable {
 
     /**
      * Sets a flag with the specified operator and value
-     * @param flag the flag to set
-     * @param operator the operator to use
-     * @param value the value to modify by
+     * 
+     * @param flag
+     *            the flag to set
+     * @param operator
+     *            the operator to use
+     * @param value
+     *            the value to modify by
      */
     public void setFlag(String flag, String operator, int value) {
         switch (operator) {
@@ -2766,7 +2763,9 @@ public class Entity extends Observable implements Serializable {
 
     /**
      * Check if an item is equipped.
-     * @param itemName the name of the item to check for
+     * 
+     * @param itemName
+     *            the name of the item to check for
      * @return if the item is equipped
      */
     public boolean checkIfEquipped(String itemName) {
@@ -2783,7 +2782,9 @@ public class Entity extends Observable implements Serializable {
 
     /**
      * Check if an item is in the players inventory.
-     * @param itemName the name of the item to check for
+     * 
+     * @param itemName
+     *            the name of the item to check for
      * @return if the item is in the players inventroy
      */
     public boolean checkIfInInventory(String itemName) {
@@ -2794,9 +2795,12 @@ public class Entity extends Observable implements Serializable {
         }
         return false;
     }
+
     /**
      * Checks if the player is under the given effect.
-     * @param effectName the name of the effect to look for
+     * 
+     * @param effectName
+     *            the name of the effect to look for
      * @return if the player is under that effect.
      */
     public boolean checkIfEffected(String effectName) {
@@ -2810,7 +2814,9 @@ public class Entity extends Observable implements Serializable {
 
     /**
      * Checks if the player knows the given spell.
-     * @param spellName the name of the spell to look for
+     * 
+     * @param spellName
+     *            the name of the spell to look for
      * @return if the player knows the spell
      */
     public boolean checkIfSpell(String spellName) {
@@ -2825,7 +2831,9 @@ public class Entity extends Observable implements Serializable {
 
     /**
      * Checks if the player knows the given skill.
-     * @param skillName the name of the skill to check for
+     * 
+     * @param skillName
+     *            the name of the skill to check for
      * @return if the player has the skil
      */
     public boolean checkIfSkill(String skillName) {
@@ -2840,15 +2848,21 @@ public class Entity extends Observable implements Serializable {
 
     /**
      * Sets a flags value.
-     * @param flag the flag to set
-     * @param value the value to set
+     * 
+     * @param flag
+     *            the flag to set
+     * @param value
+     *            the value to set
      */
     public void setFlagValue(String flag, int value) {
         flags.put(flag, value);
     }
+
     /**
      * Adds an entity listener to the entity.
-     * @param listener the listener to add
+     * 
+     * @param listener
+     *            the listener to add
      */
     public void addEntityListener(EntityListener listener) {
         entityListeners.add(listener);
@@ -2856,7 +2870,9 @@ public class Entity extends Observable implements Serializable {
 
     /**
      * Removes an entity listener from the entity.
-     * @param listener the listener to remove
+     * 
+     * @param listener
+     *            the listener to remove
      */
     public void removeEntityListener(EntityListener listener) {
         entityListeners.remove(listener);

@@ -369,12 +369,10 @@ public abstract class Effect implements Serializable {
 
         switch (string) {
         case "targetName":
-            Window.addToPane(Window.getInstance().getTextPane(),
-                    owner.getUseName());
+            Window.appendText(owner.getUseName());
             break;
         case "targetNameCapital":
-            Window.addToPane(Window.getInstance().getTextPane(),
-                    Game.capitalizeFirstLetter(owner.getUseName()));
+            Window.appendText(Game.capitalizeFirstLetter(owner.getUseName()));
             break;
         default:
             return false;
@@ -434,10 +432,10 @@ public abstract class Effect implements Serializable {
         }
         for (String string : description) {
             if (!printSharedDescription(string)) {
-                Window.addToPane(Window.getInstance().getTextPane(), string);
+                Window.appendText(string);
             }
         }
-        Window.appendToPane(Window.getInstance().getTextPane(), "");
+        Window.appendText("\n");
     }
 
     /**
@@ -545,7 +543,8 @@ public abstract class Effect implements Serializable {
     /**
      * Builds an Effect from the given XML element and returns it.
      * 
-     * @param element the element to build an effect out of
+     * @param element
+     *            the element to build an effect out of
      * @return the built effect
      */
     public static Effect buildEffect(Element element) {
@@ -743,6 +742,7 @@ public abstract class Effect implements Serializable {
 
     /**
      * Returns the effects end time.
+     * 
      * @return the endTime
      */
     public int getEndTime() {
@@ -751,6 +751,7 @@ public abstract class Effect implements Serializable {
 
     /**
      * Sets the effects end time.
+     * 
      * @param endTime
      *            the endTime to set
      */

@@ -290,8 +290,8 @@ public class Item implements Serializable {
                 if (newSkill != null) {
                     addSkill(newSkill);
                 } else {
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "ERROR: Somthing went wrong while creating a skill. See game.log for more information.");
+                    Window.appendText(
+                            "ERROR: Somthing went wrong while creating a skill. See game.log for more information.\n");
                 }
                 break;
             case "spell":
@@ -299,8 +299,8 @@ public class Item implements Serializable {
                 if (newSpell != null) {
                     addSpell(newSpell);
                 } else {
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "ERROR: Somthing went wrong while creating a spell. See game.log for more information.");
+                    Window.appendText(
+                            "ERROR: Somthing went wrong while creating a spell. See game.log for more information.\n");
                 }
                 break;
             case "equipSkill":
@@ -308,8 +308,8 @@ public class Item implements Serializable {
                 if (newEquipSkill != null) {
                     addEquipSkill(newEquipSkill);
                 } else {
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "ERROR: Somthing went wrong while creating a skill. See game.log for more information.");
+                    Window.appendText(
+                            "ERROR: Somthing went wrong while creating a skill. See game.log for more information.\n");
                 }
                 break;
             case "equipSpell":
@@ -317,8 +317,8 @@ public class Item implements Serializable {
                 if (newEquipSpell != null) {
                     addEquipSpell(newEquipSpell);
                 } else {
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "ERROR: Somthing went wrong while creating a spell. See game.log for more information.");
+                    Window.appendText(
+                            "ERROR: Somthing went wrong while creating a spell. See game.log for more information.\n");
                 }
                 break;
 
@@ -520,8 +520,7 @@ public class Item implements Serializable {
         }
         uses--;
         if (uses <= 0 && maxUses > 0) {
-            Window.appendToPane(Window.getInstance().getTextPane(),
-                    getName() + " has run out of uses");
+            Window.appendText(getName() + " has run out of uses\n");
         }
     }
 

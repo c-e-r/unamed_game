@@ -172,27 +172,25 @@ public final class Enemy extends Entity {
         for (String string : itemDescription) {
             switch (string) {
             case "userName":
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        user.getUseName());
+                Window.appendText(user.getUseName());
                 break;
             case "userNameCapital":
-                Window.addToPane(Window.getInstance().getTextPane(),
+                Window.appendText(
                         Game.capitalizeFirstLetter(user.getUseName()));
                 break;
             case "targetName":
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        this.getUseName());
+                Window.appendText(this.getUseName());
                 break;
             case "targetNameCapital":
-                Window.addToPane(Window.getInstance().getTextPane(),
+                Window.appendText(
                         Game.capitalizeFirstLetter(this.getUseName()));
                 break;
             default:
-                Window.addToPane(Window.getInstance().getTextPane(), string);
+                Window.appendText(string);
                 break;
             }
         }
-        Window.appendToPane(Window.getInstance().getTextPane(), "");
+        Window.appendText("\n");
 
         item.use(user, this);
 
@@ -418,8 +416,8 @@ public final class Enemy extends Entity {
                     addKnownSpell(newSpell);
 
                 } else {
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "ERROR: Somthing went wrong while creating a spell. See game.log for more information.");
+                    Window.appendText(
+                            "ERROR: Somthing went wrong while creating a spell. See game.log for more information.\n");
                 }
                 break;
             case "item":
@@ -455,8 +453,8 @@ public final class Enemy extends Entity {
                         }
                     }
                 } else {
-                    Window.appendToPane(Window.getInstance().getTextPane(),
-                            "ERROR: Somthing went wrong when adding an item to the enemies inventory. See game.log for more information.");
+                    Window.appendText(
+                            "ERROR: Somthing went wrong when adding an item to the enemies inventory. See game.log for more information.\n");
                 }
                 reloadSkills();
                 break;

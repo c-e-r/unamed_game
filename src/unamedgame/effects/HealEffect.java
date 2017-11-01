@@ -107,20 +107,18 @@ public class HealEffect extends Effect {
         for (String string : descriptionArray) {
             switch (string) {
             case "totalHeal":
-                Window.addToPane(Window.getInstance().getTextPane(),
-                        Integer.toString(totalHeal), Colors.HEAL);
+                Window.appendText(Integer.toString(totalHeal), Colors.HEAL);
                 break;
             default:
                 if (!printSharedDescription(string)) {
-                    Window.addToPane(Window.getInstance().getTextPane(),
-                            string);
+                    Window.appendText(string);
 
                 }
                 break;
             }
 
         }
-        Window.appendToPane(Window.getInstance().getTextPane(), "");
+        Window.appendText("\n");
 
     }
 
