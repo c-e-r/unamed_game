@@ -173,6 +173,8 @@ public final class Player extends Entity implements Serializable {
         int expToGain = 0;
         int expRemainder = 0;
         expGain *= expMult;
+        Window.appendToPane(Window.getInstance().getTextPane(),
+                "You gained " + expGain + " exp.");
         while (expGain > 0) {
             if (exp + expGain > expToNextLevel) {
                 expRemainder = exp + expGain - expToNextLevel;
@@ -188,7 +190,6 @@ public final class Player extends Entity implements Serializable {
                 increaseLevel();
             }
         }
-
     }
 
     /**
@@ -425,9 +426,12 @@ public final class Player extends Entity implements Serializable {
     }
 
     /**
-     *Equip the specified item to the specified hand. 
-     * @param hand the hand to equip to
-     * @param toEquip the item to equip
+     * Equip the specified item to the specified hand.
+     * 
+     * @param hand
+     *            the hand to equip to
+     * @param toEquip
+     *            the item to equip
      */
     public void equipToHand(int hand, Item toEquip) {
         hand = hand == 1 ? EquipmentIndex.LEFT_HAND.getValue()
@@ -458,8 +462,11 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Hold the specified item in the specified hand.
-     * @param hand to hold the item in
-     * @param toEquip the item to hold
+     * 
+     * @param hand
+     *            to hold the item in
+     * @param toEquip
+     *            the item to hold
      */
     public void equipToHeld(int hand, Item toEquip) {
         if (hand != 3) {
@@ -539,6 +546,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Returns the players stat points.
+     * 
      * @return the statPoints
      */
     public int getStatPoints() {
@@ -547,6 +555,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Sets the players stat points.
+     * 
      * @param statPoints
      *            the statPoints to set
      */
@@ -556,6 +565,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Returns the players newVitality.
+     * 
      * @return the newVitality
      */
     public int getNewVitality() {
@@ -564,6 +574,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Sets the players newVitality.
+     * 
      * @param newVitality
      *            the newVitality to set
      */
@@ -573,6 +584,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Retuens the platers newStrength.
+     * 
      * @return the newStrength
      */
     public int getNewStrength() {
@@ -581,6 +593,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Sets the players newStrength.
+     * 
      * @param newStrength
      *            the newStrength to set
      */
@@ -590,6 +603,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Returns the players newDexterity.
+     * 
      * @return the newDexterity
      */
     public int getNewDexterity() {
@@ -598,6 +612,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Sets the players newDexterity.
+     * 
      * @param newDexterity
      *            the newDexterity to set
      */
@@ -607,6 +622,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Returns the players new intellect.
+     * 
      * @return the newIntellect
      */
     public int getNewIntellect() {
@@ -615,6 +631,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Sets the players newIntellect.
+     * 
      * @param newIntellect
      *            the newIntellect to set
      */
@@ -624,6 +641,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Returns the players newSpirit.
+     * 
      * @return the newSpirit
      */
     public int getNewSpirit() {
@@ -632,6 +650,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Sets the players newSpirit.
+     * 
      * @param newSpirit
      *            the newSpirit to set
      */
@@ -640,7 +659,8 @@ public final class Player extends Entity implements Serializable {
     }
 
     /**
-     *Returns the players newLuck.
+     * Returns the players newLuck.
+     * 
      * @return the newLuck
      */
     public int getNewLuck() {
@@ -649,6 +669,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Sets the players newLuck.
+     * 
      * @param newLuck
      *            the newLuck to set
      */
@@ -658,6 +679,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Returns the players newStatPoints.
+     * 
      * @return the newStatPoints
      */
     public int getNewStatPoints() {
@@ -666,6 +688,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Sets the players newstatPoints.
+     * 
      * @param newStatPoints
      *            the newStatPoints to set
      */
@@ -675,6 +698,7 @@ public final class Player extends Entity implements Serializable {
 
     /**
      * Returns the players level.
+     * 
      * @return the level
      */
     public int getLevel() {

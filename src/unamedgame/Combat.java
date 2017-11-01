@@ -519,10 +519,10 @@ public class Combat {
      */
     private void endCombatWin() {
         inCombat = false;
-        player.gainExp(enemy.getExpValue());
         Window.clearPane(Window.getInstance().getSidePane());
         Window.appendToPane(Window.getInstance().getTextPane(),
                 enemy.getDeathDescription());
+        player.gainExp(enemy.getExpValue());
         if (enemy.getInventory().size() != 0) {
             Window.appendToPane(Window.getInstance().getTextPane(),
                     Game.capitalizeFirstLetter(enemy.getUseName())
