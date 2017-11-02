@@ -2,10 +2,12 @@
 <event>
     <branch number = '0'>
         <text>line 0 </text>
+        <useItem user='testEnemy'>dot</useItem>
+        <removeItemUse>test item</removeItemUse>
         <addSkill>testSkill</addSkill>
         <addSpell>testSpell</addSpell>
         <addEffect 
-            name='dotDot' 
+            name='notDot?' 
             magnitude='2' 
             duration='10000'
             increment='1'
@@ -37,6 +39,9 @@
                 playerResistRepeatEffectDescription='KYou resisted the effect this turn'
             >damage</effect>
         </addEffect>
+        <ifItemUses itemName='test item' operator='=' value='1'>
+            <text>test item has 1 use</text>
+        </ifItemUses>
         <ifRoll roll='2' operator='=' value='1'>
             <text>roll pass</text>
         </ifRoll>
@@ -76,6 +81,9 @@
             <choiceDescription>You have choices</choiceDescription>
             <option branch='1'>choice 1</option>
             <option branch='3'>choice 2</option>
+            <ifItemUses itemName='test item' operator='=' value='1'>
+                <option branch='3'>test item use choice</option>
+            </ifItemUses>
             <ifRoll roll='2' operator='=' value='1'>
                 <option branch='3'>choice roll</option>
             </ifRoll>

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Observable;
 
 import org.apache.logging.log4j.LogManager;
@@ -1644,13 +1645,15 @@ public class Entity extends Observable implements Serializable {
             if (this instanceof Player) {
                 Window.appendText(Game.capitalizeFirstLetter(
                         "You are already under the effects of "
-                                + effect.getName()) + "\n");
+                                + effect.getName())
+                        + "\n");
 
             } else {
                 Window.appendText(Game.capitalizeFirstLetter(
                         Game.capitalizeFirstLetter(useName)
                                 + " is already under the effects of "
-                                + effect.getName()) + "\n");
+                                + effect.getName())
+                        + "\n");
 
             }
 
@@ -2785,11 +2788,52 @@ public class Entity extends Observable implements Serializable {
      * 
      * @param itemName
      *            the name of the item to check for
-     * @return if the item is in the players inventroy
+     * @return if the item is in the players inventory
      */
     public boolean checkIfInInventory(String itemName) {
         for (Item item : inventory) {
             if (item.getName().equals(itemName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if an item is in the players inventory and has at least one use
+     * left
+     * 
+     * @param itemName
+     *            the name of the item to check for
+     * @return if the item is in the players inventory
+     */
+    public boolean checkIfItemUses(String itemName, String operator,
+            int value) {
+        for (Item item : inventory) {
+            if (item.getName().equals(itemName)) {
+                switch (operator) {
+                case "=":
+                    if (item.getUses() == value)
+                        return true;
+                    break;
+                case "<":
+                    if (item.getUses() < value)
+                        return true;
+                    break;
+                case ">":
+                    if (item.getUses() > value)
+                        return true;
+                    break;
+                case "<=":
+                    if (item.getUses() <= value)
+                        return true;
+                    break;
+                case ">=":
+                    if (item.getUses() >= value)
+                        return true;
+                    break;
+                default:
+                }
                 return true;
             }
         }
@@ -2856,6 +2900,51 @@ public class Entity extends Observable implements Serializable {
      */
     public void setFlagValue(String flag, int value) {
         flags.put(flag, value);
+    }
+
+    public boolean removeItemFromInventory(String itemName) {
+        ListIterator<Item> itr = inventory.listIterator();
+        while (itr.hasNext()) {
+            if (itr.next().getName().equals(itemName)) {
+                itr.remove();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean removeItemUse(String itemName) {
+        ListIterator<Item> itr = inventory.listIterator();
+        Item item;
+        while (itr.hasNext()) {
+            if ((item = itr.next()).getName().equals(itemName)) {
+                item.removeUse();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean removeSkillFromInnateSkills(String skillName) {
+        ListIterator<Skill> itr = innateSkills.listIterator();
+        while (itr.hasNext()) {
+            if (itr.next().getName().equals(skillName)) {
+                itr.remove();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean removeSpellFromKnownSpells(String spellName) {
+        ListIterator<Spell> itr = knownSpells.listIterator();
+        while (itr.hasNext()) {
+            if (itr.next().getName().equals(spellName)) {
+                itr.remove();
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

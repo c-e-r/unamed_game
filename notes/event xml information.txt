@@ -3,10 +3,19 @@ All event require a 0 branch and an end point
 <event> root element
     <branch>                events will always start at branch 0. options can lead to other branches. branches contain all other elements
         number=''           the branch's identifying number.
+        
         <text>              the text will be printed to the text pane
         <addItem>           adds the specified item to the players inventory
+        <useItem>           builds an item from the given filename and uses it on the player
+            user=''         the entity that uses the item. defaults to player if none are specified
+            
+        <removeItem>        the first item found of the given name will be removed from the players inventory
+        <removeItemUse>     the first item found of the given name that has at least one use will have 1 use taken away
+        <useItem>           creates an item from the item name and uses it on the player
         <addSkill>          adds the specified skill to the players innate skill list
+        <removeSkill>       the first skill found of the given name will be removed from the players innate skills
         <addSpell>          adds the specified spell to the players known spell list
+        <removeSpell>       the first spell found of the given name will be removed from the players known spells
         <addEffect>         creates an effect from the element and applies it to the player. See effect xml information for more information
         <combat>            starts combat with the specified enemy
         <goto>              goes to the specified branch
@@ -56,6 +65,10 @@ All event require a 0 branch and an end point
         <ifItem>            check if an item of the given name is in the players inventory
             itemName=''     the name of the item to check for
             not=''          if set to true will check if an item is not in the players inventory
+        <ifItemUses>        check the amount of uses an item has against a value. is true if at least one item of that name in the players inventory passes the check
+            itemName=''     the name of the item to check for
+            operator=''     the operator to use for the check. valid values are =,<=,>=,!=, <, >. NOTE: < and > characters need to be escaped with '&lt;' and '&gt;'
+            value=''        the value to check against
         <ifSkill>           check if the player has a skill of the given name
             itemName=''     the name of the skill to check for
             not=''          if set to true will check if the player does not have the skill

@@ -208,6 +208,26 @@ public class EventReader {
                         "ERROR: Something went wrong adding an item to your inventory. See game.log for more information.\n");
             }
             break;
+        case "removeItem":
+            if (Player.getInstance()
+                    .removeItemFromInventory(element.getText())) {
+                Window.appendText(Game.capitalizeFirstLetter(
+                        element.getText() + " removed from inventory.\n"));
+            }
+            break;
+        case "removeItemUse":
+            Player.getInstance().removeItemUse(element.getText());
+            nextElement();
+            interpretElement(currentElement);
+            break;
+        case "useItem":
+            Item newUseItem = Item.buildItem(element.getText());
+            if(element.attributeValue("user") != null) {
+                Player.getInstance().applyItemEffects(newUseItem, Enemy.buildEnemy(element.attributeValue("user")));
+            } else {
+                Player.getInstance().applyItemEffects(newUseItem, Player.getInstance());
+            }
+            break;
         case "addSkill":
             Skill newSkill = Skill.buildSkill(element.getText());
             if (newSkill != null) {
@@ -219,6 +239,13 @@ public class EventReader {
                         "ERROR: Something went wrong adding a skill to your innate skills. See game.log for more information.\n");
             }
             break;
+        case "removeSkill":
+            if (Player.getInstance()
+                    .removeSkillFromInnateSkills(element.getText())) {
+                Window.appendText(Game.capitalizeFirstLetter(element.getText()
+                        + " has been removed from innate skills."));
+            }
+            break;
         case "addSpell":
             Spell newSpell = Spell.buildSpell(element.getText());
             if (newSpell != null) {
@@ -228,6 +255,13 @@ public class EventReader {
             } else {
                 Window.appendText(
                         "ERROR: Something went wrong adding a spell to your known spells. See game.log for more information.\n");
+            }
+            break;
+        case "removeSpell":
+            if (Player.getInstance()
+                    .removeSpellFromKnownSpells(element.getText())) {
+                Window.appendText(Game.capitalizeFirstLetter(element.getText()
+                        + " has been removed from known spells."));
             }
             break;
         case "addEffect":
@@ -338,6 +372,18 @@ public class EventReader {
             not = Boolean.parseBoolean(element.attributeValue("not"));
             String itemName = element.attributeValue("itemName");
             if (not ^ !Player.getInstance().checkIfInInventory(itemName)) {
+                skipChildren = true;
+            }
+            nextElement();
+            interpretElement(currentElement);
+            break;
+        case "ifItemUses":
+            String itemUsesName = element.attributeValue("itemName");
+            int itemUsesValue = Integer
+                    .parseInt(element.attributeValue("value"));
+            String itemUsesOperator = element.attributeValue("operator");
+            if (!Player.getInstance().checkIfItemUses(itemUsesName,
+                    itemUsesOperator, itemUsesValue)) {
                 skipChildren = true;
             }
             nextElement();
@@ -589,6 +635,33 @@ public class EventReader {
                     choices.addAll(getAllIfOptions(n));
                 }
             }
+        }
+        List<Node> ifItemUsesChoices = node.selectNodes("ifItemUses");
+        for (Node n : ifItemUsesChoices) {
+            if (n != null) {
+                if (((Element) n).attributeValue("roll") != null) {
+                    roll = Integer
+                            .parseInt(((Element) n).attributeValue("roll"));
+                } else {
+                    roll = 0;
+                }
+                int value = Integer
+                        .parseInt(((Element) n).attributeValue("value"));
+                String operator = ((Element) n).attributeValue("operator");
+                String itemName = ((Element) n).attributeValue("itemName");
+                if (Player.getInstance().checkIfItemUses(itemName, operator,
+                        value)) {
+                    choices.addAll(n.selectNodes("option"));
+
+                    List<Node> innerIfChoices = n
+                            .selectNodes("./*[starts-with(name(), 'if')]");
+                    if (innerIfChoices.size() != 0) {
+                        choices.addAll(getAllIfOptions(n));
+                    }
+                }
+
+            }
+
         }
         List<Node> ifSkillChoices = node.selectNodes("ifSkill");
         for (Node n : ifSkillChoices) {

@@ -519,8 +519,14 @@ public class Item implements Serializable {
             }
         }
         uses--;
-        if (uses <= 0 && maxUses > 0) {
+        if (uses <= 0 && maxUses > 0 && user instanceof Player) {
             Window.appendText(getName() + " has run out of uses\n");
+        }
+    }
+
+    public void removeUse() {
+        if (uses > 0) {
+            uses--;
         }
     }
 

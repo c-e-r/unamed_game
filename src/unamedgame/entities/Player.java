@@ -271,6 +271,7 @@ public final class Player extends Entity implements Serializable {
 
         return item;
     }
+    
 
     /**
      * Equips the item at the item index removing other equipment if needed.
