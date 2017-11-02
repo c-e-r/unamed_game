@@ -294,7 +294,6 @@ public class EventReader {
             double value = Double.parseDouble(element.attributeValue("value"));
             String operator = element.attributeValue("operator");
             String stat = element.attributeValue("stat");
-            System.out.println(roll);
             if (!Player.getInstance().checkStat(stat, operator, value, roll)) {
                 skipChildren = true;
             }

@@ -2878,7 +2878,7 @@ public class Entity extends Observable implements Serializable {
      * 
      * @param skillName
      *            the name of the skill to check for
-     * @return if the player has the skil
+     * @return if the player has the skill
      */
     public boolean checkIfSkill(String skillName) {
         reloadSkills();

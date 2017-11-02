@@ -60,7 +60,7 @@ All event require a 0 branch and an end point
             itemName=''     the name of the item to check for
             not=''          if set to true will check if an item is not equipped
         <ifEffect>          check if an effect of the given name is currently on the player
-            itemName=''     the name of the effect to check for
+            effectName=''     the name of the effect to check for
             not=''          if set to true will check if the effect is not there
         <ifItem>            check if an item of the given name is in the players inventory
             itemName=''     the name of the item to check for
@@ -70,9 +70,9 @@ All event require a 0 branch and an end point
             operator=''     the operator to use for the check. valid values are =,<=,>=,!=, <, >. NOTE: < and > characters need to be escaped with '&lt;' and '&gt;'
             value=''        the value to check against
         <ifSkill>           check if the player has a skill of the given name
-            itemName=''     the name of the skill to check for
+            skillName=''     the name of the skill to check for
             not=''          if set to true will check if the player does not have the skill
         <ifSpell>           check if the player has a spell of the given name
-            itemName=''     the name of the spell to check for
+            spellName=''     the name of the spell to check for
             not=''          if set to true will check if the player does not have the spell
         <end>               ends the event

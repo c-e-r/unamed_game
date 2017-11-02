@@ -1,0 +1,6 @@
+<event>
+    <branch  number='0'>
+        <text>You didn't qualify for any events.</text>
+        <end/>
+    </branch>
+</event>
