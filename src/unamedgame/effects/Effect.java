@@ -639,7 +639,7 @@ public abstract class Effect implements Serializable {
                     element.attributeValue("playerResistEffectDescription"),
                     element.attributeValue("resistRepeatEffectDescription"),
                     element.attributeValue(
-                            "repeatResistRepeatEffectDescription"),
+                            "playerResistRepeatEffectDescription"),
                     element.attributeValue("selfDestructTrigger"),
                     element.attributeValue("selfDestructDescription"),
                     element.attributeValue("playerSelfDestructDescription"),

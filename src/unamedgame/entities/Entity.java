@@ -893,194 +893,118 @@ public class Entity extends Observable implements Serializable {
     public void increaseModifier(String stat, int modifier) {
         switch (stat) {
         case "vitality":
-            if (modifier > vitalityBonus) {
-                vitalityBonus = modifier;
-            }
+            vitalityBonus += modifier;
             break;
         case "strength":
-            if (modifier > strengthBonus) {
-                strengthBonus = modifier;
-            }
+            strengthBonus += modifier;
             break;
         case "dexterity":
-            if (modifier > dexterityBonus) {
-                dexterityBonus = modifier;
-            }
+            dexterityBonus += modifier;
             break;
         case "intellect":
-            if (modifier > intellectBonus) {
-                intellectBonus = modifier;
-            }
+            intellectBonus += modifier;
             break;
         case "spirit":
-            if (modifier > spiritBonus) {
-                spiritBonus = modifier;
-            }
+            spiritBonus += modifier;
             break;
         case "luck":
-            if (modifier > luckBonus) {
-                luckBonus = modifier;
-            }
+            luckBonus += modifier;
             break;
         case "health":
-            if (modifier > maxHealthBonus) {
-                maxHealthBonus = modifier;
-            }
+            maxHealthBonus += modifier;
             break;
         case "stamina":
-            if (modifier > maxStaminaBonus) {
-                maxStaminaBonus = modifier;
-            }
+            maxStaminaBonus += modifier;
             break;
         case "mana":
-            if (modifier > maxManaBonus) {
-                maxManaBonus = modifier;
-            }
+            maxManaBonus += modifier;
             break;
         case "speed":
-            if (modifier > speedBonus) {
-                speedBonus = modifier;
-            }
+            speedBonus += modifier;
             break;
         case "hit":
-            if (modifier > hitBonus) {
-                hitBonus = modifier;
-            }
+            hitBonus += modifier;
             break;
         case "dodge":
-            if (modifier > dodgeBonus) {
-                dodgeBonus = modifier;
-            }
+            dodgeBonus += modifier;
             break;
         case "slashingReduction":
-            if (modifier > slashingReductionBonus) {
-                slashingReductionBonus = modifier;
-            }
+            slashingReductionBonus += modifier;
             break;
         case "piercingReduction":
-            if (modifier > piercingReductionBonus) {
-                piercingReductionBonus = modifier;
-            }
+            piercingReductionBonus += modifier;
             break;
         case "bludgeoningReduction":
-            if (modifier > bludgeoningReductionBonus) {
-                bludgeoningReductionBonus = modifier;
-            }
+            bludgeoningReductionBonus += modifier;
             break;
         case "fireReduction":
-            if (modifier > fireReductionBonus) {
-                fireReductionBonus = modifier;
-            }
+            fireReductionBonus += modifier;
             break;
         case "coldReduction":
-            if (modifier > coldReductionBonus) {
-                coldReductionBonus = modifier;
-            }
+            coldReductionBonus += modifier;
             break;
         case "electricityReduction":
-            if (modifier > electricityReductionBonus) {
-                electricityReductionBonus = modifier;
-            }
+            electricityReductionBonus += modifier;
             break;
         case "sacredReduction":
-            if (modifier > sacredReductionBonus) {
-                sacredReductionBonus = modifier;
-            }
+            sacredReductionBonus += modifier;
             break;
         case "profaneReduction":
-            if (modifier > profaneReductionBonus) {
-                profaneReductionBonus = modifier;
-            }
+            profaneReductionBonus += modifier;
             break;
         case "poisonReduction":
-            if (modifier > poisonReductionBonus) {
-                poisonReductionBonus = modifier;
-            }
+            poisonReductionBonus += modifier;
             break;
         case "slashingResistance":
-            if (modifier > slashingResistanceBonus) {
-                slashingResistanceBonus = modifier;
-            }
+            slashingResistanceBonus += modifier;
             break;
         case "piercingResistance":
-            if (modifier > piercingResistanceBonus) {
-                piercingResistanceBonus = modifier;
-            }
+            piercingResistanceBonus += modifier;
             break;
         case "bludgeoningResistance":
-            if (modifier > bludgeoningResistanceBonus) {
-                bludgeoningResistanceBonus = modifier;
-            }
+            bludgeoningResistanceBonus += modifier;
             break;
         case "fireResistance":
-            if (modifier > fireResistanceBonus) {
-                fireResistanceBonus = modifier;
-            }
+            fireResistanceBonus += modifier;
             break;
         case "coldResitance":
-            if (modifier > coldResistanceBonus) {
-                coldResistanceBonus = modifier;
-            }
+            coldResistanceBonus += modifier;
             break;
         case "electricityResistance":
-            if (modifier > electricityResistanceBonus) {
-                electricityResistanceBonus = modifier;
-            }
+            electricityResistanceBonus += modifier;
             break;
         case "sacredResistance":
-            if (modifier > sacredResistanceBonus) {
-                sacredResistanceBonus = modifier;
-            }
+            sacredResistanceBonus += modifier;
             break;
         case "profaneResistance":
-            if (modifier > profaneResistanceBonus) {
-                profaneResistanceBonus = modifier;
-            }
+            profaneResistanceBonus += modifier;
             break;
         case "poisonResistance":
-            if (modifier > poisonResistanceBonus) {
-                poisonResistanceBonus = modifier;
-            }
+            poisonResistanceBonus += modifier;
             break;
         case "hitMult":
-            if (modifier > hitMultBonus) {
-                hitMultBonus = modifier;
-            }
+            hitMultBonus += modifier;
             break;
         case "damageMult":
-            if (modifier > damageMultBonus) {
-                damageMultBonus = modifier;
-            }
+            damageMultBonus += modifier;
             break;
         case "healMult":
-            if (modifier > healMultBonus) {
-                healMultBonus = modifier;
-            }
+            healMultBonus += modifier;
             break;
         case "carryCapacitys":
-            if (modifier > carryCapacityBonus) {
-                carryCapacityBonus = modifier;
-            }
+            carryCapacityBonus += modifier;
             break;
         case "mentalChanceMult":
-            if (modifier > mentalChanceMultBonus) {
-                mentalChanceMultBonus = modifier;
-            }
+            mentalChanceMultBonus += modifier;
             break;
         case "physicalChanceMult":
-            if (modifier > physicalChanceMultBonus) {
-                physicalChanceMultBonus = modifier;
-            }
+            physicalChanceMultBonus += modifier;
             break;
         case "mentalResistance":
-            if (modifier > mentalResistanceBonus) {
-                mentalResistanceBonus = modifier;
-            }
+            mentalResistanceBonus += modifier;
             break;
         case "physicalResistance":
-            if (modifier > physicalResistanceBonus) {
-                physicalResistanceBonus = modifier;
-            }
+            physicalResistanceBonus += modifier;
             break;
         default:
             break;
@@ -1098,198 +1022,123 @@ public class Entity extends Observable implements Serializable {
     public void decreaseModifier(String stat, int modifier) {
         switch (stat) {
         case "vitality":
-            if (modifier > vitalityPenalty) {
-                vitalityPenalty = modifier;
-            }
+                vitalityPenalty += modifier;
             break;
         case "strength":
-            if (modifier > strengthPenalty) {
-                strengthPenalty = modifier;
-            }
+                strengthPenalty += modifier;
             break;
         case "dexterity":
-            if (modifier > dexterityPenalty) {
-                dexterityPenalty = modifier;
-            }
+                dexterityPenalty += modifier;
             break;
         case "intellect":
-            if (modifier > intellectPenalty) {
-                intellectPenalty = modifier;
-            }
+                intellectPenalty += modifier;
             break;
         case "spirit":
-            if (modifier > spiritPenalty) {
-                spiritPenalty = modifier;
-            }
+                spiritPenalty += modifier;
             break;
         case "luck":
-            if (modifier > luckPenalty) {
-                luckPenalty = modifier;
-            }
+                luckPenalty += modifier;
             break;
         case "health":
-            if (modifier > maxHealthPenalty) {
                 maxHealthPenalty += modifier;
-            }
             break;
         case "stamina":
-            if (modifier > maxStaminaPenalty) {
                 maxStaminaPenalty += modifier;
-            }
             break;
         case "mana":
-            if (modifier > maxManaPenalty) {
                 maxManaPenalty += modifier;
-            }
             break;
         case "speed":
-            if (modifier > speedPenalty) {
-                speedPenalty = modifier;
-            }
+                speedPenalty += modifier;
             break;
         case "hit":
-            if (modifier > hitPenalty) {
                 hitPenalty = modifier;
-            }
             break;
         case "dodge":
-            if (modifier > dodgePenalty) {
                 dodgePenalty = modifier;
-            }
             break;
         case "slashingReduction":
-            if (modifier > slashingReductionPenalty) {
-                slashingReductionPenalty = modifier;
-            }
+                slashingReductionPenalty += modifier;
             break;
         case "piercingReduction":
-            if (modifier > piercingReductionPenalty) {
-                piercingReductionPenalty = modifier;
-            }
+                piercingReductionPenalty += modifier;
             break;
         case "bludgeoningReduction":
-            if (modifier > bludgeoningReductionPenalty) {
-                bludgeoningReductionPenalty = modifier;
-            }
+                bludgeoningReductionPenalty += modifier;
             break;
         case "fireReduction":
-            if (modifier > fireReductionPenalty) {
-                fireReductionPenalty = modifier;
-            }
+                fireReductionPenalty += modifier;
             break;
         case "coldReduction":
-            if (modifier > coldReductionPenalty) {
-                coldReductionPenalty = modifier;
-            }
+                coldReductionPenalty += modifier;
             break;
         case "electricityReduction":
-            if (modifier > electricityReductionPenalty) {
-                electricityReductionPenalty = modifier;
-            }
+                electricityReductionPenalty += modifier;
             break;
         case "sacredReduction":
-            if (modifier > sacredReductionPenalty) {
-                sacredReductionPenalty = modifier;
-            }
+                sacredReductionPenalty += modifier;
             break;
         case "profaneReduction":
-            if (modifier > profaneReductionPenalty) {
-                profaneReductionPenalty = modifier;
-            }
+                profaneReductionPenalty += modifier;
             break;
         case "poisonReduction":
-            if (modifier > poisonReductionPenalty) {
-                poisonReductionPenalty = modifier;
-            }
+                poisonReductionPenalty += modifier;
             break;
         case "slashingResistance":
-            if (modifier > slashingResistancePenalty) {
-                slashingResistancePenalty = modifier;
-            }
+                slashingResistancePenalty += modifier;
             break;
         case "piercingResistance":
-            if (modifier > piercingResistancePenalty) {
-                piercingResistancePenalty = modifier;
-            }
+                piercingResistancePenalty += modifier;
             break;
         case "bludgeoningResistance":
-            if (modifier > bludgeoningResistanceBonus) {
-                bludgeoningResistancePenalty = modifier;
-            }
+                bludgeoningResistancePenalty += modifier;
             break;
         case "fireResistance":
-            if (modifier > fireResistancePenalty) {
-                fireResistancePenalty = modifier;
-            }
+                fireResistancePenalty += modifier;
             break;
         case "coldResitance":
-            if (modifier > coldResistancePenalty) {
-                coldResistancePenalty = modifier;
-            }
+                coldResistancePenalty += modifier;
             break;
         case "electricityResistance":
-            if (modifier > electricityResistancePenalty) {
-                electricityResistancePenalty = modifier;
-            }
+                electricityResistancePenalty += modifier;
             break;
         case "sacredResistance":
-            if (modifier > sacredResistancePenalty) {
-                sacredResistancePenalty = modifier;
-            }
+                sacredResistancePenalty += modifier;
             break;
         case "profaneResistance":
-            if (modifier > profaneResistancePenalty) {
-                profaneResistancePenalty = modifier;
-            }
+                profaneResistancePenalty += modifier;
             break;
         case "poisonResistance":
-            if (modifier > poisonResistancePenalty) {
-                poisonResistancePenalty = modifier;
-            }
+                poisonResistancePenalty += modifier;
             break;
         case "hitMult":
-            if (modifier > hitMultPenalty) {
-                hitMultPenalty = modifier;
-            }
+                hitMultPenalty += modifier;
             break;
         case "damageMult":
-            if (modifier > damageMultPenalty) {
-                damageMultPenalty = modifier;
-            }
+                damageMultPenalty += modifier;
             break;
         case "healMult":
-            if (modifier > healMultPenalty) {
-                healMultPenalty = modifier;
-            }
+                healMultPenalty += modifier;
             break;
-        case "carryCapacitys":
-            if (modifier > carryCapacityPenalty) {
-                carryCapacityPenalty = modifier;
-            }
+        case "carryCapacity":
+                carryCapacityPenalty += modifier;
             break;
         case "mentalChanceMult":
-            if (modifier > mentalChanceMultPenalty) {
-                mentalChanceMultPenalty = modifier;
-            }
+                mentalChanceMultPenalty += modifier;
             break;
         case "physicalChanceMult":
-            if (modifier > physicalChanceMultPenalty) {
-                physicalChanceMultPenalty = modifier;
-            }
+                physicalChanceMultPenalty += modifier;
             break;
         case "mentalResistance":
-            if (modifier > mentalResistancePenalty) {
-                mentalResistancePenalty = modifier;
-            }
+                mentalResistancePenalty += modifier;
             break;
         case "physicalResistance":
-            if (modifier > physicalResistancePenalty) {
-                physicalResistancePenalty = modifier;
-            }
+                physicalResistancePenalty += modifier;
             break;
         default:
             break;
         }
+
     }
 
     /**

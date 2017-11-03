@@ -110,7 +110,7 @@ public class StatIncreaseEffect extends Effect {
                         Colors.GAIN_STAT);
                 break;
             case "time":
-                Window.appendText(Integer.toString((duration) / 60),
+                Window.appendText(Integer.toString(duration),
                         Colors.TURNS);
                 break;
             default:

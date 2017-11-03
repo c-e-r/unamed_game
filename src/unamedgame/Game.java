@@ -703,7 +703,7 @@ public class Game {
         Window.appendPlayer(Player.getInstance().getStatus());
 
         Window.clearSide();
-        Window.appendPlayer(
+        Window.appendSide(
                 "0: Back\n1: View Perks\n2: Spend Stat Points\n3: Spend Perk Points\n");
 
         Window.getInstance().addInputObsever(new InputObserver() {
