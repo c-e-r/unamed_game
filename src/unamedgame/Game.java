@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import unamedgame.entities.Enemy;
@@ -305,7 +306,7 @@ public class Game {
     public static void openExplorationMenu() {
         Window.clearSide();
         Window.appendSide(
-                "1: Explore \n2: Move\n3: Gather\n4: Inventory \n5: Status\n6: Save\n");
+                "1: Explore \n2: Move\n3: Gather\n4: Inventory\n5: Quests \n6: Status\n7: Save\n");
 
         Window.getInstance().addInputObsever(new InputObserver() {
             @Override
@@ -338,11 +339,15 @@ public class Game {
                     window.removeInputObsever(this);
                     openInventoryMenu(() -> openExplorationMenu());
                     break;
-                case 5: // status
+                case 5: // quest
+                    window.removeInputObsever(this);
+                    openQuestMenu(() -> openExplorationMenu());
+                    break;
+                case 6: // status
                     window.removeInputObsever(this);
                     openStatusMenu(() -> openExplorationMenu());
                     break;
-                case 6: // save
+                case 7: // save
                     window.removeInputObsever(this);
                     openSaveMenu(() -> openExplorationMenu());
                     break;
@@ -689,6 +694,88 @@ public class Game {
             }
 
         });
+    }
+
+    public static void openQuestMenu(Runnable back) {
+
+        Window.clearSide();
+        Window.appendSide(String.format("Name"));
+        Window.appendSide("------------------------------------------------\n");
+        Window.appendSide(String.format("0: Back\n"));
+        int i = 1;
+        ArrayList<Quest> quests = new ArrayList<Quest>(
+                Player.getInstance().getQuestLog().values());
+        for (Quest quest : quests) {
+            if (i % 2 != 0) {
+                if (quest.isCompleted()) {
+                    Window.appendSide(i++ + ": " + quest.getQuestName() + " (Completed)\n",
+                            new Color(100, 100, 100), new Color(244, 244, 244));
+                } else {
+                    Window.appendSide(i++ + ": " + quest.getQuestName() + "\n",
+                            Color.BLACK, new Color(244, 244, 244));
+                }
+
+            } else {
+                if (quest.isCompleted()) {
+                    Window.appendSide(i++ + ": " + quest.getQuestName() + " (Completed)\n",
+                            new Color(100, 100, 100));
+                } else {
+                    Window.appendSide(i++ + ": " + quest.getQuestName() + "\n");
+                }
+            }
+
+        }
+        Window.getInstance().addInputObsever(new InputObserver() {
+            @Override
+            public void inputChanged(InputEvent evt) {
+                int questIndex = -2;
+                if (isNumeric(evt.getText())) {
+                    questIndex = Integer.parseInt(evt.getText()) - 1;
+                }
+                if (questIndex >= 0 && questIndex < Player.getInstance()
+                        .getQuestLog().values().size()) {
+                    questChoiceMenu(quests.get(questIndex),
+                            () -> openQuestMenu(back));
+                    Window.getInstance().removeInputObsever(this);
+                } else if (questIndex == -1) {
+                    Window.getInstance().removeInputObsever(this);
+                    back.run();
+                } else {
+                    Window.appendSide("Invalid Command\n");
+
+                }
+            }
+        });
+
+    }
+
+    public static void questChoiceMenu(Quest quest, Runnable back) {
+        Window.clearSide();
+        Window.clearText();
+        Window.appendSide("0: Back\n");
+        Window.appendText(quest.getLogInfo());
+        Window.getInstance().addInputObsever(new InputObserver() {
+            @Override
+            public void inputChanged(InputEvent evt) {
+                int command = -1;
+                if (isNumeric(evt.getText())) {
+                    command = Integer.parseInt(evt.getText());
+                }
+
+                switch (command) {
+                case 0: // back
+                    Window.clearText();
+                    Window.getInstance().removeInputObsever(this);
+                    back.run();
+                    break;
+                default:
+                    Window.appendText("Invalid Command\n");
+                    break;
+                }
+
+            }
+        });
+
     }
 
     /**

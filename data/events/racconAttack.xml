@@ -1,25 +1,10 @@
 <?xml version="1.0"?>
 <event>
     <branch number = '0'>
-        <addEffect
-            name='effect1'
-            duration='-1'
-            stat='dexterity'
-            magnitude='1'
-            effectDescription='#targetNameCapital#  gains #magnitude# #stat#.'
-            playerEffectDescription='You gain #magnitude# #stat#'
-        >increaseStat</addEffect>
-        <addEffect
-            name='effect2'
-            duration='-1'
-            stat='dexterity'
-            magnitude='3'
-            effectDescription='#userNameCapital#  gains #magnitude# #stat#.'
-            playerEffectDescription='You gain #magnitude# #stat#'    
-        >increaseStat</addEffect>
         <choice>
             <choiceDescription>As your exploring the forest you hear somthing in the bushes nearby.</choiceDescription>
             <option branch='1'>Investigate the source of the sound</option>
+            <option branch='3'>Talk to it</option>
             <option branch='2'>Leave quietly</option>
 
         </choice>       
@@ -35,5 +20,15 @@
     <branch number='2'>
         <text>Whatever was in that bush does not notice you sneak away.</text>
         <end></end>
+    </branch>
+    
+    <branch number='3'>
+        <text>"Go sit on a rock"</text>
+        <ifFlag flag='q-rock' operator='=' value='0'>
+            <addQuest questId='q-shrub'>The talking shrub?</addQuest>
+            <updateQuest questId='q-shrub'>A strange shrub wold you to go sit on a rock. Where would you ever find one of those</updateQuest>
+            <completeQuest questId='q-shrub'/>
+        </ifFlag>
+        <end/>
     </branch>
 </event>

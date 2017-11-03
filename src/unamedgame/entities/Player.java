@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import unamedgame.Game;
+import unamedgame.Quest;
 import unamedgame.effects.Effect;
 import unamedgame.items.Item;
 import unamedgame.skills.Skill;
@@ -33,7 +34,7 @@ public final class Player extends Entity implements Serializable {
     /**
      * Returns the player.
      * 
-     * @return the erplay
+     * @return the player
      */
     public static Player getInstance() {
         if (instance == null) {
@@ -53,6 +54,8 @@ public final class Player extends Entity implements Serializable {
         Player.instance = instance;
     }
 
+    private HashMap<String, Quest> questLog;
+    
     private Point location;
     private int level;
     private int exp;
@@ -97,6 +100,7 @@ public final class Player extends Entity implements Serializable {
         spells = new ArrayList<Spell>();
         knownSpells = new ArrayList<Spell>();
         itemSpells = new ArrayList<Spell>();
+        questLog = new HashMap<>();
 
         Item newItem = Item.buildItem("default");
         if (newItem != null) {
@@ -496,29 +500,14 @@ public final class Player extends Entity implements Serializable {
         }
     }
 
-    /**
-     * Add all equip effects from the given list to the equipmentEffects List.
-     * 
-     * @param list
-     *            the List of effects to add
-     */
-    public void addEquipEffects(List<Effect> list) {
-        equipmentEffects.addAll(list);
-        recalculateStats();
+    public void addQuest(String questId, String name) {
+        questLog.put(questId, new Quest(name));
     }
-
-    /**
-     * Remove all equip effects that are in the given list from the
-     * equipmentEffects List.
-     * 
-     * @param list
-     *            the List of effects to remove
-     */
-    public void removeEquipEffects(List<Effect> list) {
-        equipmentEffects.removeAll(list);
-        recalculateStats();
+    
+    public void updateQuest(String questId, String text) {
+        questLog.get(questId).appendText(text);
     }
-
+    
     /**
      * Returns the players stat points.
      * 
@@ -669,6 +658,14 @@ public final class Player extends Entity implements Serializable {
      */
     public void setNewStatPoints(int newStatPoints) {
         this.newStatPoints = newStatPoints;
+    }
+    
+    /**
+     * Returns the quest log
+     * @return the questLog
+     */
+    public HashMap<String, Quest> getQuestLog(){
+        return questLog;
     }
 
     /**

@@ -238,10 +238,16 @@ public class Window {
     }
 
     public static void appendText(String msg, Color c) {
+        appendText(msg, Color.BLACK, Color.BLACK);
+    }
+    
+    public static void appendText(String msg, Color text, Color background) {
         StyledDocument doc = instance.textPane.getStyledDocument();
         StyleContext sc = StyleContext.getDefaultStyleContext();
+        sc.addAttribute(SimpleAttributeSet.EMPTY,
+                StyleConstants.Background, background);
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
-                StyleConstants.Foreground, c);
+                StyleConstants.Foreground, text);
         try {
             doc.insertString(doc.getLength(), msg, aset);
 
@@ -250,22 +256,10 @@ public class Window {
             e1.printStackTrace();
         }
         LOG.debug(msg);
-
     }
 
     public static void appendTextBackground(String msg, Color c) {
-        StyledDocument doc = instance.textPane.getStyledDocument();
-        StyleContext sc = StyleContext.getDefaultStyleContext();
-        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
-                StyleConstants.Background, c);
-        try {
-            doc.insertString(doc.getLength(), msg, aset);
-
-        } catch (BadLocationException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-        LOG.debug(msg);
+        appendText(msg, Color.BLACK, c);
     }
 
     public static void appendSide(String msg) {
@@ -273,10 +267,16 @@ public class Window {
     }
 
     public static void appendSide(String msg, Color c) {
+        appendSide(msg, Color.BLACK, Color.BLACK);
+    }
+    
+    public static void appendSide(String msg, Color text, Color background) {
         StyledDocument doc = instance.sidePane.getStyledDocument();
         StyleContext sc = StyleContext.getDefaultStyleContext();
+        sc.addAttribute(SimpleAttributeSet.EMPTY,
+                StyleConstants.Background, background);
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
-                StyleConstants.Foreground, c);
+                StyleConstants.Foreground, text);
         try {
             doc.insertString(doc.getLength(), msg, aset);
 
@@ -288,29 +288,24 @@ public class Window {
     }
 
     public static void appendSideBackground(String msg, Color c) {
-        StyledDocument doc = instance.sidePane.getStyledDocument();
-        StyleContext sc = StyleContext.getDefaultStyleContext();
-        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
-                StyleConstants.Background, c);
-        try {
-            doc.insertString(doc.getLength(), msg, aset);
-
-        } catch (BadLocationException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-        LOG.debug(msg);
+        appendSide(msg, Color.BLACK, c);
     }
 
     public static void appendPlayer(String msg) {
-        appendPlayer(msg, Color.BLACK);
+        appendSide(msg, Color.BLACK, Color.BLACK);
     }
-
+    
     public static void appendPlayer(String msg, Color c) {
+        appendSide(msg, c, Color.BLACK);
+    }
+    
+    public static void appendPlayer(String msg, Color text, Color background) {
         StyledDocument doc = instance.playerPane.getStyledDocument();
         StyleContext sc = StyleContext.getDefaultStyleContext();
+        sc.addAttribute(SimpleAttributeSet.EMPTY,
+                StyleConstants.Background, background);
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
-                StyleConstants.Foreground, c);
+                StyleConstants.Foreground, text);
         try {
             doc.insertString(doc.getLength(), msg, aset);
 
@@ -322,19 +317,9 @@ public class Window {
     }
 
     public static void appendPlayerBackground(String msg, Color c) {
-        StyledDocument doc = instance.textPane.getStyledDocument();
-        StyleContext sc = StyleContext.getDefaultStyleContext();
-        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
-                StyleConstants.Background, c);
-        try {
-            doc.insertString(doc.getLength(), msg, aset);
-
-        } catch (BadLocationException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-        LOG.debug(msg);
+        appendPlayer(msg, Color.BLACK, c);
     }
+
 
     public static void clearText() {
         StyledDocument doc = instance.textPane.getStyledDocument();

@@ -1544,6 +1544,29 @@ public class Entity extends Observable implements Serializable {
         attackEffects.add(effect);
         return effect;
     }
+    
+    /**
+     * Add all equip effects from the given list to the equipmentEffects List.
+     * 
+     * @param list
+     *            the List of effects to add
+     */
+    public void addEquipEffects(List<Effect> list) {
+        equipmentEffects.addAll(list);
+        recalculateStats();
+    }
+
+    /**
+     * Remove all equip effects that are in the given list from the
+     * equipmentEffects List.
+     * 
+     * @param list
+     *            the List of effects to remove
+     */
+    public void removeEquipEffects(List<Effect> list) {
+        equipmentEffects.removeAll(list);
+        recalculateStats();
+    }
 
     /**
      * Returns the item description for the given item index from inventory.

@@ -414,6 +414,21 @@ public class EventReader {
             nextElement();
             interpretElement(currentElement);
             break;
+        case "addQuest":
+            Player.getInstance().addQuest(element.attributeValue("questId"), element.getText());
+            nextElement();
+            interpretElement(currentElement);
+            break;
+        case "updateQuest":
+            Player.getInstance().updateQuest(element.attributeValue("questId"), element.getText());
+            nextElement();
+            interpretElement(currentElement);
+            break;
+        case "completeQuest":
+            Player.getInstance().getQuestLog().get(element.attributeValue("questId")).setCompleted();
+            nextElement();
+            interpretElement(currentElement);
+            break;
         default:
             LOG.error("Error unrecognized element name: "
                     + currentElement.getName());

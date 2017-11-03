@@ -488,10 +488,12 @@ public final class Enemy extends Entity {
             if (equipment[EquipmentIndex.HEAD.getValue()] == null) {
                 equipment[EquipmentIndex.HEAD.getValue()] = item;
                 item.setEquipped(true);
+                addEquipEffects(item.getEquipEffects());
             } else {
                 equipment[EquipmentIndex.HEAD.getValue()].setEquipped(false);
                 equipment[EquipmentIndex.HEAD.getValue()] = item;
                 item.setEquipped(true);
+                addEquipEffects(item.getEquipEffects());
             }
 
             break;
@@ -499,10 +501,12 @@ public final class Enemy extends Entity {
             if (equipment[EquipmentIndex.BODY.getValue()] == null) {
                 equipment[EquipmentIndex.BODY.getValue()] = item;
                 item.setEquipped(true);
+                addEquipEffects(item.getEquipEffects());
             } else {
                 equipment[EquipmentIndex.BODY.getValue()].setEquipped(false);
                 equipment[EquipmentIndex.BODY.getValue()] = item;
                 item.setEquipped(true);
+                addEquipEffects(item.getEquipEffects());
             }
 
             break;
@@ -510,10 +514,12 @@ public final class Enemy extends Entity {
             if (equipment[EquipmentIndex.FEET.getValue()] == null) {
                 equipment[EquipmentIndex.FEET.getValue()] = item;
                 item.setEquipped(true);
+                addEquipEffects(item.getEquipEffects());
             } else {
                 equipment[EquipmentIndex.FEET.getValue()].setEquipped(false);
                 equipment[EquipmentIndex.FEET.getValue()] = item;
                 item.setEquipped(true);
+                addEquipEffects(item.getEquipEffects());
             }
 
             break;
@@ -521,10 +527,12 @@ public final class Enemy extends Entity {
             if (equipment[EquipmentIndex.FEET.getValue()] == null) {
                 equipment[EquipmentIndex.FEET.getValue()] = item;
                 item.setEquipped(true);
+                addEquipEffects(item.getEquipEffects());
             } else {
                 equipment[EquipmentIndex.FEET.getValue()].setEquipped(false);
                 equipment[EquipmentIndex.FEET.getValue()] = item;
                 item.setEquipped(true);
+                addEquipEffects(item.getEquipEffects());
             }
 
             break;
@@ -548,21 +556,25 @@ public final class Enemy extends Entity {
             if (equipment[EquipmentIndex.LEFT_HAND.getValue()] == null) {
                 equipment[EquipmentIndex.LEFT_HAND.getValue()] = toEquip;
                 toEquip.setEquipped(true);
+                addEquipEffects(toEquip.getEquipEffects());
             } else {
                 equipment[EquipmentIndex.LEFT_HAND.getValue()]
                         .setEquipped(false);
                 equipment[EquipmentIndex.LEFT_HAND.getValue()] = toEquip;
                 toEquip.setEquipped(true);
+                addEquipEffects(toEquip.getEquipEffects());
             }
         } else {
             if (equipment[EquipmentIndex.RIGHT_HAND.getValue()] == null) {
                 equipment[EquipmentIndex.RIGHT_HAND.getValue()] = toEquip;
                 toEquip.setEquipped(true);
+                addEquipEffects(toEquip.getEquipEffects());
             } else {
                 equipment[EquipmentIndex.RIGHT_HAND.getValue()]
                         .setEquipped(false);
                 equipment[EquipmentIndex.RIGHT_HAND.getValue()] = toEquip;
                 toEquip.setEquipped(true);
+                addEquipEffects(toEquip.getEquipEffects());
 
             }
         }
