@@ -45,6 +45,7 @@ public class EventReader {
     private static boolean skipChildren;
     private static boolean stop;
     private static HashMap<String, Integer> tempFlags;
+    private static Runnable back;
 
     /**
      * Starts an event from the given string. The string must be the file name
@@ -52,10 +53,15 @@ public class EventReader {
      * 
      * @param event
      *            a string of the filename of the event
+     * @param back
+     *            a runnable with the method for the menu to go to after the
+     *            event
+     * 
      */
-    public static void startEvent(String event) {
+    public static void startEvent(String event, Runnable b) {
         tempFlags = new HashMap<String, Integer>();
-
+        back = b;
+        
         Window.clearSide();
 
         Window.clearText();
@@ -123,7 +129,7 @@ public class EventReader {
                 .selectSingleNode("//branch[@number='" + branch + "']");
         nextElement();
         interpretElement(currentElement);
-        if (currentElement != null) {
+        if (currentElement != null && !stop) {
             Window.getInstance().addInputObsever(new InputObserver() {
                 @Override
                 public void inputChanged(InputEvent evt) {
@@ -136,6 +142,7 @@ public class EventReader {
                 }
             });
         }
+        stop=false;
 
     }
 
@@ -154,6 +161,7 @@ public class EventReader {
      *            the element to interpret
      */
     private static void interpretElement(Element element) {
+        System.out.println(element.getName());
         boolean not;
         int roll = 0;
 
@@ -165,7 +173,7 @@ public class EventReader {
             Window.clearSide();
             Window.clearText();
             stop = true;
-            Game.openExplorationMenu();
+            back.run();
             break;
         case "choice":
             Window.clearSide();
@@ -222,10 +230,12 @@ public class EventReader {
             break;
         case "useItem":
             Item newUseItem = Item.buildItem(element.getText());
-            if(element.attributeValue("user") != null) {
-                Player.getInstance().applyItemEffects(newUseItem, Enemy.buildEnemy(element.attributeValue("user")));
+            if (element.attributeValue("user") != null) {
+                Player.getInstance().applyItemEffects(newUseItem,
+                        Enemy.buildEnemy(element.attributeValue("user")));
             } else {
-                Player.getInstance().applyItemEffects(newUseItem, Player.getInstance());
+                Player.getInstance().applyItemEffects(newUseItem,
+                        Player.getInstance());
             }
             break;
         case "addSkill":
@@ -415,17 +425,20 @@ public class EventReader {
             interpretElement(currentElement);
             break;
         case "addQuest":
-            Player.getInstance().addQuest(element.attributeValue("questId"), element.getText());
+            Player.getInstance().addQuest(element.attributeValue("questId"),
+                    element.getText());
             nextElement();
             interpretElement(currentElement);
             break;
         case "updateQuest":
-            Player.getInstance().updateQuest(element.attributeValue("questId"), element.getText());
+            Player.getInstance().updateQuest(element.attributeValue("questId"),
+                    element.getText());
             nextElement();
             interpretElement(currentElement);
             break;
         case "completeQuest":
-            Player.getInstance().getQuestLog().get(element.attributeValue("questId")).setCompleted();
+            Player.getInstance().getQuestLog()
+                    .get(element.attributeValue("questId")).setCompleted();
             nextElement();
             interpretElement(currentElement);
             break;

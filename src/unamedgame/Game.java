@@ -372,7 +372,7 @@ public class Game {
             try {
                 EventSelector.startRandomEventFromFileList(World.getInstance()
                         .getTile(Player.getInstance().getLocation())
-                        .getEventFiles());
+                        .getEventFiles(), ()->openExplorationMenu());
             } catch (FileNotFoundException e) {
                 Window.appendText("ERROR: " + e.getMessage() + "\n");
                 Game.openExplorationMenu();
@@ -407,7 +407,7 @@ public class Game {
                     eventIndex = Integer.parseInt(evt.getText()) - 1;
                 }
                 if (eventIndex >= 0 && eventIndex < events.size()) {
-                    EventReader.startEvent(events.get(eventIndex));                    
+                    EventReader.startEvent(events.get(eventIndex), ()->openLocationMenu(tile, back));                    
                     Window.getInstance().removeInputObsever(this);
                 } else if (eventIndex == -1) {
                     Window.getInstance().removeInputObsever(this);
@@ -1302,7 +1302,7 @@ public class Game {
                     break;
                 case "startEvent":
                     window.removeInputObsever(this);
-                    EventReader.startEvent(command[1]);
+                    EventReader.startEvent(command[1], ()->openExplorationMenu());
                     break;
                 case "addSkill":
 

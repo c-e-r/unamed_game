@@ -30,10 +30,10 @@ public class EventSelector {
      * @throws FileNotFoundException
      *             if the file can not be found
      */
-    public static void startRandomEventFromFile(String fileName)
+    public static void startRandomEventFromFile(String fileName, Runnable back)
             throws FileNotFoundException {
         EventReader.startEvent(
-                chooseEventFromList(getEventListFromFile(fileName)));
+                chooseEventFromList(getEventListFromFile(fileName)), back);
 
     }
 
@@ -45,10 +45,10 @@ public class EventSelector {
      * @throws FileNotFoundException
      *             if the event files cannot be found
      */
-    public static void startRandomEventFromFileList(List<String> fileNames)
+    public static void startRandomEventFromFileList(List<String> fileNames, Runnable back)
             throws FileNotFoundException {
         EventReader.startEvent(
-                chooseEventFromList(getEventListFromFiles(fileNames)));
+                chooseEventFromList(getEventListFromFiles(fileNames)), back);
     }
 
     /**

@@ -6,7 +6,6 @@
             <option branch='1'>Investigate the source of the sound</option>
             <option branch='3'>Talk to it</option>
             <option branch='2'>Leave quietly</option>
-
         </choice>       
     </branch>
     
