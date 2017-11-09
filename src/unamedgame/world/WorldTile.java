@@ -23,6 +23,7 @@ public class WorldTile {
     private Point coordinates;
     private List<String> eventFiles;
     private Color color;
+    private Location location;
 
     /**
      * A default Constructor.
@@ -111,6 +112,14 @@ public class WorldTile {
         eventFiles.add(filename);
     }
 
+    
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+    
+    public Location getLocation() {
+        return location;
+    }
     /**
      * Returns a string showing the number of remaining explorations out of the
      * maximum.

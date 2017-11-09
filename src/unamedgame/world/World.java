@@ -10,8 +10,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
+import java.util.Scanner;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,7 +59,7 @@ public class World {
         world = new WorldTile[10][10];
         fillTileStorageFromFile();
         fillWorldFromIntGrid(readIntGridFromFile());
-
+        addLocationsToTiles();
     }
 
     private void fillWorldFromIntGrid(int[][] intGrid) {
@@ -95,6 +99,33 @@ public class World {
         }
 
         return intGrid;
+    }
+    
+    public void addLocationsToTiles() {
+        String[] tmp;
+        Scanner scanner;
+        try {
+            scanner = new Scanner(
+                    new File("data/map/locations.txt"));
+            while (scanner.hasNextLine()) {
+                tmp = scanner.nextLine().split("\\|");
+                if(!tmp[0].substring(0, 1).equals("#")) {
+                    int x = Integer.parseInt(tmp[0]);
+                    int y = Integer.parseInt(tmp[1]);
+                    String name = tmp[2];
+                    String desc = tmp[3];
+                    String eventFile = tmp[4];
+                    
+                    this.getTile(x, y).setLocation(new Location(name, desc, eventFile));
+                    
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+       
     }
 
     /**

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -59,10 +60,10 @@ public class EventSelector {
      * @throws FileNotFoundException
      *             if file cannot be found
      */
-    private static List<String> getEventListFromFiles(List<String> fileNames)
+    private static ArrayList<String> getEventListFromFiles(List<String> fileNames)
             throws FileNotFoundException {
-        List<String> newList = new ArrayList<String>();
-        List<String> temp;
+        ArrayList<String> newList = new ArrayList<String>();
+        ArrayList<String> temp;
         for (String fileName : fileNames) {
             temp = getEventListFromFile(fileName);
             for (String string : temp) {
@@ -81,12 +82,42 @@ public class EventSelector {
      *            the list to choose from
      * @return the chosen event
      */
-    private static String chooseEventFromList(List<String> list) {
+    private static String chooseEventFromList(ArrayList<String> list) {
         if (list.size() == 0) {
             return "defaultEvent";
         }
-        String eventString = list.get(Dice.roll(list.size()) - 1);
-        String[] eventStrings = eventString.split("\\|");
+        list = pruneEventList(list);
+        String event = list.get(Dice.roll(list.size()) - 1);
+        return event;
+
+    }
+    
+    public static ArrayList<String> prunedEventListFromFile(String fileName) {
+            try {
+                
+                return pruneEventList(getEventListFromFile(fileName));
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return null;
+    }
+    
+    public static ArrayList<String> pruneEventList(ArrayList<String> list) {
+        System.out.println(list);
+        Iterator<String> itr = list.iterator();
+        String[] tmp;
+        while(itr.hasNext()) {
+            tmp = itr.next().split("\\|");
+            if(!checkEventConditions(tmp)) {
+                itr.remove();
+            }
+        }
+        System.out.println(list);
+        return list;
+    }
+
+    public static boolean checkEventConditions(String[] eventStrings) {
         for (int i = 1; i < eventStrings.length; i++) {
             int roll;
             String operator;
@@ -100,8 +131,7 @@ public class EventSelector {
                 double value = Double.parseDouble(seperatedIf[4]);
                 if (!Player.getInstance().checkStat(stat, operator, value,
                         roll)) {
-                    list.remove(eventString);
-                    return chooseEventFromList(list);
+                    return false;
                 }
                 break;
             case "ifRoll":
@@ -109,8 +139,7 @@ public class EventSelector {
                 operator = seperatedIf[2];
                 int rollValue = Integer.parseInt(seperatedIf[3]);
                 if (EventReader.checkRoll(operator, rollValue, roll)) {
-                    list.remove(eventString);
-                    return chooseEventFromList(list);
+                    return false;
                 }
                 break;
             case "ifFlag":
@@ -120,8 +149,7 @@ public class EventSelector {
                 int flagValue = Integer.parseInt(seperatedIf[4]);
                 if (!Player.getInstance().checkFlag(flag, operator, flagValue,
                         roll)) {
-                    list.remove(eventString);
-                    return chooseEventFromList(list);
+                    return false;
                 }
                 break;
             case "ifEquipped":
@@ -132,8 +160,7 @@ public class EventSelector {
                 }
                 if (notEquipped ^ !Player.getInstance()
                         .checkIfEquipped(itemEquippedName)) {
-                    list.remove(eventString);
-                    return chooseEventFromList(list);
+                    return false;
                 }
                 break;
             case "ifItem":
@@ -144,18 +171,16 @@ public class EventSelector {
                 }
                 if (notInInventory
                         ^ !Player.getInstance().checkIfInInventory(itemName)) {
-                    list.remove(eventString);
-                    return chooseEventFromList(list);
+                    return false;
                 }
                 break;
             case "ifItemUses":
                 String itemUsesName = seperatedIf[1];
                 operator = seperatedIf[3];
                 int usesValue = Integer.parseInt(seperatedIf[4]);
-                if (!Player.getInstance().checkIfItemUses(itemUsesName, operator,
-                        usesValue)) {
-                    list.remove(eventString);
-                    return chooseEventFromList(list);
+                if (!Player.getInstance().checkIfItemUses(itemUsesName,
+                        operator, usesValue)) {
+                    return false;
                 }
                 break;
             case "ifSkill":
@@ -165,8 +190,7 @@ public class EventSelector {
                     notInInventory = true;
                 }
                 if (notSkill ^ !Player.getInstance().checkIfSkill(skillName)) {
-                    list.remove(eventString);
-                    return chooseEventFromList(list);
+                    return false;
                 }
                 break;
             case "ifSpell":
@@ -176,13 +200,13 @@ public class EventSelector {
                     notInInventory = true;
                 }
                 if (notSpell ^ !Player.getInstance().checkIfSpell(spellName)) {
-                    list.remove(eventString);
-                    return chooseEventFromList(list);
+                    return false;
                 }
                 break;
             }
         }
-        return eventStrings[0];
+
+        return true;
 
     }
 
@@ -195,9 +219,9 @@ public class EventSelector {
      * @throws FileNotFoundException
      *             if the file cannot be found
      */
-    private static List<String> getEventListFromFile(String fileName)
+    private static ArrayList<String> getEventListFromFile(String fileName)
             throws FileNotFoundException {
-        List<String> events = new ArrayList<String>();
+        ArrayList<String> events = new ArrayList<String>();
         Scanner scanner = new Scanner(
                 new File("data/events/eventLists/" + fileName + ".txt"));
         while (scanner.hasNextLine()) {

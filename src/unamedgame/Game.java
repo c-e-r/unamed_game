@@ -29,6 +29,7 @@ import unamedgame.time.Time;
 import unamedgame.ui.Window;
 import unamedgame.util.Colors;
 import unamedgame.world.World;
+import unamedgame.world.WorldTile;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -364,16 +365,60 @@ public class Game {
      * Chooses an starts a random event based on the current tiles event list.
      */
     private static void explore() {
-        try {
-            EventSelector.startRandomEventFromFileList(World.getInstance()
-                    .getTile(Player.getInstance().getLocation())
-                    .getEventFiles());
-        } catch (FileNotFoundException e) {
-            Window.appendText("ERROR: " + e.getMessage() + "\n");
-            Game.openExplorationMenu();
-            LOG.error("Event list file not found.", e);
-            e.printStackTrace();
+        WorldTile playerTile = World.getInstance()
+                .getTile(Player.getInstance().getLocation());
+
+        if (playerTile.getLocation() == null) {
+            try {
+                EventSelector.startRandomEventFromFileList(World.getInstance()
+                        .getTile(Player.getInstance().getLocation())
+                        .getEventFiles());
+            } catch (FileNotFoundException e) {
+                Window.appendText("ERROR: " + e.getMessage() + "\n");
+                Game.openExplorationMenu();
+                LOG.error("Event list file not found.", e);
+                e.printStackTrace();
+            }
+        } else {
+            openLocationMenu(playerTile, () -> openExplorationMenu());
         }
+
+    }
+
+    private static void openLocationMenu(WorldTile tile, Runnable back) {
+        Window.clearSide();
+        Window.appendSide(String.format("%-24s%10s%13s\n", "Name", "Weight",
+                "Uses Left"));
+        Window.appendSide("------------------------------------------------\n");
+        Window.appendSide(String.format("0: Back\n"));
+
+        ArrayList<String> events = EventSelector
+                .prunedEventListFromFile(tile.getLocation().getEventFile());
+        System.out.println(events);
+        int i = 1;
+        for (String event : events) {
+            Window.appendSide(i++ + ": " + event + "\n");
+        }
+        Window.getInstance().addInputObsever(new InputObserver() {
+            @Override
+            public void inputChanged(InputEvent evt) {
+                int eventIndex = -2;
+                if (isNumeric(evt.getText())) {
+                    eventIndex = Integer.parseInt(evt.getText()) - 1;
+                }
+                if (eventIndex >= 0 && eventIndex < events.size()) {
+                    EventReader.startEvent(events.get(eventIndex));                    
+                    Window.getInstance().removeInputObsever(this);
+                } else if (eventIndex == -1) {
+                    Window.getInstance().removeInputObsever(this);
+                    back.run();
+                } else {
+                    Window.appendSide("Invalid Command\n");
+
+                }
+            }
+        });
+
     }
 
     /**
@@ -427,7 +472,6 @@ public class Game {
      * 
      */
     public static void openInventoryMenu(Runnable back) {
-
         Window.clearSide();
         Window.appendSide(String.format("%-24s%10s%13s\n", "Name", "Weight",
                 "Uses Left"));
@@ -466,7 +510,6 @@ public class Game {
                 }
             }
         });
-
     }
 
     /**
@@ -708,7 +751,9 @@ public class Game {
         for (Quest quest : quests) {
             if (i % 2 != 0) {
                 if (quest.isCompleted()) {
-                    Window.appendSide(i++ + ": " + quest.getQuestName() + " (Completed)\n",
+                    Window.appendSide(
+                            i++ + ": " + quest.getQuestName()
+                                    + " (Completed)\n",
                             new Color(100, 100, 100), new Color(244, 244, 244));
                 } else {
                     Window.appendSide(i++ + ": " + quest.getQuestName() + "\n",
@@ -717,7 +762,9 @@ public class Game {
 
             } else {
                 if (quest.isCompleted()) {
-                    Window.appendSide(i++ + ": " + quest.getQuestName() + " (Completed)\n",
+                    Window.appendSide(
+                            i++ + ": " + quest.getQuestName()
+                                    + " (Completed)\n",
                             new Color(100, 100, 100));
                 } else {
                     Window.appendSide(i++ + ": " + quest.getQuestName() + "\n");
