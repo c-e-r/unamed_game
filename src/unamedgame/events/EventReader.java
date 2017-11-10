@@ -61,7 +61,7 @@ public class EventReader {
     public static void startEvent(String event, Runnable b) {
         tempFlags = new HashMap<String, Integer>();
         back = b;
-        
+
         Window.clearSide();
 
         Window.clearText();
@@ -99,7 +99,7 @@ public class EventReader {
     private static void resumeParseEventXML() {
         nextElement();
         interpretElement(currentElement);
-        if (currentElement != null) {
+        if (currentElement != null && !stop) {
             Window.getInstance().addInputObsever(new InputObserver() {
                 @Override
                 public void inputChanged(InputEvent evt) {
@@ -114,6 +114,7 @@ public class EventReader {
                 }
             });
         }
+        stop = false;
     }
 
     /**
@@ -142,8 +143,7 @@ public class EventReader {
                 }
             });
         }
-        stop=false;
-
+        stop = false;
     }
 
     /**
@@ -161,7 +161,6 @@ public class EventReader {
      *            the element to interpret
      */
     private static void interpretElement(Element element) {
-        System.out.println(element.getName());
         boolean not;
         int roll = 0;
 

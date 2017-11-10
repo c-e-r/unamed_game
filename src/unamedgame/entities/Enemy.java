@@ -15,6 +15,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import unamedgame.Dice;
 import unamedgame.Game;
 import unamedgame.effects.Effect;
 import unamedgame.items.Item;
@@ -227,6 +228,20 @@ public final class Enemy extends Entity {
         while (iterator.hasNext()) {
             Element element = iterator.next();
             switch (element.getName()) {
+            case "random":
+                Iterator<Element> randomChoice = element.elementIterator();
+                int die = Dice.roll(Dice.ENEMY_BUILD_RANDOM);
+                while (randomChoice.hasNext()) {
+                    Element tmp = randomChoice.next();
+                    System.out.println(Integer
+                            .parseInt(tmp.attributeValue("lessThan")));
+                    System.out.println(die);
+                    if (die <= Integer
+                            .parseInt(tmp.attributeValue("lessThan")) ) {
+                        parseEnemyXML(tmp.elementIterator());
+                    }
+                }
+                break;
             case "name":
                 name = element.getText();
                 break;

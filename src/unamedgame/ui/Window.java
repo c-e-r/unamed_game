@@ -238,7 +238,7 @@ public class Window {
     }
 
     public static void appendText(String msg, Color c) {
-        appendText(msg, Color.BLACK, Color.BLACK);
+        appendText(msg, c, Color.BLACK);
     }
     
     public static void appendText(String msg, Color text, Color background) {

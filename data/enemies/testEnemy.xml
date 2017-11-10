@@ -2,8 +2,15 @@
 <enemy>
     <name>racoon</name>
     <useName>the raccon</useName>
-    <expValue>1000</expValue>
     
+    <random>
+        <chance lessThan='50'>
+            <expValue>1000</expValue>
+        </chance>
+        <chance lessThan='100'>
+            <expValue>100</expValue>
+        </chance>
+    </random>
     <vitality>2</vitality>
     <strength>1</strength>
     <dexterity>3</dexterity>

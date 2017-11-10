@@ -205,9 +205,7 @@ public class EventSelector {
                 break;
             }
         }
-
         return true;
-
     }
 
     /**
@@ -225,7 +223,10 @@ public class EventSelector {
         Scanner scanner = new Scanner(
                 new File("data/events/eventLists/" + fileName + ".txt"));
         while (scanner.hasNextLine()) {
-            events.add(scanner.nextLine());
+            String tmp = scanner.nextLine();
+            if(!tmp.substring(0, 1).equals("#")) {
+                events.add(tmp);
+            }
         }
         scanner.close();
         return events;

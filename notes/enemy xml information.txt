@@ -1,4 +1,9 @@
 <enemy> root element
+    
+    <random>                        [OPTIONAL]              used to randomly choose between a number of possible enemy variations
+        <chance>                    [REQUiRED]              contains the elements that will applied of lessThan is true
+            lessThan=''             [REQUIRED]              the value to check. The roll will be between 1-100 inclusive
+
     <name>                          [OPTIONAL: default 0]   the name of the enemy
     <expValue>                      [OPTIONAL: default 0]   the amount of experience granted for defeating the enemy
     <vitality>                      [OPTIONAL: default 0]   the enemy's vitality stat

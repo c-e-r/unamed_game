@@ -1,0 +1,2 @@
+#ITEMNAME|DESCRIPTION?
+dagger|A small weapon

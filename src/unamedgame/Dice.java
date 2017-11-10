@@ -16,6 +16,7 @@ public class Dice {
 	public static final int RESISTANCE_DIE = 100;
 	public static final int SPEED_DIE = 10;
 	public static final int ENEMY_AI = 100;
+	public static final int ENEMY_BUILD_RANDOM = 100;
 
 	private static Random rand = new Random();
 
