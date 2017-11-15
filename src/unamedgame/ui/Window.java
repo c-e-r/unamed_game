@@ -238,16 +238,16 @@ public class Window {
     }
 
     public static void appendText(String msg, Color c) {
-        appendText(msg, c, Color.BLACK);
+        appendText(msg, c, Color.WHITE);
     }
-    
+
     public static void appendText(String msg, Color text, Color background) {
         StyledDocument doc = instance.textPane.getStyledDocument();
         StyleContext sc = StyleContext.getDefaultStyleContext();
-        sc.addAttribute(SimpleAttributeSet.EMPTY,
-                StyleConstants.Background, background);
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
                 StyleConstants.Foreground, text);
+        aset = sc.addAttribute(aset, StyleConstants.Background,
+                background);
         try {
             doc.insertString(doc.getLength(), msg, aset);
 
@@ -267,16 +267,17 @@ public class Window {
     }
 
     public static void appendSide(String msg, Color c) {
-        appendSide(msg, Color.BLACK, Color.BLACK);
+        appendSide(msg, Color.BLACK, Color.WHITE);
     }
-    
+
     public static void appendSide(String msg, Color text, Color background) {
         StyledDocument doc = instance.sidePane.getStyledDocument();
         StyleContext sc = StyleContext.getDefaultStyleContext();
-        sc.addAttribute(SimpleAttributeSet.EMPTY,
-                StyleConstants.Background, background);
+        
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
                 StyleConstants.Foreground, text);
+        aset = sc.addAttribute(aset, StyleConstants.Background,
+                background);
         try {
             doc.insertString(doc.getLength(), msg, aset);
 
@@ -292,20 +293,20 @@ public class Window {
     }
 
     public static void appendPlayer(String msg) {
-        appendSide(msg, Color.BLACK, Color.BLACK);
+        appendPlayer(msg, Color.BLACK, Color.WHITE);
     }
-    
+
     public static void appendPlayer(String msg, Color c) {
-        appendSide(msg, c, Color.BLACK);
+        appendPlayer(msg, c, Color.WHITE);
     }
-    
+
     public static void appendPlayer(String msg, Color text, Color background) {
         StyledDocument doc = instance.playerPane.getStyledDocument();
         StyleContext sc = StyleContext.getDefaultStyleContext();
-        sc.addAttribute(SimpleAttributeSet.EMPTY,
-                StyleConstants.Background, background);
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
                 StyleConstants.Foreground, text);
+        aset = sc.addAttribute(aset, StyleConstants.Background,
+                background);
         try {
             doc.insertString(doc.getLength(), msg, aset);
 
@@ -319,7 +320,6 @@ public class Window {
     public static void appendPlayerBackground(String msg, Color c) {
         appendPlayer(msg, Color.BLACK, c);
     }
-
 
     public static void clearText() {
         StyledDocument doc = instance.textPane.getStyledDocument();

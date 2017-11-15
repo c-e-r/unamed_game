@@ -1,5 +1,6 @@
 <item>      root element
     <name>                          [REQUIRED]                              the name of the item
+    <value>                         [OPTIONAL: default 0]                   the currency value of the item
     <description>                   [REQUIRED]                              the inventory description of the item
     <weight>                        [OPTIONAL: default 0]                   the weight of the item
     <uses>                          [OPTIONAL: default maxUses]             the number of remaining uses on the item

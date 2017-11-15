@@ -43,6 +43,7 @@ public class Spell implements Serializable {
     private List<Effect> missEffects;
 
     private String name;
+    private String id;
     private boolean isAttack;
     private String spellType;
     private String description;
@@ -87,6 +88,7 @@ public class Spell implements Serializable {
      */
     public void loadSpellFromXML(String filename) throws DocumentException {
         SAXReader reader = new SAXReader();
+        id = filename;
         File inputFile = new File("data/spells/" + filename + ".xml");
         Document document = reader.read(inputFile);
 
@@ -395,6 +397,10 @@ public class Spell implements Serializable {
      */
     public String getSpellType() {
         return spellType;
+    }
+    
+    public String getId() {
+        return id;
     }
 
 }

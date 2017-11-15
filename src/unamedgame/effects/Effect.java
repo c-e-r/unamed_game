@@ -24,13 +24,14 @@ import unamedgame.ui.Window;
  * @author c-e-r
  * @version 0.0.1
  */
-public abstract class Effect implements Serializable {
+public class Effect implements Serializable {
 
     private static final long serialVersionUID = 1153105558946744535L;
 
     private static final Logger LOG = LogManager.getLogger(Game.class);
 
     protected List<Effect> effects;
+    protected String id;
     protected String name;
     protected int startTime;
     protected int endTime;
@@ -142,7 +143,7 @@ public abstract class Effect implements Serializable {
      * @param specialAccuracyBonus
      *            the accuracy bonus of the special effect
      */
-    public Effect(List<Effect> effects, String name, int duration,
+    private Effect(List<Effect> effects, String id, String name, int duration,
             int increment, int baseAccuracy, String resistType,
             String repeatType, boolean toSelf, String playerEffectDescription,
             String playerRepeatEffectDescription, String effectDescription,
@@ -159,8 +160,10 @@ public abstract class Effect implements Serializable {
             String specialResistType, int specialAccuracyBonus) {
         this.effects = effects;
         this.duration = duration;
+        this.id = id;
         this.name = name;
         this.increment = increment;
+
         this.toSelf = toSelf;
         this.playerEffectDescription = playerEffectDescription;
         this.playerRepeatEffectDescription = playerRepeatEffectDescription;
@@ -201,9 +204,45 @@ public abstract class Effect implements Serializable {
 
         if (increment != 0) {
             maxActivateCount = duration / increment;
-
         }
 
+    }
+
+    public Effect(Effect effect) {
+        this.effects = effect.effects;
+        for (Effect childEffect : effects) {
+            childEffect.parent = this;
+        }
+        this.id = effect.id;
+        this.duration = effect.duration;
+        this.name = effect.name;
+        this.increment = effect.increment;
+        this.toSelf = effect.toSelf;
+        this.playerEffectDescription = effect.playerEffectDescription;
+        this.playerRepeatEffectDescription = effect.playerRepeatEffectDescription;
+        this.repeatEffectDescription = effect.repeatEffectDescription;
+        this.effectDescription = effect.effectDescription;
+        this.baseAccuracy = effect.baseAccuracy;
+        this.resistType = effect.resistType;
+        this.repeatType = effect.repeatType;
+        this.resistEffectDescription = effect.resistEffectDescription;
+        this.playerResistEffectDescription = effect.playerResistEffectDescription;
+        this.resistRepeatEffectDescription = effect.resistRepeatEffectDescription;
+        this.playerResistRepeatEffectDescription = effect.playerResistRepeatEffectDescription;
+        this.selfDestructTrigger = effect.selfDestructTrigger;
+        this.selfDestructDescription = effect.selfDestructDescription;
+        this.playerSelfDestructDescription = effect.playerSelfDestructDescription;
+        this.specialEffectTrigger = effect.specialEffectTrigger;
+        this.specialEffectDescription = effect.specialEffectDescription;
+        this.playerSpecialEffectDescription = effect.playerSpecialEffectDescription;
+        this.specialResistEffectDescription = effect.specialResistEffectDescription;
+        this.playerSpecialResistEffectDescription = effect.playerSpecialResistEffectDescription;
+        this.specialAccuracyBonus = effect.specialAccuracyBonus;
+        this.specialResistType = effect.specialResistType;
+
+        if (increment != 0) {
+            maxActivateCount = duration / increment;
+        }
     }
 
     /**
@@ -341,12 +380,16 @@ public abstract class Effect implements Serializable {
     /**
      * Does somthing based on effect implementation.
      */
-    public abstract void activate();
+    public void activate() {
+
+    }
 
     /**
-     * Does somthing based on effect implementation.
+     * Does something based on effect implementation.
      */
-    public abstract void firstActivate();
+    public void firstActivate() {
+
+    }
 
     /**
      * Prints the description given to it replacing placeholder words with
@@ -355,7 +398,9 @@ public abstract class Effect implements Serializable {
      * @param description
      *            the description to print
      */
-    public abstract void printDescription(String description);
+    public void printDescription(String description) {
+
+    }
 
     /**
      * Checks if string is a keyword. If it is it prints it and returns true, if
@@ -388,7 +433,9 @@ public abstract class Effect implements Serializable {
      * @param owner
      *            the owner of the effect
      */
-    public abstract void applyEffect(Entity owner);
+    public void applyEffect(Entity owner) {
+
+    }
 
     /**
      * Set an observer on the owner to destroy itself when a condition is met.
@@ -474,7 +521,9 @@ public abstract class Effect implements Serializable {
     /**
      * Implementation depends on specific effect.
      */
-    protected abstract void specialActivate();
+    protected void specialActivate() {
+
+    }
 
     /**
      * Sets a TimeObserver for the effect.
@@ -490,7 +539,6 @@ public abstract class Effect implements Serializable {
 
             @Override
             public void action() {
-
                 if (increment > 0) {
                     int newActivateCount;
                     if (Time.getInstance().getTime() > endTime
@@ -596,88 +644,42 @@ public abstract class Effect implements Serializable {
 
         }
 
+        Effect effect = new Effect(effects, element.attributeValue("id"),
+                element.attributeValue("name"), duration, increment,
+                baseAccuracy, element.attributeValue("resistType"),
+                element.attributeValue("repeatType"),
+                Boolean.parseBoolean(element.attributeValue("toSelf")),
+                element.attributeValue("playerEffectDescription"),
+                element.attributeValue("playerRepeatEffectDescription"),
+                element.attributeValue("effectDescription"),
+                element.attributeValue("repeatEffectDescription"),
+                element.attributeValue("resistEffectDescription"),
+                element.attributeValue("playerResistEffectDescription"),
+                element.attributeValue("resistRepeatEffectDescription"),
+                element.attributeValue("repeatResistRepeatEffectDescription"),
+                element.attributeValue("selfDestructTrigger"),
+                element.attributeValue("selfDestructDescription"),
+                element.attributeValue("playerSelfDestructDescription"),
+                element.attributeValue("specialEffectTrigger"),
+                element.attributeValue("specialEffectDescription"),
+                element.attributeValue("playerSpecialEffectDescription"),
+                element.attributeValue("specialResistEffectDescription"),
+                element.attributeValue("playerSpecialResistEffectDescription"),
+                element.attributeValue("specialResistType"),
+                specialAccuracyBonus);
+
         switch (element.getTextTrim()) {
 
         case "increaseStat":
-            return new StatIncreaseEffect(effects,
-                    element.attributeValue("name"), duration, baseAccuracy,
-                    element.attributeValue("resistType"),
-                    element.attributeValue("repeatType"),
-                    Boolean.parseBoolean(element.attributeValue("toSelf")),
-                    element.attributeValue("playerEffectDescription"),
-                    element.attributeValue("playerRepeatEffectDescription"),
-                    element.attributeValue("effectDescription"),
-                    element.attributeValue("repeatEffectDescription"),
-                    element.attributeValue("resistEffectDescription"),
-                    element.attributeValue("playerResistEffectDescription"),
-                    element.attributeValue("resistRepeatEffectDescription"),
-                    element.attributeValue(
-                            "repeatResistRepeatEffectDescription"),
-                    element.attributeValue("selfDestructTrigger"),
-                    element.attributeValue("selfDestructDescription"),
-                    element.attributeValue("playerSelfDestructDescription"),
-                    element.attributeValue("specialEffectTrigger"),
-                    element.attributeValue("specialEffectDescription"),
-                    element.attributeValue("playerSpecialEffectDescription"),
-                    element.attributeValue("specialResistEffectDescription"),
-                    element.attributeValue(
-                            "playerSpecialResistEffectDescription"),
-                    element.attributeValue("specialResistType"),
-                    specialAccuracyBonus, element.attributeValue("stat"),
+            return new StatIncreaseEffect(effect,
+                    element.attributeValue("stat"),
                     Integer.parseInt(element.attributeValue("magnitude")));
         case "heal":
-            return new HealEffect(effects, element.attributeValue("name"),
-                    duration, increment, baseAccuracy,
-                    element.attributeValue("resistType"),
-                    element.attributeValue("repeatType"),
-                    Boolean.parseBoolean(element.attributeValue("toSelf")),
-                    element.attributeValue("playerEffectDescription"),
-                    element.attributeValue("playerRepeatEffectDescription"),
-                    element.attributeValue("effectDescription"),
-                    element.attributeValue("repeatEffectDescription"),
-                    element.attributeValue("resistEffectDescription"),
-                    element.attributeValue("playerResistEffectDescription"),
-                    element.attributeValue("resistRepeatEffectDescription"),
-                    element.attributeValue(
-                            "playerResistRepeatEffectDescription"),
-                    element.attributeValue("selfDestructTrigger"),
-                    element.attributeValue("selfDestructDescription"),
-                    element.attributeValue("playerSelfDestructDescription"),
-                    element.attributeValue("specialEffectTrigger"),
-                    element.attributeValue("specialEffectDescription"),
-                    element.attributeValue("playerSpecialEffectDescription"),
-                    element.attributeValue("specialResistEffectDescription"),
-                    element.attributeValue(
-                            "playerSpecialResistEffectDescription"),
-                    element.attributeValue("specialResistType"),
-                    specialAccuracyBonus,
+            return new HealEffect(effect,
                     Integer.parseInt(element.attributeValue("magnitude")));
         case "damage":
-            return new DamageEffect(effects, element.attributeValue("name"),
-                    duration, increment, baseAccuracy,
-                    element.attributeValue("resistType"),
-                    element.attributeValue("repeatType"),
-                    Boolean.parseBoolean(element.attributeValue("toSelf")),
-                    element.attributeValue("playerEffectDescription"),
-                    element.attributeValue("playerRepeatEffectDescription"),
-                    element.attributeValue("effectDescription"),
-                    element.attributeValue("repeatEffectDescription"),
-                    element.attributeValue("resistEffectDescription"),
-                    element.attributeValue("playerResistEffectDescription"),
-                    element.attributeValue("resistRepeatEffectDescription"),
-                    element.attributeValue(
-                            "playerResistRepeatEffectDescription"),
-                    element.attributeValue("selfDestructTrigger"),
-                    element.attributeValue("selfDestructDescription"),
-                    element.attributeValue("playerSelfDestructDescription"),
-                    element.attributeValue("specialEffectTrigger"),
-                    element.attributeValue("specialEffectDescription"),
-                    element.attributeValue("playerSpecialEffectDescription"),
-                    element.attributeValue("specialResistEffectDescription"),
-                    element.attributeValue(
-                            "playerSpecialResistEffectDescription"),
-                    element.attributeValue("specialResistType"),
-                    specialAccuracyBonus, element.attributeValue("damageType"),
+            return new DamageEffect(effect,
+                    element.attributeValue("damageType"),
                     Integer.parseInt(element.attributeValue("magnitude")));
         default:
 
@@ -759,6 +761,10 @@ public abstract class Effect implements Serializable {
         this.endTime = endTime;
     }
 
+    public String getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "LongEffect [startTime=" + startTime + ", endTime=" + endTime
@@ -772,5 +778,8 @@ public abstract class Effect implements Serializable {
      * 
      * @return a description of the effect as a string
      */
-    public abstract String getInfo();
+    public String getInfo() {
+        return null;
+
+    }
 }

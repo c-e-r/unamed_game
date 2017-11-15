@@ -43,7 +43,9 @@ public abstract class TimeListener implements Serializable {
      * If the Listener is not deleted call action.
      */
     public void entityEvent() {
+        System.out.println("delete: " + delete);
         if (!delete) {
+            System.out.println("apple");
             action();
         }
     }

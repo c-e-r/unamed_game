@@ -1,2 +1,4 @@
-#ITEMNAME|DESCRIPTION?
-dagger|A small weapon
+#ITEMNAME
+dagger
+testItem
+dot

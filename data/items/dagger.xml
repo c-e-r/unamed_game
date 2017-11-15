@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <item>
     <name>dagger</name>
+    <value>10</value>
     <weaponHitChance>10</weaponHitChance>
     <weaponBaseDamage>2</weaponBaseDamage>
     <weaponVariableDamage>2</weaponVariableDamage>

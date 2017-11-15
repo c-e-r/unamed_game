@@ -204,6 +204,10 @@ public class EventReader {
 
             stop = true;
             break;
+        case "shop":
+            Game.openShopMenu(() -> resumeEvent(), element.getText(), element.attributeValue("name"));
+            stop = true;
+            break;
         case "addItem":
             Item newItem = Item.buildItem(element.getText());
             if (newItem != null) {

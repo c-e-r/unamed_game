@@ -13,12 +13,11 @@
     <battleUse>true</battleUse>
     <fieldUse>true</fieldUse>
     <equippable equipSlot='hand'>true</equippable>
-    <spell>testSpell</spell>
     <effect 
         name='dotDot' 
         magnitude='2' 
         duration='10000'
-        increment='2'
+        increment='1'
         damageType='sacred' 
         repeatType='persistant'
         effectDescription='#targetNameCapital# takes #totalDamage# damage'

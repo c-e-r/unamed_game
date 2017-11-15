@@ -32,33 +32,8 @@ public class StatIncreaseEffect extends Effect {
      * @param magnitude
      *            the amount to increase the given stat by
      */
-    public StatIncreaseEffect(List<Effect> effects, String name, int duration,
-            int baseAccuracy, String resistType, String repeatType,
-            boolean toSelf, String playerEffectDescription,
-            String playerRepeatEffectDescription, String effectDescription,
-            String repeatEffectDescription, String resistEffectDescription,
-            String playerResistEffectDescription,
-            String resistRepeatEffectDescription,
-            String playerResistRepeatEffectDescription,
-            String selfDestructTrigger, String selfDestructDescription,
-            String playerSelfDestructDescription, String specialEffectTrigger,
-            String specialEffectDescription,
-            String playerSpecialEffectDescription,
-            String specialResistEffectDescription,
-            String playerSpecialResistEffectDescription,
-            String specialResistType, int specialAccuracyBonus, String stat,
-            int magnitude) {
-        super(effects, name, duration, 0, baseAccuracy, resistType, repeatType,
-                toSelf, playerEffectDescription, playerRepeatEffectDescription,
-                effectDescription, repeatEffectDescription,
-                resistEffectDescription, playerResistEffectDescription,
-                resistRepeatEffectDescription,
-                playerResistRepeatEffectDescription, selfDestructTrigger,
-                selfDestructDescription, playerSelfDestructDescription,
-                specialEffectTrigger, specialEffectDescription,
-                playerSpecialEffectDescription, specialResistEffectDescription,
-                playerSpecialResistEffectDescription, specialResistType,
-                specialAccuracyBonus);
+    public StatIncreaseEffect(Effect effect, String stat, int magnitude) {
+        super(effect);
         this.stat = stat;
         this.magnitude = magnitude;
     }
@@ -110,8 +85,7 @@ public class StatIncreaseEffect extends Effect {
                         Colors.GAIN_STAT);
                 break;
             case "time":
-                Window.appendText(Integer.toString(duration),
-                        Colors.TURNS);
+                Window.appendText(Integer.toString(duration), Colors.TURNS);
                 break;
             default:
                 Window.appendText(string);

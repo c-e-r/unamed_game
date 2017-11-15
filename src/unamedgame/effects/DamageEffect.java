@@ -32,33 +32,8 @@ public class DamageEffect extends Effect {
      * @param magnitude
      *            the amount of damage the effect deals
      */
-    public DamageEffect(List<Effect> effects, String name, int duration,
-            int increment, int baseAccuracy, String resistType,
-            String repeatType, boolean toSelf, String playerEffectDescription,
-            String playerRepeatEffectDescription, String effectDescription,
-            String repeatEffectDescription, String resistEffectDescription,
-            String playerResistEffectDescription,
-            String resistRepeatEffectDescription,
-            String playerResistRepeatEffectDescription,
-            String selfDestructTrigger, String selfDestructDescription,
-            String playerSelfDestructDescription, String specialEffectTrigger,
-            String specialEffectDescription,
-            String playerSpecialEffectDescription,
-            String specialResistEffectDescription,
-            String playerSpecialResistEffectDescription,
-            String specialResistType, int specialAccuracyBonus,
-            String damageType, int magnitude) {
-        super(effects, name, duration, increment, baseAccuracy, resistType,
-                repeatType, toSelf, playerEffectDescription,
-                playerRepeatEffectDescription, effectDescription,
-                repeatEffectDescription, resistEffectDescription,
-                playerResistEffectDescription, resistRepeatEffectDescription,
-                playerResistRepeatEffectDescription, selfDestructTrigger,
-                selfDestructDescription, playerSelfDestructDescription,
-                specialEffectTrigger, specialEffectDescription,
-                playerSpecialEffectDescription, specialResistEffectDescription,
-                playerSpecialResistEffectDescription, specialResistType,
-                specialAccuracyBonus);
+    public DamageEffect(Effect effect, String damageType, int magnitude) {
+        super(effect);
         this.damageType = damageType;
         this.magnitude = magnitude;
     }

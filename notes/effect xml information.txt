@@ -3,7 +3,8 @@ effects are always contained within other xml files and are consistent across di
 
 The following are shared between all effects
 <effect>    root element
-    name=''                                 [REQUIRED]                                                      the name of the effect
+    id=''                                   [REQUIRED]                                                      the id of the effect
+    name=''                                 [REQUIRED]                                                      the name of the effect that the player will see
     duration=''                             [OPTIONAL: default 0]                                           the duration of the effect. 0 means instant. -1 is permanant
     increment=''                            [OPTIONAL: default 0}                                           how often the effect triggers
     

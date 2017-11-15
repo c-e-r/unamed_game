@@ -43,6 +43,8 @@ public class Entity extends Observable implements Serializable {
     protected HashMap<String, Integer> flags;
 
     protected List<Item> inventory;
+    protected int currency;
+
     protected List<Effect> effects;
 
     protected List<Skill> innateSkills;
@@ -1022,118 +1024,118 @@ public class Entity extends Observable implements Serializable {
     public void decreaseModifier(String stat, int modifier) {
         switch (stat) {
         case "vitality":
-                vitalityPenalty += modifier;
+            vitalityPenalty += modifier;
             break;
         case "strength":
-                strengthPenalty += modifier;
+            strengthPenalty += modifier;
             break;
         case "dexterity":
-                dexterityPenalty += modifier;
+            dexterityPenalty += modifier;
             break;
         case "intellect":
-                intellectPenalty += modifier;
+            intellectPenalty += modifier;
             break;
         case "spirit":
-                spiritPenalty += modifier;
+            spiritPenalty += modifier;
             break;
         case "luck":
-                luckPenalty += modifier;
+            luckPenalty += modifier;
             break;
         case "health":
-                maxHealthPenalty += modifier;
+            maxHealthPenalty += modifier;
             break;
         case "stamina":
-                maxStaminaPenalty += modifier;
+            maxStaminaPenalty += modifier;
             break;
         case "mana":
-                maxManaPenalty += modifier;
+            maxManaPenalty += modifier;
             break;
         case "speed":
-                speedPenalty += modifier;
+            speedPenalty += modifier;
             break;
         case "hit":
-                hitPenalty = modifier;
+            hitPenalty = modifier;
             break;
         case "dodge":
-                dodgePenalty = modifier;
+            dodgePenalty = modifier;
             break;
         case "slashingReduction":
-                slashingReductionPenalty += modifier;
+            slashingReductionPenalty += modifier;
             break;
         case "piercingReduction":
-                piercingReductionPenalty += modifier;
+            piercingReductionPenalty += modifier;
             break;
         case "bludgeoningReduction":
-                bludgeoningReductionPenalty += modifier;
+            bludgeoningReductionPenalty += modifier;
             break;
         case "fireReduction":
-                fireReductionPenalty += modifier;
+            fireReductionPenalty += modifier;
             break;
         case "coldReduction":
-                coldReductionPenalty += modifier;
+            coldReductionPenalty += modifier;
             break;
         case "electricityReduction":
-                electricityReductionPenalty += modifier;
+            electricityReductionPenalty += modifier;
             break;
         case "sacredReduction":
-                sacredReductionPenalty += modifier;
+            sacredReductionPenalty += modifier;
             break;
         case "profaneReduction":
-                profaneReductionPenalty += modifier;
+            profaneReductionPenalty += modifier;
             break;
         case "poisonReduction":
-                poisonReductionPenalty += modifier;
+            poisonReductionPenalty += modifier;
             break;
         case "slashingResistance":
-                slashingResistancePenalty += modifier;
+            slashingResistancePenalty += modifier;
             break;
         case "piercingResistance":
-                piercingResistancePenalty += modifier;
+            piercingResistancePenalty += modifier;
             break;
         case "bludgeoningResistance":
-                bludgeoningResistancePenalty += modifier;
+            bludgeoningResistancePenalty += modifier;
             break;
         case "fireResistance":
-                fireResistancePenalty += modifier;
+            fireResistancePenalty += modifier;
             break;
         case "coldResitance":
-                coldResistancePenalty += modifier;
+            coldResistancePenalty += modifier;
             break;
         case "electricityResistance":
-                electricityResistancePenalty += modifier;
+            electricityResistancePenalty += modifier;
             break;
         case "sacredResistance":
-                sacredResistancePenalty += modifier;
+            sacredResistancePenalty += modifier;
             break;
         case "profaneResistance":
-                profaneResistancePenalty += modifier;
+            profaneResistancePenalty += modifier;
             break;
         case "poisonResistance":
-                poisonResistancePenalty += modifier;
+            poisonResistancePenalty += modifier;
             break;
         case "hitMult":
-                hitMultPenalty += modifier;
+            hitMultPenalty += modifier;
             break;
         case "damageMult":
-                damageMultPenalty += modifier;
+            damageMultPenalty += modifier;
             break;
         case "healMult":
-                healMultPenalty += modifier;
+            healMultPenalty += modifier;
             break;
         case "carryCapacity":
-                carryCapacityPenalty += modifier;
+            carryCapacityPenalty += modifier;
             break;
         case "mentalChanceMult":
-                mentalChanceMultPenalty += modifier;
+            mentalChanceMultPenalty += modifier;
             break;
         case "physicalChanceMult":
-                physicalChanceMultPenalty += modifier;
+            physicalChanceMultPenalty += modifier;
             break;
         case "mentalResistance":
-                mentalResistancePenalty += modifier;
+            mentalResistancePenalty += modifier;
             break;
         case "physicalResistance":
-                physicalResistancePenalty += modifier;
+            physicalResistancePenalty += modifier;
             break;
         default:
             break;
@@ -1544,7 +1546,7 @@ public class Entity extends Observable implements Serializable {
         attackEffects.add(effect);
         return effect;
     }
-    
+
     /**
      * Add all equip effects from the given list to the equipmentEffects List.
      * 
@@ -2639,14 +2641,14 @@ public class Entity extends Observable implements Serializable {
     /**
      * Check if an item is equipped.
      * 
-     * @param itemName
+     * @param itemId
      *            the name of the item to check for
      * @return if the item is equipped
      */
-    public boolean checkIfEquipped(String itemName) {
+    public boolean checkIfEquipped(String itemId) {
         for (Item item : equipment) {
             if (item != null) {
-                if (item.getName().equals(itemName)) {
+                if (item.getId().equals(itemId)) {
                     return true;
                 }
             }
@@ -2658,13 +2660,13 @@ public class Entity extends Observable implements Serializable {
     /**
      * Check if an item is in the players inventory.
      * 
-     * @param itemName
+     * @param itemId
      *            the name of the item to check for
      * @return if the item is in the players inventory
      */
-    public boolean checkIfInInventory(String itemName) {
+    public boolean checkIfInInventory(String itemId) {
         for (Item item : inventory) {
-            if (item.getName().equals(itemName)) {
+            if (item.getId().equals(itemId)) {
                 return true;
             }
         }
@@ -2675,14 +2677,14 @@ public class Entity extends Observable implements Serializable {
      * Check if an item is in the players inventory and has at least one use
      * left
      * 
-     * @param itemName
+     * @param itemId
      *            the name of the item to check for
      * @return if the item is in the players inventory
      */
-    public boolean checkIfItemUses(String itemName, String operator,
+    public boolean checkIfItemUses(String itemId, String operator,
             int value) {
         for (Item item : inventory) {
-            if (item.getName().equals(itemName)) {
+            if (item.getId().equals(itemId)) {
                 switch (operator) {
                 case "=":
                     if (item.getUses() == value)
@@ -2721,7 +2723,7 @@ public class Entity extends Observable implements Serializable {
      */
     public boolean checkIfEffected(String effectName) {
         for (Effect effect : effects) {
-            if (effect.getName().equals(effectName)) {
+            if (effect.getId().equals(effectName)) {
                 return true;
             }
         }
@@ -2738,7 +2740,7 @@ public class Entity extends Observable implements Serializable {
     public boolean checkIfSpell(String spellName) {
         reloadSpells();
         for (Spell spell : spells) {
-            if (spell.getName().equals(spellName)) {
+            if (spell.getId().equals(spellName)) {
                 return true;
             }
         }
@@ -2755,7 +2757,7 @@ public class Entity extends Observable implements Serializable {
     public boolean checkIfSkill(String skillName) {
         reloadSkills();
         for (Skill skill : combinedSkills) {
-            if (skill.getName().equals(skillName)) {
+            if (skill.getId().equals(skillName)) {
                 return true;
             }
         }
@@ -2817,6 +2819,18 @@ public class Entity extends Observable implements Serializable {
             }
         }
         return false;
+    }
+
+    public void addCurrency(int amount) {
+        currency += amount;
+    }
+
+    public void removeCurrency(int amount) {
+        currency -= amount;
+    }
+
+    public boolean canAfford(int cost){
+        return currency >= cost;
     }
 
     /**

@@ -13,6 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 import unamedgame.entities.Enemy;
 import unamedgame.entities.Entity;
@@ -215,10 +216,8 @@ public class Game {
                 clearTextField();
                 String[] commands = evt.getText().split(" ");
                 String saveNote = "";
-                System.out.println(Arrays.toString(commands));
                 for (int j = 1; j < commands.length; j++) {
                     saveNote += commands[j] + " ";
-                    System.out.println(saveNote);
                 }
                 if (isNumeric(commands[0])) {
                     int command = Integer.parseInt(commands[0]);
@@ -370,9 +369,13 @@ public class Game {
 
         if (playerTile.getLocation() == null) {
             try {
-                EventSelector.startRandomEventFromFileList(World.getInstance()
-                        .getTile(Player.getInstance().getLocation())
-                        .getEventFiles(), ()->openExplorationMenu());
+                EventSelector
+                        .startRandomEventFromFileList(
+                                World.getInstance()
+                                        .getTile(Player.getInstance()
+                                                .getLocation())
+                                        .getEventFiles(),
+                                () -> openExplorationMenu());
             } catch (FileNotFoundException e) {
                 Window.appendText("ERROR: " + e.getMessage() + "\n");
                 Game.openExplorationMenu();
@@ -394,7 +397,6 @@ public class Game {
 
         ArrayList<String> events = EventSelector
                 .prunedEventListFromFile(tile.getLocation().getEventFile());
-        System.out.println(events);
         int i = 1;
         for (String event : events) {
             Window.appendSide(i++ + ": " + event + "\n");
@@ -407,7 +409,8 @@ public class Game {
                     eventIndex = Integer.parseInt(evt.getText()) - 1;
                 }
                 if (eventIndex >= 0 && eventIndex < events.size()) {
-                    EventReader.startEvent(events.get(eventIndex), ()->openLocationMenu(tile, back));                    
+                    EventReader.startEvent(events.get(eventIndex),
+                            () -> openLocationMenu(tile, back));
                     Window.getInstance().removeInputObsever(this);
                 } else if (eventIndex == -1) {
                     Window.getInstance().removeInputObsever(this);
@@ -446,12 +449,14 @@ public class Game {
                     if (command >= 1 && command <= 6) {
                         Player.getInstance().move(command - 1);
                         Window.getInstance().getMapPane().repaint();
+                    } else {
+                        onMoveMenu = false;
+                        window.removeInputObsever(this);
+                        openExplorationMenu();
                     }
 
                 }
-                onMoveMenu = true;
-                window.removeInputObsever(this);
-                openExplorationMenu();
+
             }
 
         });
@@ -1302,7 +1307,8 @@ public class Game {
                     break;
                 case "startEvent":
                     window.removeInputObsever(this);
-                    EventReader.startEvent(command[1], ()->openExplorationMenu());
+                    EventReader.startEvent(command[1],
+                            () -> openExplorationMenu());
                     break;
                 case "addSkill":
 
@@ -1429,6 +1435,284 @@ public class Game {
                     case 2: // inspect
                         Window.appendText(
                                 entity.getItemDescription(itemIndex) + "\n");
+                        break;
+                    default:
+                        Window.appendText("Invalid Command\n");
+                        break;
+                    }
+
+                }
+            });
+        } else {
+            LOG.error("Somehow you tried to access an item that dosn't exist");
+        }
+    }
+
+    public static void openShopMenu(Runnable back, String fileName,
+            String shopName) {
+        Window.clearSide();
+        Window.appendSide(shopName + "\n");
+        Window.appendSide("0: Back\n1: Buy\n2: Sell\n");
+
+        Window.getInstance().addInputObsever(new InputObserver() {
+            @Override
+            public void inputChanged(InputEvent evt) {
+
+                clearTextField();
+
+                if (isNumeric(evt.getText())) {
+                    int command = Integer.parseInt(evt.getText());
+                    if (command >= 0 && command <= 2) {
+                        switch (command) {
+                        case 0:
+                            Window.getInstance().removeInputObsever(this);
+                            back.run();
+                            break;
+                        case 1:
+                            Window.getInstance().removeInputObsever(this);
+                            openBuyMenu(() -> openShopMenu(back, fileName,
+                                    shopName), fileName, shopName);
+                            break;
+                        case 2:
+                            Window.getInstance().removeInputObsever(this);
+                            openSellMenu(() -> openShopMenu(back, fileName,
+                                    shopName), shopName);
+                            break;
+                        default:
+                            Window.appendText("Invalid command");
+                            break;
+                        }
+
+                    }
+                }
+            }
+
+        });
+    }
+
+    public static void openSellMenu(Runnable back, String shopName) {
+        Window.clearSide();
+        Window.appendSide(shopName + "\n");
+        Window.appendSide(String.format("%-24s%10s%13s\n", "Name", "Weight",
+                "Uses Left"));
+        Window.appendSide("------------------------------------------------\n");
+        Window.appendSide(String.format("0: Back\n"));
+        int i = 1;
+        for (Item item : Player.getInstance().getInventory()) {
+            if (i % 2 != 0) {
+                Window.appendSideBackground(
+                        i++ + ": " + item.getItemInfo() + "\n",
+                        new Color(244, 244, 244));
+
+            } else {
+                Window.appendSide(i++ + ": " + item.getItemInfo() + "\n");
+
+            }
+
+        }
+        Window.getInstance().addInputObsever(new InputObserver() {
+            @Override
+            public void inputChanged(InputEvent evt) {
+                int itemIndex = -2;
+                if (isNumeric(evt.getText())) {
+                    itemIndex = Integer.parseInt(evt.getText()) - 1;
+                }
+                if (itemIndex >= 0 && itemIndex < Player.getInstance()
+                        .getInventory().size()) {
+                    sellChoiceMenu(itemIndex,
+                            () -> openSellMenu(back, shopName));
+                    Window.getInstance().removeInputObsever(this);
+                } else if (itemIndex == -1) {
+                    Window.getInstance().removeInputObsever(this);
+                    back.run();
+                } else {
+                    Window.appendSide("Invalid Command\n");
+
+                }
+            }
+        });
+    }
+
+    private static void openSellConfirm(Runnable back, int itemIndex,
+            Item item) {
+        Window.clearSide();
+        Window.appendSide("Are you sure you would like to sell "
+                + capitalizeFirstLetter(item.getName()) + "?\n1: Yes\n2: No\n");
+
+        Window.getInstance().addInputObsever(new InputObserver() {
+            @Override
+            public void inputChanged(InputEvent evt) {
+
+                clearTextField();
+
+                if (isNumeric(evt.getText())) {
+                    int command = Integer.parseInt(evt.getText());
+                    if (command >= 1 && command <= 2) {
+                        if (command == 1) {
+
+                            Player.getInstance()
+                                    .removeItemFromInventory(itemIndex);
+                            Player.getInstance().addCurrency(item.getValue()/2);
+                            Window.appendText(
+                                    capitalizeFirstLetter(item.getName())
+                                            + " has been sold.\n");
+
+                        }
+                        window.removeInputObsever(this);
+                        back.run();
+                    }
+                }
+            }
+
+        });
+    }
+
+    public static void openBuyMenu(Runnable back, String fileName,
+            String shopName) {
+
+        Window.clearSide();
+        Window.appendSide(shopName + "\n");
+        Window.appendSide(String.format("%-19s%5s%10s%13s", "Name", "Value",
+                "Weight", "Uses Left\n"));
+        Window.appendSide("------------------------------------------------\n");
+        Window.appendSide(String.format("0: Back\n"));
+        int i = 1;
+        ArrayList<Item> items = new ArrayList<Item>();
+        try {
+            Scanner scanner = new Scanner(
+                    new File("data/shops/" + fileName + ".txt"));
+            while (scanner.hasNextLine()) {
+                String tmp = scanner.nextLine();
+                if (!tmp.substring(0, 1).equals("#")) {
+                    items.add(Item.buildItem(tmp));
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        for (Item item : items) {
+            if (item != null) {
+                LOG.error(
+                        "Somthing has gone wrong generating items from shop file \""
+                                + fileName
+                                + ".txt\". Please check that item name are spelt correctly and that all are in the items forlder");
+            }
+            if (i % 2 != 0) {
+                Window.appendSideBackground(
+                        i++ + ": " + item.getItemInfo() + "\n\t"
+                                + item.getDescription() + "\n",
+                        new Color(244, 244, 244));
+
+            } else {
+                Window.appendSide(i++ + ": " + item.getItemInfo() + "\n\t"
+                        + item.getDescription() + "\n");
+
+            }
+
+        }
+        Window.getInstance().addInputObsever(new InputObserver() {
+            @Override
+            public void inputChanged(InputEvent evt) {
+                int itemIndex = -2;
+                if (isNumeric(evt.getText())) {
+                    itemIndex = Integer.parseInt(evt.getText()) - 1;
+                }
+                if (itemIndex >= 0 && itemIndex < items.size()) {
+                    buyChoiceMenu(Item.buildItem(items.get(itemIndex).getId()),
+                            () -> openBuyMenu(back, fileName, shopName));
+                    Window.getInstance().removeInputObsever(this);
+                } else if (itemIndex == -1) {
+                    Window.getInstance().removeInputObsever(this);
+                    back.run();
+                } else {
+                    Window.appendText("Invalid Command\n");
+
+                }
+            }
+        });
+    }
+
+    public static void buyChoiceMenu(Item item, Runnable back) {
+        Window.clearSide();
+        if (item != null) {
+            Window.appendSide(capitalizeFirstLetter(item.getName()));
+            Window.appendSide("0: Back\n1: Buy\n2: Inspect\n");
+            Window.getInstance().addInputObsever(new InputObserver() {
+                @Override
+                public void inputChanged(InputEvent evt) {
+                    int command = -1;
+                    if (isNumeric(evt.getText())) {
+                        command = Integer.parseInt(evt.getText());
+                    }
+
+                    switch (command) {
+                    case 0: // back
+                        Window.getInstance().removeInputObsever(this);
+                        back.run();
+                        break;
+                    case 1: // buy
+                        if (Player.getInstance().canAfford(item.getValue())) {
+                            Player.getInstance().addItemToInventory(item);
+                            Player.getInstance()
+                                    .removeCurrency(item.getValue());
+                            Window.appendText(
+                                    capitalizeFirstLetter(item.getName())
+                                            + " bought.\n");
+                            Window.getInstance().removeInputObsever(this);
+                            back.run();
+                        } else {
+                            Window.appendText("You cant afford that item!\n");
+                        }
+
+                        break;
+                    case 2: // inspect
+                        Window.appendText(item.getDescription() + "\n");
+                        break;
+                    default:
+                        Window.appendText("Invalid Command\n");
+                        break;
+                    }
+
+                }
+            });
+        } else {
+            LOG.error("Somehow you tried to access an item that dosn't exist");
+        }
+    }
+
+    public static void sellChoiceMenu(int itemIndex, Runnable back) {
+        Item item = Player.getInstance().getInventoryItem(itemIndex);
+        Window.clearSide();
+        if (item != null) {
+            Window.appendSide(capitalizeFirstLetter(item.getName()));
+            Window.appendSide("0: Back\n1: Sell\n2: Inspect\n");
+            Window.getInstance().addInputObsever(new InputObserver() {
+                @Override
+                public void inputChanged(InputEvent evt) {
+                    int command = -1;
+                    if (isNumeric(evt.getText())) {
+                        command = Integer.parseInt(evt.getText());
+                    }
+
+                    switch (command) {
+                    case 0: // back
+                        Window.getInstance().removeInputObsever(this);
+                        back.run();
+                        break;
+                    case 1: // sell
+                        if (!item.isBound()) {
+                            openSellConfirm(back, itemIndex, item);
+                            Window.getInstance().removeInputObsever(this);
+                        } else {
+                            Window.appendText("You cant sell that item!\n");
+                        }
+
+                        break;
+                    case 2: // inspect
+                        Window.appendText(item.getDescription() + "\n");
                         break;
                     default:
                         Window.appendText("Invalid Command\n");

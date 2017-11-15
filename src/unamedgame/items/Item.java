@@ -41,6 +41,7 @@ public class Item implements Serializable {
     protected List<Spell> spells;
     protected List<Spell> equipSpells;
 
+    private String id;
     private String name;
     private double weight;
     private List<Effect> effects;
@@ -91,6 +92,9 @@ public class Item implements Serializable {
     private int strRequirement;
 
     private int speedPenalty;
+
+    private int value;
+    private boolean bound;
 
     /**
      * Builds an Item from the given filename.
@@ -169,7 +173,7 @@ public class Item implements Serializable {
      */
     private void loadItemFromXML(String itemName) throws DocumentException {
         SAXReader reader = new SAXReader();
-
+        id = itemName;
         File inputFile = new File("data/items/" + itemName + ".xml");
         Document document = reader.read(inputFile);
 
@@ -383,6 +387,13 @@ public class Item implements Serializable {
             case "itemType":
                 itemType = element.getText();
                 break;
+            case "value":
+                if (Game.isNumeric(element.getText())) {
+                    value = Integer.parseInt(element.getText());
+                }
+                break;
+            case "bound":
+                bound = Boolean.parseBoolean(element.getText());
             default:
                 LOG.error("Error unrecognized element name: "
                         + element.getName());
@@ -543,12 +554,12 @@ public class Item implements Serializable {
             maxUsesString = "-";
         }
         if (this.isEquipped()) {
-            return String.format("%-24s%5.1f%10s/%-6s", "[e] " + name, weight,
-                    usesString, maxUsesString);
+            return String.format("%-17%5ds%5.1f%10s/%-6s", "[e] " + name, value,
+                    weight, usesString, maxUsesString);
 
         }
-        return String.format("%-24s%5.1f%10s/%-6s", name, weight, usesString,
-                maxUsesString);
+        return String.format("%-17s%5d%5.1f%10s/%-6s", name, value, weight,
+                usesString, maxUsesString);
     }
 
     /**
@@ -998,6 +1009,18 @@ public class Item implements Serializable {
      */
     public String getItemType() {
         return itemType;
+    }
+
+    public int getValue() {
+        return value*(uses/maxUses);
+    }
+
+    public String getId() {
+        return id;
+    }
+    
+    public boolean isBound() {
+        return bound;
     }
 
     /*

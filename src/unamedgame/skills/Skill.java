@@ -39,6 +39,7 @@ public final class Skill implements Serializable {
     private List<Effect> alwaysEffects;
     private List<Effect> missEffects;
 
+    private String id;
     private String name;
     private boolean isAttack;
     private String skillType;
@@ -95,10 +96,11 @@ public final class Skill implements Serializable {
      * @param filename
      *            the filename of the skill
      * @throws DocumentException
-     *             if the file cant be found or is invalid
+     *             if the file can't be found or is invalid
      */
     public void loadSkillFromXML(String filename) throws DocumentException {
         SAXReader reader = new SAXReader();
+        id = filename;
         File inputFile = new File("data/skills/" + filename + ".xml");
         Document document = reader.read(inputFile);
 
@@ -474,6 +476,11 @@ public final class Skill implements Serializable {
      */
     public boolean isOffhandSkill() {
         return offhandSkill;
+    }
+    
+
+    public String getId() {
+        return id;
     }
 
     /*
