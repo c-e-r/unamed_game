@@ -31,6 +31,7 @@ import java.lang.Integer;
  * @version 0.0.1
  */
 public class World {
+    
 
     private static final Logger LOG = LogManager.getLogger(Game.class);
 
@@ -209,8 +210,8 @@ public class World {
                 String[] values = properties.getProperty(key).split("\\|");
                 WorldTile tile = new WorldTile(values[0],
                         Integer.parseInt(values[1]), values[2].charAt(0),
-                        Color.decode(values[3]));
-                for (int i = 4; i < values.length; i++) {
+                        Color.decode(values[3]), Double.parseDouble(values[4]));
+                for (int i = 5; i < values.length; i++) {
                     tile.addEventFile(values[i]);
                 }
                 tileStorage.put(Integer.parseInt(key, 16), tile);

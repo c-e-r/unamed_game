@@ -24,6 +24,7 @@ public class WorldTile {
     private List<String> eventFiles;
     private Color color;
     private Location location;
+    private double travelMult;
 
     /**
      * A default Constructor.
@@ -74,12 +75,13 @@ public class WorldTile {
      *            the names of the tiles event files
      */
     public WorldTile(String tileType, int maxExplore, char character,
-            Color color, String... eventFiles) {
+            Color color,double travelMult,  String... eventFiles) {
         this.tileType = tileType;
         this.maxExplore = maxExplore;
         this.character = character;
         this.eventFiles = new ArrayList<String>();
         this.color = color;
+        this.travelMult = travelMult;
         for (String fileName : eventFiles) {
             this.eventFiles.add(fileName);
         }

@@ -28,6 +28,7 @@ import unamedgame.world.World;
  */
 public final class Player extends Entity implements Serializable {
 
+    private static final int BASE_TRAVEL_TIME = 2400;
     private static final long serialVersionUID = -3011027798036421350L;
     private static Player instance;
 
@@ -125,7 +126,8 @@ public final class Player extends Entity implements Serializable {
                     CubePoint.pointToCubePoint(location), direction));
             if (World.getInstance().locationExists(tempLocation)) {
                 location = tempLocation;
-                Time.getInstance().passTime(480);
+                int timeToPass = BASE_TRAVEL_TIME;
+                Time.getInstance().passTime(timeToPass);
             } else {
                 direction = -1;
             }
