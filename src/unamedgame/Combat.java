@@ -488,6 +488,12 @@ public class Combat {
         Window.clearSide();
         Window.appendText(enemy.getDeathDescription() + "\n");
         player.gainExp(enemy.getExpValue());
+        if (enemy.getCurrency() > 0) {
+            player.addCurrency(enemy.getCurrency());
+            Window.appendText("You found " + enemy.getCurrency() + "Ł on the "
+                    + enemy.getName() + " .\n");
+
+        }
         if (enemy.getInventory().size() != 0) {
             Window.appendText(Game.capitalizeFirstLetter(enemy.getUseName())
                     + " had some items. Take them?.\n");

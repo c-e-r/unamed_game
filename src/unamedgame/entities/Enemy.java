@@ -49,6 +49,7 @@ public final class Enemy extends Entity {
     private int offensiveChance;
     private int healChance;
     private int expValue;
+    private int currencyRoll;
 
     /**
      * Creates an enemy from an xml with the given filename.
@@ -233,11 +234,11 @@ public final class Enemy extends Entity {
                 int die = Dice.roll(Dice.ENEMY_BUILD_RANDOM);
                 while (randomChoice.hasNext()) {
                     Element tmp = randomChoice.next();
-                    System.out.println(Integer
-                            .parseInt(tmp.attributeValue("lessThan")));
+                    System.out.println(
+                            Integer.parseInt(tmp.attributeValue("lessThan")));
                     System.out.println(die);
                     if (die <= Integer
-                            .parseInt(tmp.attributeValue("lessThan")) ) {
+                            .parseInt(tmp.attributeValue("lessThan"))) {
                         parseEnemyXML(tmp.elementIterator());
                     }
                 }
@@ -481,6 +482,10 @@ public final class Enemy extends Entity {
             case "innateWeapon":
                 innateWeapon = new Item(element);
                 break;
+            case "currency":
+                currency = Integer.parseInt(element.getText());
+            case "currencyRoll":
+                currency += Dice.roll(Integer.parseInt(element.getText()));
             default:
                 LOG.error("Error unrecognized element name: "
                         + element.getName());
@@ -779,4 +784,7 @@ public final class Enemy extends Entity {
         return expValue;
     }
 
+    public int getCurrencyRoll() {
+        return currencyRoll;
+    }
 }

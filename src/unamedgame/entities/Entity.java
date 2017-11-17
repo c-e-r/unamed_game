@@ -1639,7 +1639,7 @@ public class Entity extends Observable implements Serializable {
 
         return inventory.remove(itemIndex);
     }
-    
+
     public void removeItemFromInventory(Item item) {
         inventory.remove(item);
     }
@@ -2331,6 +2331,16 @@ public class Entity extends Observable implements Serializable {
     }
 
     /**
+     * Returns the amount of currency carried by the entity
+     * 
+     * @return the currency
+     */
+    public int getCurrency() {
+        return currency;
+
+    }
+
+    /**
      * An enumerator to store equipment array indexes.
      * 
      * @author c-e-r
@@ -2685,8 +2695,7 @@ public class Entity extends Observable implements Serializable {
      *            the name of the item to check for
      * @return if the item is in the players inventory
      */
-    public boolean checkIfItemUses(String itemId, String operator,
-            int value) {
+    public boolean checkIfItemUses(String itemId, String operator, int value) {
         for (Item item : inventory) {
             if (item.getId().equals(itemId)) {
                 switch (operator) {
@@ -2833,7 +2842,7 @@ public class Entity extends Observable implements Serializable {
         currency -= amount;
     }
 
-    public boolean canAfford(int cost){
+    public boolean canAfford(int cost) {
         return currency >= cost;
     }
 

@@ -11,6 +11,8 @@
             <expValue>100</expValue>
         </chance>
     </random>
+    <currency>1</currency>
+    <currencyRoll>10</currencyRoll>
     <vitality>2</vitality>
     <strength>1</strength>
     <dexterity>3</dexterity>
