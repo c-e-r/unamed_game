@@ -13,6 +13,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 import javax.swing.JPanel;
 
@@ -31,14 +33,15 @@ import unamedgame.world.WorldTile;
 
 public class MapPanel extends JPanel {
     private static final long serialVersionUID = 1L;
-    private int width = 500;
-    private int height = 500;
+    private static final int PREFERRED_WIDTH = 450;
+    private static final int PREFERRED_HEIGHT = 450;
+    private int width;
+    private int height;
     private Font font = new Font("monospaced", Font.PLAIN, 16);
     FontMetrics metrics;
 
     public MapPanel() {
-        setPreferredSize(new Dimension(width, height));
-        System.out.println(getMinimumSize().getHeight());
+        setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
     }
 
     /**
@@ -241,13 +244,12 @@ public class MapPanel extends JPanel {
         Font tmpf = g.getFont();
         g.setColor(new Color(colorValue));
         g.setFont(new Font("Courier New", Font.PLAIN, l / 25));
-        g.drawString(Time.getInstance().getDateTime(), 0+10,
-                height-10);
+        g.drawString(Time.getInstance().getDateTime(), 0 + 10, height - 10);
         g.setFont(tmpf);
         g.setColor(tmpC);
 
     }
-    
+
     /**
      * Draws the currency overlay on the map
      * 
@@ -260,15 +262,17 @@ public class MapPanel extends JPanel {
      * @param colorValue
      *            the color to use for the text
      */
-    private void drawCurrencyOverlay(Graphics2D g, Point o, int l, int colorValue) {
+    private void drawCurrencyOverlay(Graphics2D g, Point o, int l,
+            int colorValue) {
         Color tmpC = g.getColor();
         Font tmpf = g.getFont();
         g.setColor(new Color(colorValue));
         g.setFont(new Font("Courier New", Font.PLAIN, l / 25));
         FontMetrics metrics = g.getFontMetrics(g.getFont());
-        int stringWidth = metrics.stringWidth(Player.getInstance().getCurrencyString());
-        g.drawString(Player.getInstance().getCurrencyString(), width - stringWidth -10,
-                height -10);
+        int stringWidth = metrics
+                .stringWidth(Player.getInstance().getCurrencyString());
+        g.drawString(Player.getInstance().getCurrencyString(),
+                width - stringWidth - 10, height - 10);
         g.setFont(tmpf);
         g.setColor(tmpC);
 

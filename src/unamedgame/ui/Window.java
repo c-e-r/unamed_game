@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
@@ -27,6 +28,7 @@ import unamedgame.Game;
 import unamedgame.entities.Player;
 import unamedgame.input.InputEvent;
 import unamedgame.input.InputObserver;
+import unamedgame.items.Item;
 
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;
@@ -35,23 +37,38 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.Scanner;
 
 import javax.swing.JSplitPane;
 
 public class Window {
 
     private static final Logger LOG = LogManager.getLogger(Game.class);
+    private static final String DEFAULT_WINDOW_Y = "50";
+    private static final String DEFAULT_WINDOW_X = "200";
+    private static final String DEFAULT_WINDOW_WIDTH = "1000";
+    private static final String DEFAULT_WINDOW_HEIGHT = "950";
+    private static final String DEFAULT_MAP_WIDTH = "500";
+    private static final String DEFAULT_MAP_HEIGHT = "500";
 
     private boolean mapState = true;
 
     private JFrame frame;
     private JTextField textField;
     private JPanel panel;
-    private JMenuBar menuBar;
-    private JMenu mnSystem;
-    private JMenuItem mntmHelp;
 
     private static Window instance = null;
     private JSplitPane splitPane;
@@ -78,6 +95,7 @@ public class Window {
      */
     private Window() {
         initialize();
+
     }
 
     /**
@@ -85,10 +103,105 @@ public class Window {
      */
     private void initialize() {
         frame = new JFrame();
-        frame.setBounds(200, 50, 1000, 950);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.out.println("here");
+                File propFile = new File("saves/window.properties");
+                String yOff = Integer.toString(frame.getLocationOnScreen().y);
+                String xOff = Integer.toString(frame.getLocationOnScreen().x);
+                String width = Integer
+                        .toString((int) frame.getBounds().getWidth());
+                String height = Integer
+                        .toString((int) frame.getBounds().getHeight());
+                String mapWidth = Integer
+                        .toString((int) mapPane.getBounds().getWidth());
+                String mapHeight = Integer
+                        .toString((int) mapPane.getBounds().getHeight());
+                String state = Integer.toString((int) frame.getExtendedState());
+                Properties windowProp = new Properties();
+                windowProp.setProperty("windowY", yOff);
+                windowProp.setProperty("windowX", xOff);
+                windowProp.setProperty("windowWidth", width);
+                windowProp.setProperty("windowHeight", height);
+                windowProp.setProperty("mapWidth", mapWidth);
+                windowProp.setProperty("mapHeight", mapHeight);
+                windowProp.setProperty("state", state);
+                try {
+                    windowProp.store(new FileOutputStream(propFile), "");
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        int yOff = 0;
+        int xOff = 0;
+        int width = 0;
+        int height = 0;
+        int mapWidth = 0;
+        int mapHeight = 0;
+        int state = JFrame.NORMAL;
+        File propFile = new File("saves/window.properties");
+        if (propFile.exists()) {
+            Properties windowProp = new Properties();
+            try {
+                windowProp.load(new FileReader(propFile));
+                yOff = Integer.parseInt(
+                        windowProp.getProperty("windowY", DEFAULT_WINDOW_Y));
+                xOff = Integer.parseInt(
+                        windowProp.getProperty("windowX", DEFAULT_WINDOW_X));
+                width = Integer.parseInt(windowProp.getProperty("windowWidth",
+                        DEFAULT_WINDOW_WIDTH));
+                height = Integer.parseInt(windowProp.getProperty("windowHeight",
+                        DEFAULT_WINDOW_HEIGHT));
+                mapWidth = Integer.parseInt(
+                        windowProp.getProperty("mapWidth", DEFAULT_MAP_WIDTH));
+                mapHeight = Integer.parseInt(windowProp.getProperty("mapHeight",
+                        DEFAULT_MAP_HEIGHT));
+                state = Integer.parseInt(windowProp.getProperty("mapWidth",
+                        Integer.toString(JFrame.NORMAL)));
+
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        } else {
+            Properties windowProp = new Properties();
+            windowProp.setProperty("windowY", (DEFAULT_WINDOW_Y));
+            windowProp.setProperty("windowX", (DEFAULT_WINDOW_X));
+            windowProp.setProperty("windowWidth", (DEFAULT_WINDOW_WIDTH));
+            windowProp.setProperty("windowHeight", (DEFAULT_WINDOW_HEIGHT));
+            windowProp.setProperty("mapWidth", (DEFAULT_MAP_WIDTH));
+            windowProp.setProperty("mapHeight", (DEFAULT_MAP_HEIGHT));
+            windowProp.setProperty("state", Integer.toString(JFrame.NORMAL));
+            yOff = Integer.parseInt(
+                    windowProp.getProperty("windowY", DEFAULT_WINDOW_Y));
+            xOff = Integer.parseInt(
+                    windowProp.getProperty("windowX", DEFAULT_WINDOW_X));
+            width = Integer.parseInt(windowProp.getProperty("windowWidth",
+                    DEFAULT_WINDOW_WIDTH));
+            height = Integer.parseInt(
+                    windowProp.getProperty("windowHeight", DEFAULT_MAP_HEIGHT));
+            mapWidth = Integer.parseInt(
+                    windowProp.getProperty("mapWidth", DEFAULT_MAP_WIDTH));
+            mapHeight = Integer.parseInt(
+                    windowProp.getProperty("mapHeight", DEFAULT_MAP_HEIGHT));
+            state = Integer.parseInt(windowProp.getProperty("state",
+                    Integer.toString(JFrame.NORMAL)));
+            try {
+                windowProp.store(new FileOutputStream(propFile), "");
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+
+        }
+
+        frame.setBounds(xOff, yOff, width, height);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BorderLayout(0, 0));
-
+        frame.setExtendedState(state);
         textField = new JTextField();
         frame.getContentPane().add(textField, BorderLayout.SOUTH);
         textField.setColumns(10);
@@ -120,6 +233,7 @@ public class Window {
         splitPane2.setResizeWeight(0.0);
 
         mapPane = new MapPanel();
+
         mapScrollPane.setViewportView(mapPane);
         mapPane.setFont(new Font("Courier New", Font.PLAIN, 12));
 
@@ -134,6 +248,9 @@ public class Window {
         textScrollPane.setViewportView(textPane);
         panel.add(splitPane, BorderLayout.CENTER);
         textPane.setFont(new Font("Courier New", Font.PLAIN, 12));
+
+        splitPane2.setDividerLocation(mapWidth);
+        splitPane.setDividerLocation(mapHeight);
 
         /*
          * A mouse listener to put focus on textField when textPane is clicked
@@ -175,15 +292,6 @@ public class Window {
          */
         DefaultCaret caret = (DefaultCaret) textPane.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-
-        menuBar = new JMenuBar();
-        frame.getContentPane().add(menuBar, BorderLayout.NORTH);
-
-        mnSystem = new JMenu("System");
-        menuBar.add(mnSystem);
-
-        mntmHelp = new JMenuItem("Help");
-        mnSystem.add(mntmHelp);
 
         playerPane = new JTextPane();
         playerPane.setEditable(false);
@@ -246,8 +354,7 @@ public class Window {
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
                 StyleConstants.Foreground, text);
-        aset = sc.addAttribute(aset, StyleConstants.Background,
-                background);
+        aset = sc.addAttribute(aset, StyleConstants.Background, background);
         try {
             doc.insertString(doc.getLength(), msg, aset);
 
@@ -273,11 +380,10 @@ public class Window {
     public static void appendSide(String msg, Color text, Color background) {
         StyledDocument doc = instance.sidePane.getStyledDocument();
         StyleContext sc = StyleContext.getDefaultStyleContext();
-        
+
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
                 StyleConstants.Foreground, text);
-        aset = sc.addAttribute(aset, StyleConstants.Background,
-                background);
+        aset = sc.addAttribute(aset, StyleConstants.Background, background);
         try {
             doc.insertString(doc.getLength(), msg, aset);
 
@@ -305,8 +411,7 @@ public class Window {
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,
                 StyleConstants.Foreground, text);
-        aset = sc.addAttribute(aset, StyleConstants.Background,
-                background);
+        aset = sc.addAttribute(aset, StyleConstants.Background, background);
         try {
             doc.insertString(doc.getLength(), msg, aset);
 

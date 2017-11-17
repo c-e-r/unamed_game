@@ -61,6 +61,8 @@ public class Game {
      *            the command line arguments
      */
     public static void main(String[] args) {
+        
+
 
         Window.getInstance().getFrame().setVisible(true);
         openMainMenu();
