@@ -29,17 +29,6 @@ import unamedgame.ui.Window;
  */
 public class Combat {
 
-    /**
-     * An int to be given to the combat constructor when starting combat that
-     * should return to the exploration menu when done.
-     */
-    public static final int FROM_EXPLORATION = 1;
-    /**
-     * An int to be given to the combat constructor when starting combat that
-     * should return to an event when done.
-     */
-    public static final int FROM_EVENT = 2;
-
     private static final Logger LOG = LogManager.getLogger(Game.class);
 
     private static boolean inCombat;
@@ -79,11 +68,7 @@ public class Combat {
      */
     private void newTurn() {
         Window.clearSide();
-        Window.appendSide(
-                "1: Attack \n2: Skill \n3: Magic\n4: Item \n5: Escape\n");
-        Window.clearPlayer();
-        Window.appendPlayer(player.getStatus());
-
+        refreshPlayerStatus();
         getCombatInput();
     }
 
@@ -175,6 +160,7 @@ public class Combat {
 
             break;
         }
+        refreshPlayerStatus();
     }
 
     /**
@@ -212,6 +198,7 @@ public class Combat {
 
             break;
         }
+        refreshPlayerStatus();
     }
 
     /**
@@ -388,7 +375,7 @@ public class Combat {
         if (!playerWin && !playerLoss) {
             Time.getInstance().passTime(1);
         }
-
+        refreshPlayerStatus();
         playerLoss = player.isDead();
         playerWin = enemy.isDead();
         if (playerLoss) {
@@ -490,6 +477,7 @@ public class Combat {
         Window.clearSide();
         Window.appendText(enemy.getKillDescription() + "\n");
         inCombat = false;
+        Game.openDeathMenu();
     }
 
     /**
@@ -656,5 +644,11 @@ public class Combat {
     public static void backToEvent() {
         EventReader.resumeEvent();
         Window.getInstance().swapToMapPane();
+    }
+
+    private void refreshPlayerStatus() {
+        Window.clearPlayer();
+        Window.appendPlayer(player.getStatus());
+
     }
 }

@@ -71,7 +71,10 @@ public class Game {
      * Opens the games main menu.
      */
     public static void openMainMenu() {
+        Window.clearPlayer();
+        Window.clearText();
         Window.clearSide();
+        Window.getInstance().swapToMapPane();
         Window.appendSide("1: NEW GAME\n2: LOAD GAME\n");
         Window.getInstance().addInputObsever(new InputObserver() {
             @Override
@@ -83,11 +86,13 @@ public class Game {
                     int command = Integer.parseInt(evt.getText());
                     if (command >= 1 && command <= 2) {
                         switch (command) {
-                        case 1:
+                        case 1: // New Game
                             Window.getInstance().removeInputObsever(this);
+                            Player.setInstance(null);
+                            Time.setInstance(null);
                             openExplorationMenu();
                             break;
-                        case 2:
+                        case 2: // Load Game
                             Window.getInstance().removeInputObsever(this);
                             openLoadMenu(() -> openMainMenu());
                             break;
@@ -304,9 +309,11 @@ public class Game {
      * Opens the main exploration menu and waits for player input.
      */
     public static void openExplorationMenu() {
+        Window.getInstance().swapToMapPane();
+        Window.getInstance().getMapPane().repaint();
         Window.clearSide();
         Window.appendSide(
-                "1: Explore \n2: Move\n3: Gather\n4: Inventory\n5: Quests \n6: Status\n7: Save\n");
+                "1: Explore \n2: Move\n3: Gather\n4: Inventory\n5: Quests \n6: Status\n7: Save\n8: Load\n9: Exit to Main Menu");
 
         Window.getInstance().addInputObsever(new InputObserver() {
             @Override
@@ -350,6 +357,14 @@ public class Game {
                 case 7: // save
                     window.removeInputObsever(this);
                     openSaveMenu(() -> openExplorationMenu());
+                    break;
+                case 8: // load
+                    window.removeInputObsever(this);
+                    openLoadMenu(() -> openExplorationMenu());
+                    break;
+                case 9: // main Menu
+                    window.removeInputObsever(this);
+                    openMainMenu();
                     break;
                 default:
                     Window.appendText("Invalid Command\n");
@@ -1726,6 +1741,34 @@ public class Game {
         } else {
             LOG.error("Somehow you tried to access an item that dosn't exist");
         }
+    }
+
+    public static void openDeathMenu() {
+        Window.clearSide();
+        Window.appendSide("1: Load\n2: Return to Main Menu\n");
+        Window.getInstance().addInputObsever(new InputObserver() {
+            @Override
+            public void inputChanged(InputEvent evt) {
+                int command = -1;
+                if (isNumeric(evt.getText())) {
+                    command = Integer.parseInt(evt.getText());
+                }
+                switch (command) {
+                case 1: // Load
+                    window.removeInputObsever(this);
+                    openLoadMenu(() -> openDeathMenu());
+                    break;
+                case 2: // Main Menu
+                    window.removeInputObsever(this);
+                    openMainMenu();
+                    break;
+                default:
+                    Window.appendText("Invalid Command\n");
+                    break;
+                }
+
+            }
+        });
     }
 
     /**
