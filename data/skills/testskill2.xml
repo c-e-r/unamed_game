@@ -9,24 +9,27 @@
     playerAttackDescription='You taunt the enemy'
     >
     <alwaysEffect 
+        type='damage'
         name='itemName' 
         magnitude='1' 
         damageType='bludgeoning' 
         effectDescription='#targetNameCapital# takes #totalDamage# extra damage' 
         playerEffectDescription='You take #totalDamage# extra damage' 
-    >damage</alwaysEffect>
+    ></alwaysEffect>
     <alwaysEffect
+        type='heal'
         name='itemName'
         magnitude='7'
         toSelf='true'
         effectDescription='#targetNameCapital# is healed by #totalHeal#'
         playerEffectDescription='you are healed by #totalHeal#'
-    >heal<effect
-            name='itemName'
-            magnitude='1'
-            toSelf='true'
-            effectDescription='#targetNameCapital# is healed by #totalHeal#'
-            playerEffectDescription='you are healed by #totalHeal#'
-            >heal</effect>
+    ><effect
+        type='heal'
+        name='itemName'
+        magnitude='1'
+        toSelf='true'
+        effectDescription='#targetNameCapital# is healed by #totalHeal#'
+        playerEffectDescription='you are healed by #totalHeal#'
+    ></effect>
     </alwaysEffect>
 </skill>

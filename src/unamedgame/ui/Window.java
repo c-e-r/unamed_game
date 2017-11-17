@@ -61,8 +61,8 @@ public class Window {
     private static final String DEFAULT_WINDOW_X = "200";
     private static final String DEFAULT_WINDOW_WIDTH = "1000";
     private static final String DEFAULT_WINDOW_HEIGHT = "950";
-    private static final String DEFAULT_MAP_WIDTH = "500";
-    private static final String DEFAULT_MAP_HEIGHT = "500";
+    private static final String DEFAULT_MAP_WIDTH = "300";
+    private static final String DEFAULT_MAP_HEIGHT = "300";
 
     private boolean mapState = true;
 
@@ -114,9 +114,9 @@ public class Window {
                 String height = Integer
                         .toString((int) frame.getBounds().getHeight());
                 String mapWidth = Integer
-                        .toString((int) mapPane.getBounds().getWidth());
+                        .toString((int) splitPane2.getDividerLocation());
                 String mapHeight = Integer
-                        .toString((int) mapPane.getBounds().getHeight());
+                        .toString((int) splitPane.getDividerLocation());
                 String state = Integer.toString((int) frame.getExtendedState());
                 Properties windowProp = new Properties();
                 windowProp.setProperty("windowY", yOff);
@@ -251,6 +251,7 @@ public class Window {
 
         splitPane2.setDividerLocation(mapWidth);
         splitPane.setDividerLocation(mapHeight);
+        System.out.println(mapPane.getWidth());
 
         /*
          * A mouse listener to put focus on textField when textPane is clicked

@@ -7,6 +7,7 @@
         <addSkill>testSkill</addSkill>
         <addSpell>testSpell</addSpell>
         <addEffect 
+            type='damage'
             name='notDot?' 
             magnitude='2' 
             duration='10000'
@@ -21,8 +22,9 @@
             resistRepeatEffectDescription='#targetNameCapital# resisted the effect this turn'
             playerResistEffectDescription='You resist the effect'
             playerResistRepeatEffectDescription='You resisted the effect this turn'
-        >damage
+        >
             <effect 
+                type='damage'
                 name='dotDotDot' 
                 magnitude='2' 
                 duration='10000'
@@ -37,7 +39,7 @@
                 resistRepeatEffectDescription='K#targetNameCapital# resisted the effect this turn'
                 playerResistEffectDescription='KYou resist the effect'
                 playerResistRepeatEffectDescription='KYou resisted the effect this turn'
-            >damage</effect>
+            ></effect>
         </addEffect>
         <ifItemUses itemName='test item' operator='=' value='1'>
             <text>test item has 1 use</text>

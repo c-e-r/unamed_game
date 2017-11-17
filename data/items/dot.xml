@@ -15,6 +15,7 @@
     <fieldUse>true</fieldUse>
     <equippable equipSlot='hand'>true</equippable>
     <effect 
+        type='damage'
         name='dotDot' 
         magnitude='2' 
         duration='10000'
@@ -39,5 +40,5 @@
         playerSpecialEffectDescription='You take #totalDamage# extra damage from a special effect'
         specialResistEffectDescription='#targetNameCapital# resists the special effect'
         playerSpecialResistEffectDescription='You resist the special effect'
-    >damage</effect>
+    ></effect>
 </item>

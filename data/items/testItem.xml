@@ -15,22 +15,25 @@
     <equippable equipSlot='held'>true</equippable>
     <spell>testSpell</spell>
     <effect
+        type='heal'
         toSelf='true'
         name='itemNameHeal' 
         magnitude="7"
         baseAccuracy='-1'
         effectDescription='#targetNameCapital# healed for #totalHeal# health' 
         playerEffectDescription='You are healed for #totalHeal#'
-    >heal</effect>
+    ></effect>
     <effect
+        type='heal'
         toSelf='true'
         name='itemNameHeal2' 
         magnitude="7"
         baseAccuracy='-1'
         effectDescription='#targetNameCapital# healed for #totalHeal# health' 
         playerEffectDescription='You are healed for #totalHeal#'
-    >heal</effect>
+    ></effect>
     <effect 
+        type='damage'
         name='itemNameDamage' 
         magnitude='2' 
         duration='10000'
@@ -60,10 +63,11 @@
 
 
         
-        >damage</effect>
+        ></effect>
         
     
     <effect
+        type='increaseStat'
         name='itemNameStrength'
         magnitude='15'
         duration='-1'
@@ -74,5 +78,5 @@
         repeatEffectDescription='N/A'
         playerRepeatEffectDescription='N/A'
         
-    >increaseStat</effect>
+    ></effect>
 </item>

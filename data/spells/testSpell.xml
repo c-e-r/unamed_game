@@ -13,10 +13,11 @@
     playerMissDescription='You you shoot lightning at #targetName# but miss.'
     >
     <hitEffect 
+        type='damage'
         name='itemName' 
         magnitude='1' 
         damageType='electricity' 
         effectDescription='#targetNameCapital# takes #totalDamage# damage' 
         playerEffectDescription='You take #totalDamage# damage' 
-    >damage</hitEffect>
+    ></hitEffect>
 </spell>

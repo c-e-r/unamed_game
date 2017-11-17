@@ -14,11 +14,12 @@
     playerMissDescription='You bites at #targetName# with your teeth butmiss.'
     >
     <alwaysEffect 
+        type='damage'
         name='itemName' 
         magnitude='1' 
         damageType='piercing' 
         effectDescription='#targetNameCapital# takes #totalDamage# extra damage' 
         playerEffectDescription='You take #totalDamage# extra damage' 
-    >damage</alwaysEffect>
+    ></alwaysEffect>
     <hitSkill>testSkill2</hitSkill>
 </skill>

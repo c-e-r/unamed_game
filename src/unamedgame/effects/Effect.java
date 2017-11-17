@@ -668,7 +668,7 @@ public class Effect implements Serializable {
                 element.attributeValue("specialResistType"),
                 specialAccuracyBonus);
 
-        switch (element.getTextTrim()) {
+        switch (element.attributeValue("type")) {
 
         case "increaseStat":
             return new StatIncreaseEffect(effect,

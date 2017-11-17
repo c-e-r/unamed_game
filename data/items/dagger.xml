@@ -21,15 +21,17 @@
     <maxUses>0</maxUses>
     <equippable equipSlot='held'>true</equippable>
     <equipEffect
+        type='increaseStat'
         stat='speed'
         length='-1'
         magnitude='5'
-    >increaseStat</equipEffect>
+    ></equipEffect>
     <attackEffect
+        type='heal'
         magnitude='1'
         toSelf='true'
         playerEffectDescription='You heal for #totalHeal#'
-    >heal</attackEffect>
+    ></attackEffect>
     <skill>testSkill</skill>
     <skill>testSkill2</skill>
     <equipSpell>testSpell</equipSpell>
