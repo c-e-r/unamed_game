@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <item>
     <name>dot</name>
+    <perishable>true</perishable>
     <description>this is a dot item</description>
     <useText>#userNameCapital# uses the dot item</useText>
     <useOnText>#userNameCapital# uses the dot item on #targetName#</useOnText>
@@ -9,7 +10,7 @@
     <offensive>true</offensive>
     <weight>1</weight>
     <uses>1</uses>
-    <maxUses>2</maxUses>
+    <maxUses>1</maxUses>
     <battleUse>true</battleUse>
     <fieldUse>true</fieldUse>
     <equippable equipSlot='hand'>true</equippable>

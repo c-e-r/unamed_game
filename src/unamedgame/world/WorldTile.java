@@ -71,11 +71,13 @@ public class WorldTile {
      *            the character that represents the tile
      * @param color
      *            the tiles color as a Color
+     * @param travelMult
+     *            the tiles travel time multiplier
      * @param eventFiles
      *            the names of the tiles event files
      */
     public WorldTile(String tileType, int maxExplore, char character,
-            Color color,double travelMult,  String... eventFiles) {
+            Color color, double travelMult, String... eventFiles) {
         this.tileType = tileType;
         this.maxExplore = maxExplore;
         this.character = character;
@@ -102,6 +104,7 @@ public class WorldTile {
         this.character = worldTile.character;
         this.eventFiles = worldTile.eventFiles;
         this.color = worldTile.color;
+        this.travelMult = worldTile.travelMult;
     }
 
     /**
@@ -114,14 +117,14 @@ public class WorldTile {
         eventFiles.add(filename);
     }
 
-    
     public void setLocation(Location location) {
         this.location = location;
     }
-    
+
     public Location getLocation() {
         return location;
     }
+
     /**
      * Returns a string showing the number of remaining explorations out of the
      * maximum.
@@ -207,6 +210,15 @@ public class WorldTile {
      */
     public Color getColor() {
         return color;
+    }
+
+    /**
+     * Return the tiles travel time multiplier
+     * 
+     * @return the travelMult
+     */
+    public double getTravelMult() {
+        return travelMult;
     }
 
     @Override

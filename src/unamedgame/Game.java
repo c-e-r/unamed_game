@@ -584,28 +584,29 @@ public class Game {
                                 .getItemDescription(itemIndex) + "\n");
                         break;
                     case 3: // drop
-                        if (item.isEquipped()) {
-                            Player.getInstance()
-                                    .unequipInventoryItem(itemIndex);
-                            Window.appendText(
-                                    "You threw away the "
-                                            + Player.getInstance()
-                                                    .removeItemFromInventory(
-                                                            itemIndex)
-                                                    .getName()
-                                            + ".\n");
+                        if (!item.isBound()) {
+                            if (item.isEquipped()) {
+                                Player.getInstance()
+                                        .unequipInventoryItem(itemIndex);
+                                Window.appendText("You threw away the "
+                                        + Player.getInstance()
+                                                .removeItemFromInventory(
+                                                        itemIndex)
+                                                .getName()
+                                        + ".\n");
+                            } else {
+                                Window.appendText("You threw away the "
+                                        + Player.getInstance()
+                                                .removeItemFromInventory(
+                                                        itemIndex)
+                                                .getName()
+                                        + ".\n");
+                                Window.getInstance().removeInputObsever(this);
+                            }
+                            back.run();
                         } else {
-                            Window.appendText(
-                                    "You threw away the "
-                                            + Player.getInstance()
-                                                    .removeItemFromInventory(
-                                                            itemIndex)
-                                                    .getName()
-                                            + ".\n");
-                            Window.getInstance().removeInputObsever(this);
+                            Window.appendText("You cant drop that item!\n");
                         }
-
-                        back.run();
                         break;
                     case 4: // equip/unequip
                         if (item.isEquippable()) {
@@ -1552,7 +1553,8 @@ public class Game {
 
                             Player.getInstance()
                                     .removeItemFromInventory(itemIndex);
-                            Player.getInstance().addCurrency(item.getValue()/2);
+                            Player.getInstance()
+                                    .addCurrency(item.getValue() / 2);
                             Window.appendText(
                                     capitalizeFirstLetter(item.getName())
                                             + " has been sold.\n");

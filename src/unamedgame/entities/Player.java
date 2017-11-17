@@ -19,6 +19,7 @@ import unamedgame.time.Time;
 import unamedgame.ui.Window;
 import unamedgame.util.CubePoint;
 import unamedgame.world.World;
+import unamedgame.world.WorldTile;
 
 /**
  * A class to act as the player.
@@ -28,7 +29,7 @@ import unamedgame.world.World;
  */
 public final class Player extends Entity implements Serializable {
 
-    private static final int BASE_TRAVEL_TIME = 2400;
+    private static final int BASE_TRAVEL_TIME = 2880;
     private static final long serialVersionUID = -3011027798036421350L;
     private static Player instance;
 
@@ -56,7 +57,7 @@ public final class Player extends Entity implements Serializable {
     }
 
     private HashMap<String, Quest> questLog;
-    
+
     private Point location;
     private int level;
     private int exp;
@@ -122,36 +123,43 @@ public final class Player extends Entity implements Serializable {
     public void move(int direction) {
         if (Game.isOnMoveMenu()) {
             Point tempLocation;
+            int timeToPass = -1;
             tempLocation = CubePoint.cubePointToPoint(CubePoint.getMoveNeighbor(
                     CubePoint.pointToCubePoint(location), direction));
             if (World.getInstance().locationExists(tempLocation)) {
+                WorldTile tile = World.getInstance().getTile(tempLocation);
+                timeToPass = (int) (BASE_TRAVEL_TIME * tile.getTravelMult());
+            }
+
+            if (timeToPass >= 0) {
                 location = tempLocation;
-                int timeToPass = BASE_TRAVEL_TIME;
                 Time.getInstance().passTime(timeToPass);
             } else {
                 direction = -1;
             }
+            double hoursTraveled = timeToPass / 360;
+            int roundedHours = (int) Math.round(hoursTraveled);
             switch (direction) {
             case -1:
                 Window.appendText("You can't go there.\n");
                 break;
             case 0:
-                Window.appendText("You travel northwest.\n");
+                Window.appendText("You travel northwest for " + roundedHours + " hours.\n");
                 break;
             case 1:
-                Window.appendText("You travel north.\n");
+                Window.appendText("You travel north for " + roundedHours + " hours.\n");
                 break;
             case 2:
-                Window.appendText("You travel northeast.\n");
+                Window.appendText("You travel northeast for " + roundedHours + " hours.\n");
                 break;
             case 3:
-                Window.appendText("You travel southeast.\n");
+                Window.appendText("You travel southeast for " + roundedHours + " hours.\n");
                 break;
             case 4:
-                Window.appendText("You travel south.\n");
+                Window.appendText("You travel south for " + roundedHours + " hours.\n");
                 break;
             case 5:
-                Window.appendText("You travel southwest.\n");
+                Window.appendText("You travel southwest for " + roundedHours + " hours.\n");
                 break;
 
             default:
@@ -277,7 +285,6 @@ public final class Player extends Entity implements Serializable {
 
         return item;
     }
-    
 
     /**
      * Equips the item at the item index removing other equipment if needed.
@@ -505,11 +512,15 @@ public final class Player extends Entity implements Serializable {
     public void addQuest(String questId, String name) {
         questLog.put(questId, new Quest(name));
     }
-    
+
     public void updateQuest(String questId, String text) {
         questLog.get(questId).appendText(text);
     }
     
+    public String getCurrencyString() {
+        return String.format("%7d", currency);
+    }
+
     /**
      * Returns the players stat points.
      * 
@@ -661,12 +672,13 @@ public final class Player extends Entity implements Serializable {
     public void setNewStatPoints(int newStatPoints) {
         this.newStatPoints = newStatPoints;
     }
-    
+
     /**
      * Returns the quest log
+     * 
      * @return the questLog
      */
-    public HashMap<String, Quest> getQuestLog(){
+    public HashMap<String, Quest> getQuestLog() {
         return questLog;
     }
 

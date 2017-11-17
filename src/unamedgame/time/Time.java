@@ -83,6 +83,17 @@ public class Time extends Observable implements Serializable {
     public int getTime() {
         return time;
     }
+    
+    public String getDateTime() {
+        int tempTime = time;
+        int days = time/8640;
+        tempTime -= days*8640;
+        int hours = tempTime/360;
+        tempTime -= hours*360;
+        int minutes = tempTime/6;
+        tempTime = tempTime*6;
+        return String.format("Day %d  %d:%02d", days+1, hours, minutes);
+    }
 
     /**
      * Adds a time listener to this time object.

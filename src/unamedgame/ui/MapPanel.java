@@ -17,6 +17,7 @@ import java.awt.Stroke;
 import javax.swing.JPanel;
 
 import unamedgame.entities.Player;
+import unamedgame.time.Time;
 import unamedgame.util.CubePoint;
 import unamedgame.world.World;
 import unamedgame.world.WorldTile;
@@ -64,7 +65,9 @@ public class MapPanel extends JPanel {
         drawRectangle(g2d, true, 0xFFFFFF, 1);
         int radius = lowerBound / 13;
         drawHexGridLoop(g2d, origin, 9, radius, 1, lowerBound);
-        drawMovementOverlay(g2d,origin, lowerBound, 0x000000);
+        drawMovementOverlay(g2d, origin, lowerBound, 0x000000);
+        drawDateOverlay(g2d, origin, lowerBound, 0x000000);
+        drawCurrencyOverlay(g2d, origin, lowerBound, 0x000000);
     }
 
     /**
@@ -181,13 +184,13 @@ public class MapPanel extends JPanel {
         }
         hex.draw(g2d, x, y, 0, tile.getColor(), true);
         hex.draw(g2d, x, y, 2, Color.decode(outlineColor), false);
-        
-        g.setFont(new Font("Courier New", Font.PLAIN, lowerBound/30));
+
+        g.setFont(new Font("Courier New", Font.PLAIN, lowerBound / 30));
 
         g.setColor(new Color(0xFFFFFF));
         g.drawString(text, x - w / 2, y + h / 2 - 14);
         g.drawString(tile.getExploredOutOfMax(), x - w / 2 - 10, y + h / 2 + 2);
-        
+
         g.setFont(tmpf);
     }
 
@@ -208,14 +211,64 @@ public class MapPanel extends JPanel {
         Color tmpC = g.getColor();
         Font tmpf = g.getFont();
         g.setColor(new Color(colorValue));
-        g.setFont(new Font("Courier New", Font.PLAIN, l/30));
-        g.drawString("1", o.y - l/13,o.x - l/31);
-        g.drawString("2", o.y - l/90,o.x -  l/14);
-        g.drawString("3", o.y + l/17,o.x - l/31);
-        g.drawString("4", o.y + l/17,o.x + l/23);
-        g.drawString("5", o.y - l/90,o.x +  l/11);
-        g.drawString("6", o.y - l/13,o.x + l/21);
+        g.setFont(new Font("Courier New", Font.PLAIN, l / 30));
+        g.drawString("1", o.y - l / 13, o.x - l / 31);
+        g.drawString("2", o.y - l / 90, o.x - l / 14);
+        g.drawString("3", o.y + l / 17, o.x - l / 31);
+        g.drawString("4", o.y + l / 17, o.x + l / 23);
+        g.drawString("5", o.y - l / 90, o.x + l / 11);
+        g.drawString("6", o.y - l / 13, o.x + l / 21);
 
+        g.setFont(tmpf);
+        g.setColor(tmpC);
+
+    }
+
+    /**
+     * Draws the date overlay on the map
+     * 
+     * @param g
+     *            the graphics object
+     * @param o
+     *            the origin of the panel
+     * @param l
+     *            lower value of height or width or the panel
+     * @param colorValue
+     *            the color to use for the text
+     */
+    private void drawDateOverlay(Graphics2D g, Point o, int l, int colorValue) {
+        Color tmpC = g.getColor();
+        Font tmpf = g.getFont();
+        g.setColor(new Color(colorValue));
+        g.setFont(new Font("Courier New", Font.PLAIN, l / 25));
+        g.drawString(Time.getInstance().getDateTime(), 0+10,
+                height-10);
+        g.setFont(tmpf);
+        g.setColor(tmpC);
+
+    }
+    
+    /**
+     * Draws the currency overlay on the map
+     * 
+     * @param g
+     *            the graphics object
+     * @param o
+     *            the origin of the panel
+     * @param l
+     *            lower value of height or width or the panel
+     * @param colorValue
+     *            the color to use for the text
+     */
+    private void drawCurrencyOverlay(Graphics2D g, Point o, int l, int colorValue) {
+        Color tmpC = g.getColor();
+        Font tmpf = g.getFont();
+        g.setColor(new Color(colorValue));
+        g.setFont(new Font("Courier New", Font.PLAIN, l / 25));
+        FontMetrics metrics = g.getFontMetrics(g.getFont());
+        int stringWidth = metrics.stringWidth(Player.getInstance().getCurrencyString());
+        g.drawString(Player.getInstance().getCurrencyString(), width - stringWidth -10,
+                height -10);
         g.setFont(tmpf);
         g.setColor(tmpC);
 

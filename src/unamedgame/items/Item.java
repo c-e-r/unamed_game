@@ -95,6 +95,7 @@ public class Item implements Serializable {
 
     private int value;
     private boolean bound;
+    private boolean perishable;
 
     /**
      * Builds an Item from the given filename.
@@ -394,6 +395,8 @@ public class Item implements Serializable {
                 break;
             case "bound":
                 bound = Boolean.parseBoolean(element.getText());
+            case "perishable":
+                perishable = Boolean.parseBoolean(element.getText());
             default:
                 LOG.error("Error unrecognized element name: "
                         + element.getName());
@@ -531,7 +534,12 @@ public class Item implements Serializable {
         }
         uses--;
         if (uses <= 0 && maxUses > 0 && user instanceof Player) {
-            Window.appendText(getName() + " has run out of uses\n");
+            if(user instanceof Player) {
+                Window.appendText(Game.capitalizeFirstLetter(getName()) + " has run out of uses\n");
+            }
+            if(perishable) {
+                user.removeItemFromInventory(this);
+            }
         }
     }
 
@@ -1012,13 +1020,13 @@ public class Item implements Serializable {
     }
 
     public int getValue() {
-        return value*(uses/maxUses);
+        return value * (uses / maxUses);
     }
 
     public String getId() {
         return id;
     }
-    
+
     public boolean isBound() {
         return bound;
     }

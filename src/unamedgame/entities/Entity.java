@@ -1639,6 +1639,10 @@ public class Entity extends Observable implements Serializable {
 
         return inventory.remove(itemIndex);
     }
+    
+    public void removeItemFromInventory(Item item) {
+        inventory.remove(item);
+    }
 
     /**
      * Returns the name of the entity.
