@@ -1,6 +1,8 @@
 <event>
     <branch number='0'>
-        <shop name='test shop'>testShop</shop>
+        <ifTime after='0' before='0'>
+            <shop name='test shop'>testShop</shop>
+        </ifTime>
         <choice>
             <choiceDescription>You find a rock. Sit on it?</choiceDescription>
             <option branch='1'>Yes</option>

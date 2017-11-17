@@ -13,6 +13,7 @@ import java.util.Scanner;
 
 import unamedgame.Dice;
 import unamedgame.entities.Player;
+import unamedgame.time.Time;
 
 /**
  * A class to randomly select events.
@@ -45,8 +46,8 @@ public class EventSelector {
      * @throws FileNotFoundException
      *             if the event files cannot be found
      */
-    public static void startRandomEventFromFileList(List<String> fileNames, Runnable back)
-            throws FileNotFoundException {
+    public static void startRandomEventFromFileList(List<String> fileNames,
+            Runnable back) throws FileNotFoundException {
         EventReader.startEvent(
                 chooseEventFromList(getEventListFromFiles(fileNames)), back);
     }
@@ -60,8 +61,8 @@ public class EventSelector {
      * @throws FileNotFoundException
      *             if file cannot be found
      */
-    private static ArrayList<String> getEventListFromFiles(List<String> fileNames)
-            throws FileNotFoundException {
+    private static ArrayList<String> getEventListFromFiles(
+            List<String> fileNames) throws FileNotFoundException {
         ArrayList<String> newList = new ArrayList<String>();
         ArrayList<String> temp;
         for (String fileName : fileNames) {
@@ -91,25 +92,25 @@ public class EventSelector {
         return event;
 
     }
-    
+
     public static ArrayList<String> prunedEventListFromFile(String fileName) {
-            try {
-                
-                return pruneEventList(getEventListFromFile(fileName));
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            return null;
+        try {
+
+            return pruneEventList(getEventListFromFile(fileName));
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
-    
+
     public static ArrayList<String> pruneEventList(ArrayList<String> list) {
         System.out.println(list);
         Iterator<String> itr = list.iterator();
         String[] tmp;
-        while(itr.hasNext()) {
+        while (itr.hasNext()) {
             tmp = itr.next().split("\\|");
-            if(!checkEventConditions(tmp)) {
+            if (!checkEventConditions(tmp)) {
                 itr.remove();
             }
         }
@@ -138,7 +139,14 @@ public class EventSelector {
                 roll = Integer.parseInt(seperatedIf[1]);
                 operator = seperatedIf[2];
                 int rollValue = Integer.parseInt(seperatedIf[3]);
-                if (EventReader.checkRoll(operator, rollValue, roll)) {
+                if (!EventReader.checkRoll(operator, rollValue, roll)) {
+                    return false;
+                }
+                break;
+            case "ifTime":
+                int after = Integer.parseInt(seperatedIf[1]);
+                int before = Integer.parseInt(seperatedIf[2]);
+                if (!Time.getInstance().checkBetweenHours(after, before)) {
                     return false;
                 }
                 break;
@@ -224,7 +232,7 @@ public class EventSelector {
                 new File("data/events/eventLists/" + fileName + ".txt"));
         while (scanner.hasNextLine()) {
             String tmp = scanner.nextLine();
-            if(!tmp.substring(0, 1).equals("#")) {
+            if (!tmp.substring(0, 1).equals("#")) {
                 events.add(tmp);
             }
         }

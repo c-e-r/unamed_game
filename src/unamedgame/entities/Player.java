@@ -518,7 +518,7 @@ public final class Player extends Entity implements Serializable {
     }
     
     public String getCurrencyString() {
-        return String.format("%7d", currency);
+        return String.format("%7dŁ", currency);
     }
 
     /**

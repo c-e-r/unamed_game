@@ -28,6 +28,7 @@ import unamedgame.input.InputObserver;
 import unamedgame.items.Item;
 import unamedgame.skills.Skill;
 import unamedgame.spells.Spell;
+import unamedgame.time.Time;
 import unamedgame.ui.Window;
 
 /**
@@ -205,7 +206,8 @@ public class EventReader {
             stop = true;
             break;
         case "shop":
-            Game.openShopMenu(() -> resumeEvent(), element.getText(), element.attributeValue("name"));
+            Game.openShopMenu(() -> resumeEvent(), element.getText(),
+                    element.attributeValue("name"));
             stop = true;
             break;
         case "addItem":
@@ -295,6 +297,15 @@ public class EventReader {
             String rollOperator = element.attributeValue("operator");
 
             if (!checkRoll(rollOperator, rollValue, roll)) {
+                skipChildren = true;
+            }
+            nextElement();
+            interpretElement(currentElement);
+            break;
+        case "ifTime":
+            int after = Integer.parseInt(element.attributeValue("after"));
+            int before = Integer.parseInt(element.attributeValue("before"));
+            if (!Time.getInstance().checkBetweenHours(after, before)) {
                 skipChildren = true;
             }
             nextElement();
@@ -542,6 +553,29 @@ public class EventReader {
                         .parseInt(((Element) n).attributeValue("value"));
                 String rollOperator = ((Element) n).attributeValue("operator");
                 if (checkRoll(rollOperator, rollValue, roll)) {
+                    choices.addAll(n.selectNodes("option"));
+
+                    List<Node> innerIfChoices = n
+                            .selectNodes("./*[starts-with(name(), 'if')]");
+                    if (innerIfChoices.size() != 0) {
+                        choices.addAll(getAllIfOptions(n));
+                    }
+                }
+
+            }
+
+        }
+        List<Node> ifTimeChoices = node.selectNodes("ifTime");
+        for (Node n : ifTimeChoices) {
+            if (n != null) {
+
+                int after = Integer
+                        .parseInt(((Element) n).attributeValue("after"));
+                int before = Integer
+                        .parseInt(((Element) n).attributeValue("before"));
+
+                String rollOperator = ((Element) n).attributeValue("operator");
+                if (Time.getInstance().checkBetweenHours(after, before)) {
                     choices.addAll(n.selectNodes("option"));
 
                     List<Node> innerIfChoices = n

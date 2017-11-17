@@ -4,6 +4,7 @@
 package unamedgame.time;
 
 import java.io.Serializable;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,14 +37,14 @@ public class Time extends Observable implements Serializable {
 
     /**
      * Sets the the Time object.
-     * @param instance the Time to set
+     * 
+     * @param instance
+     *            the Time to set
      */
     public static void setInstance(Time instance) {
         Time.instance = instance;
     }
-    
-    
-    
+
     private List<TimeListener> timeListeners = new ArrayList<TimeListener>();
     private int time;
 
@@ -83,21 +84,35 @@ public class Time extends Observable implements Serializable {
     public int getTime() {
         return time;
     }
-    
+
     public String getDateTime() {
         int tempTime = time;
-        int days = time/8640;
-        tempTime -= days*8640;
-        int hours = tempTime/360;
-        tempTime -= hours*360;
-        int minutes = tempTime/6;
-        tempTime = tempTime*6;
-        return String.format("Day %d  %d:%02d", days+1, hours, minutes);
+        int days = time / 8640;
+        tempTime -= days * 8640;
+        int hours = tempTime / 360;
+        tempTime -= hours * 360;
+        int minutes = tempTime / 6;
+        tempTime = tempTime * 6;
+        return String.format("Day %d  %d:%02d", days + 1, hours, minutes);
+    }
+
+    public boolean checkBetweenHours(int after, int before) {
+        int tempTime = time;
+        int days = time / 8640;
+        tempTime -= days * 8640;
+        int hours = tempTime / 360;
+        LocalTime target = LocalTime.parse(String.format("%02d:00:00", hours));
+        LocalTime ltAfter = LocalTime.parse(String.format("%02d:00:00", after));
+        LocalTime ltBefore = LocalTime
+                .parse(String.format("%02d:00:00", before));
+        return !target.isBefore(ltAfter) && !target.isAfter(ltBefore);
     }
 
     /**
      * Adds a time listener to this time object.
-     * @param listener the listener to add
+     * 
+     * @param listener
+     *            the listener to add
      */
     public void addTimeListener(TimeListener listener) {
         timeListeners.add(listener);
@@ -105,7 +120,9 @@ public class Time extends Observable implements Serializable {
 
     /**
      * Removes the given time listener from the time object.
-     * @param listener the listener to remove
+     * 
+     * @param listener
+     *            the listener to remove
      */
     public void removeEntityListener(TimeListener listener) {
         timeListeners.remove(listener);
