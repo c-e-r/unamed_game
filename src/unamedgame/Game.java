@@ -1291,7 +1291,7 @@ public class Game {
     private static void openDebugMenu(Runnable back) {
         Window.clearSide();
         Window.appendSide(
-                "0: Back \naddItem <itemName>\ngainExp <amount>\nstartEvent <eventName>\naddSkill <skillName>\naddSpell <spellName>\nstartCombat <enemyName>\n");
+                "0: Back \naddItem <itemName>\ngainExp <amount>\nstartEvent <eventName>\naddSkill <skillName>\naddSpell <spellName>\nstartCombat <enemyName>\ntime\n");
 
         Window.getInstance().addInputObsever(new InputObserver() {
             @Override
@@ -1357,7 +1357,7 @@ public class Game {
                     window.removeInputObsever(this);
                     Enemy newEnemy = Enemy.buildEnemy(command[1]);
                     if (newEnemy != null) {
-                        new Combat(newEnemy, () -> openExplorationMenu());
+                        new Combat(newEnemy, () -> openExplorationMenu(), null);
                     } else {
                         Window.appendText(
                                 "ERROR: Somthing went wrong while creating an enemy. See game.log for more info.\n");
@@ -1786,7 +1786,7 @@ public class Game {
                 }
 
                 if (command > 0) {
-                    Window.appendText("You wait for "+ command +" hours.");
+                    Window.appendText("You wait for " + command + " hours.");
                     Time.getInstance().passTime(command * 360);
                     Window.getInstance().removeInputObsever(this);
                     back.run();
@@ -1809,8 +1809,18 @@ public class Game {
      * @return if the string contains only numeric characters
      */
     public static boolean isNumeric(String str) {
+        if (str == null) {
+            return false;
+        }
         return str.matches("\\d+");
 
+    }
+
+    public static int toInt(String s) {
+        if (isNumeric(s)) {
+            return Integer.parseInt(s);
+        }
+        return -1;
     }
 
     /**

@@ -201,7 +201,14 @@ public class EventReader {
         case "combat":
             Enemy newEnemy = Enemy.buildEnemy(element.getText());
             if (newEnemy != null) {
-                new Combat(newEnemy, () -> Combat.backToEvent());
+                String escape = element.attributeValue("escape");
+                int escapeBranch = Game.toInt(escape);
+                if (escapeBranch == -1) {
+                    new Combat(newEnemy, () -> Combat.backToEvent(), null);
+                } else {
+                    new Combat(newEnemy, () -> Combat.backToEvent(),
+                            () -> parseEventXML(root, escapeBranch));
+                }
             } else {
                 Window.appendText(
                         "ERROR: Somthing went wrong while creating an enemy. See game.log for more info.\n");
@@ -460,7 +467,7 @@ public class EventReader {
             nextElement();
             interpretElement(currentElement);
             break;
-        
+
         default:
             LOG.error("Error unrecognized element name: "
                     + currentElement.getName());

@@ -41,6 +41,8 @@ public class Combat {
     private Player player;
     private Enemy enemy;
     private Runnable back;
+    private Runnable escape;
+    private boolean escaped;
 
     /**
      * Starts a combat loop between the player and given Enemy.
@@ -50,11 +52,12 @@ public class Combat {
      * @param returnPoint
      *            the location to go after combat as an int
      */
-    public Combat(Enemy enemy, Runnable back) {
+    public Combat(Enemy enemy, Runnable back, Runnable escape) {
         this.back = back;
         player = Player.getInstance();
         this.enemy = enemy;
         inCombat = true;
+        this.escape = escape;
 
         Window.getInstance().swapToPlayerPane();
         Window.clearText();
@@ -105,17 +108,16 @@ public class Combat {
                         Window.getInstance().removeInputObsever(this);
                         break;
                     case 5: // escape
-                        Window.getInstance().removeInputObsever(this);
+                        if (escape != null) {
+                            Window.getInstance().removeInputObsever(this);
+                            combatTurn(5, -1);
+                        } else {
+                            Window.appendText("You cant run from this battle!\n");
+                        }
                         break;
-
                     default:
                         Window.appendText("Invalid Command\n");
                         break;
-                    }
-                    if (command >= 1 && command <= 5) {
-
-                    } else {
-
                     }
                 } else {
                     Window.appendText("Invalid Command\n");
@@ -154,6 +156,7 @@ public class Combat {
             }
             break;
         case 5: // escape
+            escaped = true;
             break;
         default:
             Window.appendText("Invalid Command\n");
@@ -161,6 +164,21 @@ public class Combat {
             break;
         }
         refreshPlayerStatus();
+    }
+
+    private void escape() {
+        if (escape != null) {
+            escaped = false;
+            Window.appendText("You escape the fight?\n");
+            Window.getInstance().addInputObsever(new InputObserver() {
+                @Override
+                public void inputChanged(InputEvent evt) {
+                    escape.run();
+                    Window.getInstance().removeInputObsever(this);
+                }
+            });
+        }
+
     }
 
     /**
@@ -354,7 +372,7 @@ public class Combat {
             playerAction(command, index);
             playerLoss = player.isDead();
             playerWin = enemy.isDead();
-            if (!playerWin && !playerLoss) {
+            if (!playerWin && !playerLoss && !escaped) {
                 enemyAction(enemyCommand, enemyIndex);
                 playerLoss = player.isDead();
                 playerWin = enemy.isDead();
@@ -382,6 +400,8 @@ public class Combat {
             endCombatLoss();
         } else if (playerWin) {
             endCombatWin();
+        } else if (escaped) {
+            escape();
         } else {
             newTurn();
         }
