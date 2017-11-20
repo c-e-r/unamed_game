@@ -105,6 +105,9 @@ public class Time extends Observable implements Serializable {
         LocalTime ltAfter = LocalTime.parse(String.format("%02d:00:00", after));
         LocalTime ltBefore = LocalTime
                 .parse(String.format("%02d:00:00", before));
+        if (before > after) {
+            return !target.isAfter(ltBefore) || !target.isBefore(ltAfter);
+        }
         return !target.isBefore(ltAfter) && !target.isAfter(ltBefore);
     }
 

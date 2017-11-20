@@ -41,7 +41,7 @@ public class MapPanel extends JPanel {
     FontMetrics metrics;
 
     public MapPanel() {
-        //setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
+        setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
     }
 
     /**
