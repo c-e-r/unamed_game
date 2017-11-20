@@ -75,4 +75,5 @@ All event require a 0 branch and an end point
         <ifSpell>           check if the player has a spell of the given name
             spellName=''     the name of the spell to check for
             not=''          if set to true will check if the player does not have the spell
+        <event>             will the the current event and start the specified one    
         <end>               ends the event

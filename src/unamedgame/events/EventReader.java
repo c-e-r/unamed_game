@@ -175,6 +175,10 @@ public class EventReader {
             stop = true;
             back.run();
             break;
+        case "event":
+            EventReader.startEvent(currentElement.getText(), back);
+            stop = true;
+            break;
         case "choice":
             Window.clearSide();
             String choiceDescription = ((Element) currentElement
@@ -456,6 +460,7 @@ public class EventReader {
             nextElement();
             interpretElement(currentElement);
             break;
+        
         default:
             LOG.error("Error unrecognized element name: "
                     + currentElement.getName());
