@@ -60,8 +60,6 @@ public class Game {
      *            the command line arguments
      */
     public static void main(String[] args) {
-        
-
 
         Window.getInstance().getFrame().setVisible(true);
         openMainMenu();
@@ -314,7 +312,7 @@ public class Game {
         Window.getInstance().getMapPane().repaint();
         Window.clearSide();
         Window.appendSide(
-                "1: Explore \n2: Move\n3: Gather\n4: Inventory\n5: Quests \n6: Status\n7: Save\n8: Load\n9: Exit to Main Menu");
+                "1: Explore \n2: Move\n3: Gather\n4: Inventory\n5: Quests \n6: Status\n7: Wait\n8: Save\n9: Load\n10: Exit to Main Menu");
 
         Window.getInstance().addInputObsever(new InputObserver() {
             @Override
@@ -355,15 +353,19 @@ public class Game {
                     window.removeInputObsever(this);
                     openStatusMenu(() -> openExplorationMenu());
                     break;
-                case 7: // save
+                case 7:
+                    window.removeInputObsever(this);
+                    openWaitMenu(() -> openExplorationMenu());
+                    break;
+                case 8: // save
                     window.removeInputObsever(this);
                     openSaveMenu(() -> openExplorationMenu());
                     break;
-                case 8: // load
+                case 9: // load
                     window.removeInputObsever(this);
                     openLoadMenu(() -> openExplorationMenu());
                     break;
-                case 9: // main Menu
+                case 10: // main Menu
                     window.removeInputObsever(this);
                     openMainMenu();
                     break;
@@ -1766,6 +1768,33 @@ public class Game {
                 default:
                     Window.appendText("Invalid Command\n");
                     break;
+                }
+
+            }
+        });
+    }
+
+    public static void openWaitMenu(Runnable back) {
+        Window.clearSide();
+        Window.appendSide("How many hours would you like to wait?\n");
+        Window.getInstance().addInputObsever(new InputObserver() {
+            @Override
+            public void inputChanged(InputEvent evt) {
+                int command = -1;
+                if (isNumeric(evt.getText())) {
+                    command = Integer.parseInt(evt.getText());
+                }
+
+                if (command > 0) {
+                    Window.appendText("You wait for "+ command +" hours.");
+                    Time.getInstance().passTime(command * 360);
+                    Window.getInstance().removeInputObsever(this);
+                    back.run();
+                } else if (command == 0) {
+                    Window.getInstance().removeInputObsever(this);
+                    back.run();
+                } else {
+                    Window.appendText("Invalid Number.\n");
                 }
 
             }
