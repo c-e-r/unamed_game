@@ -43,6 +43,7 @@ public class Combat {
     private Runnable back;
     private Runnable escape;
     private boolean escaped;
+    private int turn;
 
     /**
      * Starts a combat loop between the player and given Enemy.
@@ -70,6 +71,7 @@ public class Combat {
      * Starts a new combat turn.
      */
     private void newTurn() {
+        turn++;
         Window.clearSide();
         refreshPlayerStatus();
         getCombatInput();
@@ -112,7 +114,8 @@ public class Combat {
                             Window.getInstance().removeInputObsever(this);
                             combatTurn(5, -1);
                         } else {
-                            Window.appendText("You cant run from this battle!\n");
+                            Window.appendText(
+                                    "You cant run from this battle!\n");
                         }
                         break;
                     default:
@@ -164,6 +167,7 @@ public class Combat {
             break;
         }
         refreshPlayerStatus();
+        Window.appendText("\n");
     }
 
     private void escape() {
@@ -217,6 +221,7 @@ public class Combat {
             break;
         }
         refreshPlayerStatus();
+        Window.appendText("\n");
     }
 
     /**
@@ -354,6 +359,7 @@ public class Combat {
      *            the index for the command if it requires one
      */
     void combatTurn(int command, int index) {
+        Window.appendText("------Turn " + turn + "------\n");
 
         boolean playerLoss = false;
         boolean playerWin = false;
@@ -510,8 +516,7 @@ public class Combat {
         player.gainExp(enemy.getExpValue());
         if (enemy.getCurrency() > 0) {
             player.addCurrency(enemy.getCurrency());
-            Window.appendText("You found " + enemy.getCurrency() + "Ł on the "
-                    + enemy.getName() + " .\n");
+            Window.appendText("You found " + enemy.getCurrency() + "Ł.\n");
 
         }
         if (enemy.getInventory().size() != 0) {
