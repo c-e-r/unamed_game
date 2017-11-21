@@ -62,7 +62,6 @@ public class Combat {
 
         Window.getInstance().swapToPlayerPane();
         Window.clearText();
-        Window.appendText(enemy.getDescription() + "\n");
 
         newTurn();
     }
@@ -72,6 +71,8 @@ public class Combat {
      */
     private void newTurn() {
         turn++;
+        Window.appendText("------Turn " + turn + "------\n");
+        Window.appendText(enemy.getDescription() + " " + enemy.getHealthDescription() + "\n");
         Window.clearSide();
         refreshPlayerStatus();
         getCombatInput();
@@ -359,7 +360,6 @@ public class Combat {
      *            the index for the command if it requires one
      */
     void combatTurn(int command, int index) {
-        Window.appendText("------Turn " + turn + "------\n");
 
         boolean playerLoss = false;
         boolean playerWin = false;

@@ -787,4 +787,16 @@ public final class Enemy extends Entity {
     public int getCurrencyRoll() {
         return currencyRoll;
     }
+
+    public String getHealthDescription() {
+        double healthPercent = currentHealth / maxHealth;
+        if (healthPercent == 1) {
+            return Game.capitalizeFirstLetter(useName)
+                    + " is in perfect health.";
+        } else if (healthPercent < 1 && healthPercent > .5) {
+            return Game.capitalizeFirstLetter(useName)
+                    + " has some minor injuries.";
+        }
+        return Game.capitalizeFirstLetter(useName) + " is visibly injured.";
+    }
 }

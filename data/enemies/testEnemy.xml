@@ -31,7 +31,7 @@
     <offensiveChance>100</offensiveChance>
     <healChance>0</healChance>
     
-    <description>You are fighting a very angry racoon</description>
+    <description>You are fighting a very angry racoon.</description>
     <deathDescription>The raccon dies</deathDescription>
     <killDescription>The raccon kills you</killDescription>
     <innateSkill>testSkill</innateSkill>
