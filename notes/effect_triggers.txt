@@ -61,8 +61,8 @@
 'fire_damage_taken_after'           after fire damage has been taken
 'cold_damage_taken_before'          after being told to take cold damage but before damage is taken
 'cold_damage_taken_after'           after cold damage has been taken
-'lightning_damage_taken_before'     after being told to take lightning damage but before damage is taken
-'lightning_damage_taken_after'      after lightning damage has been taken
+'electricity_damage_taken_before'   after being told to take electricity damage but before damage is taken
+'electricity_damage_taken_after'    after electricity damage has been taken
 'sacred_damage_taken_before'        after being told to take sacred damage but before damage is taken
 'sacred_damage_taken_after'         after sacred damage has been taken
 'poison_damage_taken_before'        after being told to take poison damage but before damage is taken

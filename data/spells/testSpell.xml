@@ -17,7 +17,6 @@
     playerMissDescription='You you shoot lightning at #targetName# but miss.'
     >
     <hitEffect 
-        toSelf='true'
         type='damage'
         name='itemName' 
         magnitude='1' 

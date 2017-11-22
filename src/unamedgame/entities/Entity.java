@@ -97,6 +97,8 @@ public class Entity extends Observable implements Serializable {
     protected int dodgePenalty;
     protected int baseDodge = 20;
 
+    protected int globalReduction;
+    protected double globalResistance;
     protected int slashingReduction;
     protected double slashingResistance = 1;
     protected int piercingReduction;
@@ -116,6 +118,10 @@ public class Entity extends Observable implements Serializable {
     protected int poisonReduction;
     protected double poisonResistance = 1;
 
+    protected int globalReductionBonus;
+    protected int globalReductionPenalty;
+    protected double globalResistanceBonus;
+    protected double globalResistancePenalty;
     protected int slashingReductionBonus;
     protected int slashingReductionPenalty;
     protected double slashingResistanceBonus;
@@ -381,7 +387,6 @@ public class Entity extends Observable implements Serializable {
             triggerEffects("attacked_miss");
             triggerEffects("all_attacked_miss");
         }
-
 
         // Apply attack effects if the attack hit
         if (weapon != null && attackHit) {
@@ -697,7 +702,7 @@ public class Entity extends Observable implements Serializable {
 
         }
         if (spellHit) {
-            
+
             if (attacker instanceof Player) {
                 description = spell.getPlayerAttackDescription();
             } else {
@@ -705,7 +710,7 @@ public class Entity extends Observable implements Serializable {
             }
 
         } else {
-           
+
             if (attacker instanceof Player) {
                 description = spell.getPlayerMissDescription();
             } else {
@@ -715,7 +720,7 @@ public class Entity extends Observable implements Serializable {
         }
         // Replace keywords in description with variables
         printAttackDescription(description, attacker, 0, spellFocus);
-        if(spellHit) {
+        if (spellHit) {
             attacker.triggerEffects("spell_attack_hit");
             attacker.triggerEffects("all_attack_hit");
             triggerEffects("spell_attacked_hit");
@@ -819,42 +824,70 @@ public class Entity extends Observable implements Serializable {
      * @return the damage after resistances are applied
      */
     public int applyResistances(int damage, String damageType) {
+        int reduction = globalReduction + globalReductionBonus
+                - globalReductionPenalty;
+        double resistance = globalResistance + globalReductionBonus
+                - globalResistancePenalty;
         switch (damageType) {
         case "slashing":
-            return (int) ((damage - slashingReduction - slashingReductionBonus)
-                    * (slashingResistance + slashingResistanceBonus));
+            reduction += slashingReduction + slashingReductionBonus
+                    - slashingReductionPenalty;
+            resistance += slashingResistance - slashingReductionBonus
+                    + slashingReductionBonus;
+            break;
         case "piercing":
-            return (int) ((damage - piercingReduction - piercingReductionBonus)
-                    * (piercingResistance + piercingResistanceBonus));
+            reduction += piercingReduction + piercingReductionBonus
+                    - piercingReductionPenalty;
+            resistance += piercingResistance - piercingReductionBonus
+                    + piercingReductionBonus;
+            break;
         case "bludgeoning":
-            return (int) ((damage - bludgeoningReduction
-                    - bludgeoningReductionBonus)
-                    * (bludgeoningResistance + bludgeoningResistanceBonus));
+            reduction += bludgeoningReduction + bludgeoningReductionBonus
+                    - bludgeoningReductionPenalty;
+            resistance += bludgeoningResistance - bludgeoningReductionBonus
+                    + bludgeoningReductionBonus;
+            break;
         case "fire":
-            return (int) ((damage - fireReduction - fireReductionBonus)
-                    * (fireResistance + fireResistanceBonus));
+            reduction += fireReduction + fireReductionBonus
+                    - fireReductionPenalty;
+            resistance += fireResistance - fireReductionBonus
+                    + fireReductionBonus;
+            break;
         case "cold":
-            return (int) ((damage - coldReduction - coldReductionBonus)
-                    * (coldResistance + coldResistanceBonus));
+            reduction += coldReduction + coldReductionBonus
+                    - coldReductionPenalty;
+            resistance += coldResistance - coldReductionBonus
+                    + coldReductionBonus;
+            break;
         case "electricity":
-            return (int) ((damage - electricityReduction
-                    - electricityReductionBonus)
-                    * (electricityResistance + electricityResistanceBonus));
+            reduction += electricityReduction + electricityReductionBonus
+                    - electricityReductionPenalty;
+            System.out.println(reduction);
+            resistance += electricityResistance - electricityReductionBonus
+                    + electricityReductionBonus;
+            break;
         case "sacred":
-            return (int) ((damage - sacredReduction - sacredReductionBonus)
-                    * (sacredResistance + sacredResistanceBonus));
+            reduction += sacredReduction + sacredReductionBonus
+                    - sacredReductionPenalty;
+            resistance += sacredResistance - sacredReductionBonus
+                    + sacredReductionBonus;
+            break;
         case "profane":
-            return (int) ((damage - profaneReduction - profaneReductionBonus)
-                    * (profaneResistance + profaneResistanceBonus));
+            reduction += profaneReduction + profaneReductionBonus
+                    - profaneReductionPenalty;
+            resistance += profaneResistance - profaneReductionBonus
+                    + profaneReductionBonus;
+            break;
         case "poison":
-            return (int) ((damage - poisonReduction - poisonReductionBonus)
-                    * (poisonResistance + poisonResistanceBonus));
+            reduction += poisonReduction + poisonReductionBonus
+                    - poisonReductionPenalty;
+            resistance += poisonResistance - poisonReductionBonus
+                    + poisonReductionBonus;
+            break;
         case "unresistable":
             return damage;
-
-        default:
-            return 0;
         }
+        return (int) ((damage - reduction) * resistance);
     }
 
     /**
@@ -1431,8 +1464,8 @@ public class Entity extends Observable implements Serializable {
         case "cold":
             triggerEffects("cold_damage_taken_before");
             break;
-        case "lightning":
-            triggerEffects("lightning_damage_taken_before");
+        case "electricity":
+            triggerEffects("electricity_damage_taken_before");
             break;
         case "sacred":
             triggerEffects("sacred_damage_taken_before");

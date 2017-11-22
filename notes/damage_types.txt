@@ -4,7 +4,7 @@ VALID DAMAGE TYPES
 "bludgeoning"      
 "fire"
 "cold"
-"lightning"
+"electricity"
 "sacred"
 "profane"
 "poison"
