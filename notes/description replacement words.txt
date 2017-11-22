@@ -1,0 +1,23 @@
+EFFFECT DESCRIPTION
+    all effects:
+        #targetName#
+        #targetNameCaptial#
+    damage effect:
+        #damageType#
+        #totalDamage#
+    heal effect:
+        #totalHeal#
+    increase stat effect:
+        #stat#
+        #magnitude#
+        #time#
+        
+        
+ATTACK, SKILL and SPELL DESCRIPTIONS
+    #userName#
+    #userNameCapital#
+    #targetName#
+    #targetNameCapital#
+    #damage#
+    #weaponName#
+    #weaponNameCapital#

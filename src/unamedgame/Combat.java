@@ -72,7 +72,8 @@ public class Combat {
     private void newTurn() {
         turn++;
         Window.appendText("------Turn " + turn + "------\n");
-        Window.appendText(enemy.getDescription() + " " + enemy.getHealthDescription() + "\n");
+        Window.appendText(enemy.getDescription() + " "
+                + enemy.getHealthDescription() + "\n");
         Window.clearSide();
         refreshPlayerStatus();
         getCombatInput();
@@ -162,6 +163,9 @@ public class Combat {
         case 5: // escape
             escaped = true;
             break;
+        case 6: // guard
+
+            break;
         default:
             Window.appendText("Invalid Command\n");
 
@@ -216,6 +220,8 @@ public class Combat {
             break;
         case 5: // escape
             break;
+        case 6: // guard
+            break;
         default:
             Window.appendText("Invalid Command\n");
 
@@ -263,7 +269,6 @@ public class Combat {
                 int skillIndex = -2;
                 if (Game.isNumeric(evt.getText())) {
                     skillIndex = Integer.parseInt(evt.getText()) - 1;
-                    System.out.println(skillIndex);
                 }
                 if (skillIndex >= 0 && skillIndex < Player.getInstance()
                         .getCombinedSkills().size()) {

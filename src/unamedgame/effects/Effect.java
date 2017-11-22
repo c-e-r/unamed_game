@@ -55,10 +55,10 @@ public class Effect implements Serializable {
     protected boolean toSelf;
     protected int duration;
     protected boolean active = false;
-    protected String selfDestructTrigger;
+    protected ArrayList<String> selfDestructTriggers;
     protected String selfDestructDescription;
     protected String playerSelfDestructDescription;
-    protected String specialEffectTrigger;
+    protected ArrayList<String> specialEffectTriggers;
     protected String specialEffectDescription;
     protected String playerSpecialEffectDescription;
     protected String specialResistEffectDescription;
@@ -151,8 +151,10 @@ public class Effect implements Serializable {
             String playerResistEffectDescription,
             String resistRepeatEffectDescription,
             String playerResistRepeatEffectDescription,
-            String selfDestructTrigger, String selfDestructDescription,
-            String playerSelfDestructDescription, String specialEffectTrigger,
+            ArrayList<String> selfDestructTrigger,
+            String selfDestructDescription,
+            String playerSelfDestructDescription,
+            ArrayList<String> specialEffectTrigger,
             String specialEffectDescription,
             String playerSpecialEffectDescription,
             String specialResistEffectDescription,
@@ -188,10 +190,10 @@ public class Effect implements Serializable {
         this.playerResistEffectDescription = playerResistEffectDescription;
         this.resistRepeatEffectDescription = resistRepeatEffectDescription;
         this.playerResistRepeatEffectDescription = playerResistRepeatEffectDescription;
-        this.selfDestructTrigger = selfDestructTrigger;
+        this.selfDestructTriggers = selfDestructTrigger;
         this.selfDestructDescription = selfDestructDescription;
         this.playerSelfDestructDescription = playerSelfDestructDescription;
-        this.specialEffectTrigger = specialEffectTrigger;
+        this.specialEffectTriggers = specialEffectTrigger;
         this.specialEffectDescription = specialEffectDescription;
         this.playerSpecialEffectDescription = playerSpecialEffectDescription;
         this.specialResistEffectDescription = specialResistEffectDescription;
@@ -229,10 +231,10 @@ public class Effect implements Serializable {
         this.playerResistEffectDescription = effect.playerResistEffectDescription;
         this.resistRepeatEffectDescription = effect.resistRepeatEffectDescription;
         this.playerResistRepeatEffectDescription = effect.playerResistRepeatEffectDescription;
-        this.selfDestructTrigger = effect.selfDestructTrigger;
+        this.selfDestructTriggers = effect.selfDestructTriggers;
         this.selfDestructDescription = effect.selfDestructDescription;
         this.playerSelfDestructDescription = effect.playerSelfDestructDescription;
-        this.specialEffectTrigger = effect.specialEffectTrigger;
+        this.specialEffectTriggers = effect.specialEffectTriggers;
         this.specialEffectDescription = effect.specialEffectDescription;
         this.playerSpecialEffectDescription = effect.playerSpecialEffectDescription;
         this.specialResistEffectDescription = effect.specialResistEffectDescription;
@@ -356,10 +358,10 @@ public class Effect implements Serializable {
 
             }
             if (duration > 0 || duration == -1) {
-                if (selfDestructTrigger != null) {
+                if (selfDestructTriggers.size() != 0) {
                     setSelfDestructionObserver();
                 }
-                if (specialEffectTrigger != null) {
+                if (specialEffectTriggers.size() != 0) {
                     setSpecialEffectObserver();
                 }
             }
@@ -451,7 +453,7 @@ public class Effect implements Serializable {
 
             @Override
             public void action(String event) {
-                if (selfDestructTrigger.equals(event)) {
+                if (selfDestructTriggers.contains(event)) {
                     effect.selfDestruct();
                     setDelete();
                 }
@@ -468,7 +470,6 @@ public class Effect implements Serializable {
         specialEffectListener.setDelete();
         timeListener.setDelete();
         owner.deleteObservers();
-
         String[] description;
 
         destroyed = true;
@@ -500,7 +501,7 @@ public class Effect implements Serializable {
 
             @Override
             public void action(String event) {
-                if (specialEffectTrigger.equals(event)) {
+                if (specialEffectTriggers.contains(event)) {
                     if (checkSpecialResistance()) {
                         effect.specialActivate();
                     } else {
@@ -628,6 +629,22 @@ public class Effect implements Serializable {
             increment = 0;
         }
 
+        ArrayList<String> specialEffectTriggers = new ArrayList<String>();
+        String tmp = element.attributeValue("specialEffectTriggers");
+        if (tmp != null && !tmp.equals("")) {
+            for (String string : tmp.split("\\|")) {
+                specialEffectTriggers.add(string);
+            }
+        }
+
+        ArrayList<String> selfDestructTriggers = new ArrayList<String>();
+        tmp = element.attributeValue("selfDestructTriggers");
+        if (tmp != null && !tmp.equals("")) {
+            for (String string : tmp.split("\\|")) {
+                selfDestructTriggers.add(string);
+            }
+        }
+
         List<Effect> effects = new ArrayList<Effect>();
         Iterator<Element> iterator = element.elementIterator();
         while (iterator.hasNext()) {
@@ -657,10 +674,10 @@ public class Effect implements Serializable {
                 element.attributeValue("playerResistEffectDescription"),
                 element.attributeValue("resistRepeatEffectDescription"),
                 element.attributeValue("repeatResistRepeatEffectDescription"),
-                element.attributeValue("selfDestructTrigger"),
+                selfDestructTriggers,
                 element.attributeValue("selfDestructDescription"),
                 element.attributeValue("playerSelfDestructDescription"),
-                element.attributeValue("specialEffectTrigger"),
+                specialEffectTriggers,
                 element.attributeValue("specialEffectDescription"),
                 element.attributeValue("playerSpecialEffectDescription"),
                 element.attributeValue("specialResistEffectDescription"),

@@ -152,6 +152,9 @@ public final class Enemy extends Entity {
      * @return item the item that had its effect applied
      */
     public Item applyItemEffects(Item item, Entity user) {
+        triggerEffects("item_used_on_before");
+        user.triggerEffects("item_used_before");
+
         String[] itemDescription;
         if (user instanceof Player) {
             if (user == this) {
@@ -195,6 +198,8 @@ public final class Enemy extends Entity {
         Window.appendText("\n");
 
         item.use(user, this);
+        triggerEffects("item_used_on_after");
+        user.triggerEffects("item_used_after");
 
         return item;
     }
@@ -234,9 +239,6 @@ public final class Enemy extends Entity {
                 int die = Dice.roll(Dice.ENEMY_BUILD_RANDOM);
                 while (randomChoice.hasNext()) {
                     Element tmp = randomChoice.next();
-                    System.out.println(
-                            Integer.parseInt(tmp.attributeValue("lessThan")));
-                    System.out.println(die);
                     if (die <= Integer
                             .parseInt(tmp.attributeValue("lessThan"))) {
                         parseEnemyXML(tmp.elementIterator());

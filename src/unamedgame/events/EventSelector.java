@@ -105,7 +105,6 @@ public class EventSelector {
     }
 
     public static ArrayList<String> pruneEventList(ArrayList<String> list) {
-        System.out.println(list);
         Iterator<String> itr = list.iterator();
         String[] tmp;
         while (itr.hasNext()) {
@@ -114,7 +113,6 @@ public class EventSelector {
                 itr.remove();
             }
         }
-        System.out.println(list);
         return list;
     }
 

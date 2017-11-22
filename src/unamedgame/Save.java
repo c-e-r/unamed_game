@@ -52,7 +52,6 @@ public class Save implements Serializable {
         if (saveNote != null) {
             this.saveNote = saveNote;
         }
-        System.out.println(" :" + saveNote);
     }
 
     /**

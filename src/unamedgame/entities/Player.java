@@ -144,22 +144,28 @@ public final class Player extends Entity implements Serializable {
                 Window.appendText("You can't go there.\n");
                 break;
             case 0:
-                Window.appendText("You travel northwest for " + roundedHours + " hours.\n");
+                Window.appendText("You travel northwest for " + roundedHours
+                        + " hours.\n");
                 break;
             case 1:
-                Window.appendText("You travel north for " + roundedHours + " hours.\n");
+                Window.appendText(
+                        "You travel north for " + roundedHours + " hours.\n");
                 break;
             case 2:
-                Window.appendText("You travel northeast for " + roundedHours + " hours.\n");
+                Window.appendText("You travel northeast for " + roundedHours
+                        + " hours.\n");
                 break;
             case 3:
-                Window.appendText("You travel southeast for " + roundedHours + " hours.\n");
+                Window.appendText("You travel southeast for " + roundedHours
+                        + " hours.\n");
                 break;
             case 4:
-                Window.appendText("You travel south for " + roundedHours + " hours.\n");
+                Window.appendText(
+                        "You travel south for " + roundedHours + " hours.\n");
                 break;
             case 5:
-                Window.appendText("You travel southwest for " + roundedHours + " hours.\n");
+                Window.appendText("You travel southwest for " + roundedHours
+                        + " hours.\n");
                 break;
 
             default:
@@ -239,6 +245,9 @@ public final class Player extends Entity implements Serializable {
      * @return the item used
      */
     public Item applyItemEffects(Item item, Entity user) {
+        triggerEffects("item_used_on_before");
+        user.triggerEffects("item_used_before");
+
         String[] description;
         if (user instanceof Player) {
             if (user == this) {
@@ -282,6 +291,8 @@ public final class Player extends Entity implements Serializable {
         Window.appendText("\n");
 
         item.use(user, this);
+        triggerEffects("item_used_on_after");
+        user.triggerEffects("item_used_after");
 
         return item;
     }
@@ -430,7 +441,6 @@ public final class Player extends Entity implements Serializable {
                 : EquipmentIndex.RIGHT_HAND.getValue();
         if (equipment[hand] == null) {
             equipment[hand] = toEquip;
-            System.out.println(equipment[hand].getName());
             toEquip.setEquipped(true);
             Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
 
@@ -463,7 +473,6 @@ public final class Player extends Entity implements Serializable {
                     : EquipmentIndex.RIGHT_HELD.getValue();
             if (equipment[hand] == null) {
                 equipment[hand] = toEquip;
-                System.out.println(equipment[hand].getName());
                 toEquip.setEquipped(true);
                 Player.getInstance().addEquipEffects(toEquip.getEquipEffects());
 
@@ -516,7 +525,7 @@ public final class Player extends Entity implements Serializable {
     public void updateQuest(String questId, String text) {
         questLog.get(questId).appendText(text);
     }
-    
+
     public String getCurrencyString() {
         return String.format("%7dŁ", currency);
     }

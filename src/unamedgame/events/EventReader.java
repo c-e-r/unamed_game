@@ -442,7 +442,6 @@ public class EventReader {
             interpretElement(currentElement);
             break;
         case "goto":
-            System.out.println("goto");
             int branch = Integer.parseInt(element.attributeValue("branch"));
             currentElement = (Element) root
                     .selectSingleNode("//branch[@number='" + branch + "']");

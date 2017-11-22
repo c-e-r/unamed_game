@@ -211,8 +211,14 @@ public class Entity extends Observable implements Serializable {
         if (currentHealth + heal > maxHealth) {
             heal = maxHealth - currentHealth;
         }
+        if (heal > 0) {
+            triggerEffects("health_restored_before");
+        }
         currentHealth += heal;
         checkHealth();
+        if (heal > 0) {
+            triggerEffects("health_restored_after");
+        }
         return heal;
     }
 
@@ -303,6 +309,11 @@ public class Entity extends Observable implements Serializable {
      * @param attacker
      */
     public void getAttacked(Entity attacker, boolean usingOffhandWeapon) {
+        attacker.triggerEffects("attack");
+        attacker.triggerEffects("all_attack");
+        triggerEffects("attacked");
+        triggerEffects("all_attacked");
+
         boolean attackHit = false;
         Item weapon;
 
@@ -311,8 +322,6 @@ public class Entity extends Observable implements Serializable {
         } else {
             weapon = attacker.getMainWeapon();
         }
-
-        triggerEffects("attacked");
 
         int weaponHitChance = 0;
         String weaponDamageType = "null";
@@ -332,10 +341,9 @@ public class Entity extends Observable implements Serializable {
         playerWeaponAttackMissDescription = weapon
                 .getPlayerAttackMissDescription();
 
-        String[] description = null;
+        String description = null;
 
         int damage = 0;
-        // Prevent damage from going below 0
 
         attackHit = Calculate.calculateAttackHitChance(attacker,
                 weaponHitChance) >= this.getEffectiveDodge();
@@ -343,22 +351,79 @@ public class Entity extends Observable implements Serializable {
             damage = Calculate.calculateAttackDamage(attacker, weapon,
                     usingOffhandWeapon);
             damage = this.takeDamage(damage, weaponDamageType);
+
             if (attacker instanceof Player) {
-                description = playerWeaponAttackHitDescription.split("#");
+                description = playerWeaponAttackHitDescription;
             } else {
-                description = weaponAttackHitDescription.split("#");
+                description = weaponAttackHitDescription;
             }
 
         } else {
+
             if (attacker instanceof Player) {
-                description = playerWeaponAttackMissDescription.split("#");
+                description = playerWeaponAttackMissDescription;
             } else {
-                description = weaponAttackMissDescription.split("#");
+                description = weaponAttackMissDescription;
             }
 
         }
         // Replace the placeholder words with variables
-        for (String string : description) {
+        printAttackDescription(description, attacker, damage, weapon);
+
+        if (attackHit) {
+            attacker.triggerEffects("attack_hit");
+            attacker.triggerEffects("all_attack_hit");
+            triggerEffects("attacked_hit");
+            triggerEffects("all_attacked_hit");
+        } else {
+            attacker.triggerEffects("attack_miss");
+            attacker.triggerEffects("all_attack_miss");
+            triggerEffects("attacked_miss");
+            triggerEffects("all_attacked_miss");
+        }
+
+
+        // Apply attack effects if the attack hit
+        if (weapon != null && attackHit) {
+            for (Effect effect : weapon.getAttackEffects()) {
+                if (effect != null) {
+                    if (effect.isToSelf()) {
+                        attacker.addEffect(effect, attacker);
+                    } else {
+                        addEffect(effect, attacker);
+                    }
+                }
+            }
+        }
+        if (attackHit) {
+            attacker.triggerEffects("attack_after_hit");
+            attacker.triggerEffects("all_attack_after_hit");
+            triggerEffects("attacked_after_hit");
+            triggerEffects("all_attacked_after_hit");
+        }
+        attacker.triggerEffects("attack_after");
+        attacker.triggerEffects("all_attack_after");
+        triggerEffects("attacked_after");
+        triggerEffects("all_attacked_after");
+    }
+
+    /**
+     * Use a skill on the given enemy.
+     * 
+     * @param skillIndex
+     *            the index of the skill to use
+     * @param target
+     *            the target of the skill
+     */
+    public void useSkill(int skillIndex, Entity target) {
+        Skill skill = combinedSkills.get(skillIndex);
+        target.getAttackedBySkill(skill, this, skill.isOffhandSkill());
+    }
+
+    public void printAttackDescription(String description, Entity attacker,
+            int damage, Item weapon) {
+
+        for (String string : description.split("#")) {
             switch (string) {
             case "userName":
                 Window.appendText(attacker.getUseName());
@@ -383,6 +448,9 @@ public class Entity extends Observable implements Serializable {
                 }
                 break;
             case "weaponName":
+                Window.appendText(weapon.getName());
+                break;
+            case "weaponNameCapital":
                 Window.appendText(Game.capitalizeFirstLetter(weapon.getName()));
                 break;
             default:
@@ -392,31 +460,6 @@ public class Entity extends Observable implements Serializable {
         }
         Window.appendText("\n");
 
-        // Apply attack effects if the attack hit
-        if (weapon != null && attackHit) {
-            for (Effect effect : weapon.getAttackEffects()) {
-                if (effect != null) {
-                    if (effect.isToSelf()) {
-                        attacker.addEffect(effect, attacker);
-                    } else {
-                        addEffect(effect, attacker);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Use a skill on the given enemy.
-     * 
-     * @param skillIndex
-     *            the index of the skill to use
-     * @param target
-     *            the target of the skill
-     */
-    public void useSkill(int skillIndex, Entity target) {
-        Skill skill = combinedSkills.get(skillIndex);
-        target.getAttackedBySkill(skill, this, skill.isOffhandSkill());
     }
 
     /**
@@ -461,6 +504,10 @@ public class Entity extends Observable implements Serializable {
      */
     public void getAttackedBySkill(Skill skill, Entity attacker,
             boolean usingOffhandWeapon) {
+        attacker.triggerEffects("skill_attack");
+        attacker.triggerEffects("all_attack");
+        triggerEffects("skill_attacked");
+        triggerEffects("all_attacked");
         Item weapon = attacker.getMainWeapon();
         boolean attackHit = true;
 
@@ -481,7 +528,7 @@ public class Entity extends Observable implements Serializable {
         weapon.getWeaponVariableDamage();
         weaponDamageType = weapon.getDamageType();
 
-        String[] description = null;
+        String description = null;
 
         int damage = 0;
         // Prevent damage from going below 0
@@ -493,60 +540,38 @@ public class Entity extends Observable implements Serializable {
                 damage = Calculate.calculateSkillAttackDamage(attacker, skill,
                         weapon, usingOffhandWeapon);
                 damage = this.takeDamage(damage, weaponDamageType);
+
             }
         }
         if (attackHit) {
             if (attacker instanceof Player) {
-                description = skill.getPlayerAttackDescription().split("#");
+                description = skill.getPlayerAttackDescription();
             } else {
-                description = skill.getAttackDescription().split("#");
+                description = skill.getAttackDescription();
             }
 
         } else {
 
             if (attacker instanceof Player) {
-                description = skill.getPlayerMissDescription().split("#");
+                description = skill.getPlayerMissDescription();
             } else {
-                description = skill.getMissDescription().split("#");
+                description = skill.getMissDescription();
             }
         }
 
         // Replace keywords in description with variables
-        for (String string : description) {
-            switch (string) {
-            case "userName":
-                Window.appendText(attacker.getUseName());
-                break;
-            case "userNameCapital":
-                Window.appendText(
-                        Game.capitalizeFirstLetter(attacker.getUseName()));
-                break;
-            case "targetName":
-                Window.appendText(this.getUseName());
-                break;
-            case "targetNameCapital":
-                Window.appendText(
-                        Game.capitalizeFirstLetter(this.getUseName()));
-                break;
-            case "damage":
-                if (damage == 0) {
-                    Window.appendText(Integer.toString(damage),
-                            Colors.DAMAGE_BLOCK);
-                } else {
-                    Window.appendText(Integer.toString(damage), Colors.DAMAGE);
-                }
-                break;
-            case "weaponName":
-                Window.appendText(Game.capitalizeFirstLetter(weapon.getName()));
-                break;
-            default:
-                Window.appendText(string);
-                break;
-
-            }
-
+        printAttackDescription(description, attacker, damage, weapon);
+        if (attackHit) {
+            attacker.triggerEffects("skill_attack_hit");
+            attacker.triggerEffects("all_attack_hit");
+            triggerEffects("skill_attacked_hit");
+            triggerEffects("all_attacked_hit");
+        } else {
+            attacker.triggerEffects("skill_attack_miss");
+            attacker.triggerEffects("all_attack_miss");
+            triggerEffects("skill_attacked_miss");
+            triggerEffects("all_attacked_miss");
         }
-        Window.appendText("\n");
         // Apply weapon attack effects if weapon attack hit
         if (weapon != null && attackHit) {
             for (Effect effect : weapon.getAttackEffects()) {
@@ -617,6 +642,16 @@ public class Entity extends Observable implements Serializable {
             }
 
         }
+        if (attackHit) {
+            attacker.triggerEffects("skill_attack_after_hit");
+            attacker.triggerEffects("all_attack_after_hit");
+            triggerEffects("skill_attacked_after_hit");
+            triggerEffects("all_attacked_after_hit");
+        }
+        attacker.triggerEffects("skill_attack_after");
+        attacker.triggerEffects("all_attack_after");
+        triggerEffects("skill_attacked_after");
+        triggerEffects("all_attacked_after");
 
     }
 
@@ -629,6 +664,10 @@ public class Entity extends Observable implements Serializable {
      *            the attacker
      */
     public void getAttackedBySpell(Spell spell, Entity attacker) {
+        attacker.triggerEffects("spell_attack");
+        attacker.triggerEffects("all_attack");
+        triggerEffects("spell_attacked");
+        triggerEffects("all_attacked");
         Item spellFocus = attacker.getMainWeapon();
 
         int spellFocusHitChance = 0;
@@ -647,7 +686,7 @@ public class Entity extends Observable implements Serializable {
         // innate
         // weapon stats
 
-        String[] description = null;
+        String description = null;
 
         Dice.roll(Dice.HIT_DIE);
 
@@ -658,50 +697,35 @@ public class Entity extends Observable implements Serializable {
 
         }
         if (spellHit) {
-
+            
             if (attacker instanceof Player) {
-                description = spell.getPlayerAttackDescription().split("#");
+                description = spell.getPlayerAttackDescription();
             } else {
-                description = spell.getAttackDescription().split("#");
+                description = spell.getAttackDescription();
             }
 
         } else {
+           
             if (attacker instanceof Player) {
-                description = spell.getPlayerMissDescription().split("#");
+                description = spell.getPlayerMissDescription();
             } else {
-                description = spell.getMissDescription().split("#");
+                description = spell.getMissDescription();
             }
 
         }
         // Replace keywords in description with variables
-        for (String string : description) {
-            switch (string) {
-            case "userName":
-                Window.appendText(attacker.getUseName());
-                break;
-            case "userNameCapital":
-                Window.appendText(
-                        Game.capitalizeFirstLetter(attacker.getUseName()));
-                break;
-            case "targetName":
-                Window.appendText(this.getUseName());
-                break;
-            case "targetNameCapital":
-                Window.appendText(
-                        Game.capitalizeFirstLetter(this.getUseName()));
-                break;
-            case "spellFocusName":
-                Window.appendText(
-                        Game.capitalizeFirstLetter(spellFocus.getName()));
-                break;
-            default:
-                Window.appendText(string);
-                break;
-
-            }
-
+        printAttackDescription(description, attacker, 0, spellFocus);
+        if(spellHit) {
+            attacker.triggerEffects("spell_attack_hit");
+            attacker.triggerEffects("all_attack_hit");
+            triggerEffects("spell_attacked_hit");
+            triggerEffects("all_attacked_hit");
+        } else {
+            attacker.triggerEffects("spell_attack_miss");
+            attacker.triggerEffects("all_attack_miss");
+            triggerEffects("spell_attacked_miss");
+            triggerEffects("all_attacked_miss");
         }
-        Window.appendText("\n");
         // Apply spell attack effects if weapon attack hit
         if (spellFocus != null && spellHit) {
             for (Effect effect : spellFocus.getSpellEffects()) {
@@ -773,6 +797,16 @@ public class Entity extends Observable implements Serializable {
 
         }
 
+        if (spellHit) {
+            attacker.triggerEffects("spell_attack_after_hit");
+            attacker.triggerEffects("all_attack_after_hit");
+            triggerEffects("spell_attacked_after_hit");
+            triggerEffects("all_attacked_after_hit");
+        }
+        attacker.triggerEffects("spell_attack_after_hit");
+        attacker.triggerEffects("all_attack_after_hit");
+        triggerEffects("spell_attacked_after");
+        triggerEffects("all_attacked_after");
     }
 
     /**
@@ -895,22 +929,34 @@ public class Entity extends Observable implements Serializable {
     public void increaseModifier(String stat, int modifier) {
         switch (stat) {
         case "vitality":
+            triggerEffects("vitality_increased_before");
             vitalityBonus += modifier;
+            triggerEffects("vitality_increased_after");
             break;
         case "strength":
+            triggerEffects("strength_increased_before");
             strengthBonus += modifier;
+            triggerEffects("strength_increased_after");
             break;
         case "dexterity":
+            triggerEffects("dexterity_increased_before");
             dexterityBonus += modifier;
+            triggerEffects("dexterity_increased_after");
             break;
         case "intellect":
+            triggerEffects("intellect_increased_before");
             intellectBonus += modifier;
+            triggerEffects("intellect_increased_after");
             break;
         case "spirit":
+            triggerEffects("spirit_increased_before");
             spiritBonus += modifier;
+            triggerEffects("spirit_increased_after");
             break;
         case "luck":
+            triggerEffects("luck_increased_before");
             luckBonus += modifier;
+            triggerEffects("luck_increased_after");
             break;
         case "health":
             maxHealthBonus += modifier;
@@ -925,10 +971,14 @@ public class Entity extends Observable implements Serializable {
             speedBonus += modifier;
             break;
         case "hit":
+            triggerEffects("hit_increased_before");
             hitBonus += modifier;
+            triggerEffects("hit_increased_after");
             break;
         case "dodge":
+            triggerEffects("dodge_increased_before");
             dodgeBonus += modifier;
+            triggerEffects("dodge_increased_after");
             break;
         case "slashingReduction":
             slashingReductionBonus += modifier;
@@ -1364,11 +1414,78 @@ public class Entity extends Observable implements Serializable {
      */
     public int takeDamage(int damage, String damageType) {
         damage = applyResistances(damage, damageType);
+        triggerEffects("damage_taken_before");
+        switch (damageType) {
+        case "slashing":
+            triggerEffects("slashing_damage_taken_before");
+            break;
+        case "piercing":
+            triggerEffects("piercing_damage_taken_before");
+            break;
+        case "bludgeoning":
+            triggerEffects("bludgeoning_damage_taken_before");
+            break;
+        case "fire":
+            triggerEffects("fire_damage_taken_before");
+            break;
+        case "cold":
+            triggerEffects("cold_damage_taken_before");
+            break;
+        case "lightning":
+            triggerEffects("lightning_damage_taken_before");
+            break;
+        case "sacred":
+            triggerEffects("sacred_damage_taken_before");
+            break;
+        case "profane":
+            triggerEffects("profane_damage_taken_before");
+            break;
+        case "poison":
+            triggerEffects("poison_damage_taken_before");
+            break;
+        case "unresistable":
+            triggerEffects("unresistable_damage_taken_before");
+            break;
+        }
         if (damage < 0) {
             damage = 0;
         }
         currentHealth -= damage;
         LOG.debug(damage + " taken by " + name);
+
+        triggerEffects("damage_taken_after");
+        switch (damageType) {
+        case "slashing":
+            triggerEffects("slashing_damage_taken_after");
+            break;
+        case "piercing":
+            triggerEffects("piercing_damage_taken_after");
+            break;
+        case "bludgeoning":
+            triggerEffects("bludgeoning_damage_taken_after");
+            break;
+        case "fire":
+            triggerEffects("fire_damage_taken_after");
+            break;
+        case "cold":
+            triggerEffects("cold_damage_taken_after");
+            break;
+        case "lightning":
+            triggerEffects("lightning_damage_taken_after");
+            break;
+        case "sacred":
+            triggerEffects("sacred_damage_taken_after");
+            break;
+        case "profane":
+            triggerEffects("profane_damage_taken_after");
+            break;
+        case "poison":
+            triggerEffects("poison_damage_taken_after");
+            break;
+        case "unresistable":
+            triggerEffects("unresistable_damage_taken_after");
+            break;
+        }
         return damage;
     }
 
@@ -1531,7 +1648,9 @@ public class Entity extends Observable implements Serializable {
      * @return the item added
      */
     public Item addItemToInventory(Item item) {
+        triggerEffects("item_gained_before");
         inventory.add(item);
+        triggerEffects("item_gained_after");
         return item;
     }
 
@@ -1636,7 +1755,6 @@ public class Entity extends Observable implements Serializable {
      * @return the item that was removed
      */
     public Item removeItemFromInventory(int itemIndex) {
-
         return inventory.remove(itemIndex);
     }
 
@@ -2835,11 +2953,15 @@ public class Entity extends Observable implements Serializable {
     }
 
     public void addCurrency(int amount) {
+        triggerEffects("currency_gained_before");
         currency += amount;
+        triggerEffects("currency_gained_after");
     }
 
     public void removeCurrency(int amount) {
+        triggerEffects("currency_removed_before");
         currency -= amount;
+        triggerEffects("currency_removed_after");
     }
 
     public boolean canAfford(int cost) {

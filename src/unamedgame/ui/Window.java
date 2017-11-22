@@ -105,7 +105,6 @@ public class Window {
         frame = new JFrame();
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                System.out.println("here");
                 File propFile = new File("saves/window.properties");
                 String yOff = Integer.toString(frame.getLocationOnScreen().y);
                 String xOff = Integer.toString(frame.getLocationOnScreen().x);
@@ -251,7 +250,6 @@ public class Window {
 
         splitPane2.setDividerLocation(mapWidth);
         splitPane.setDividerLocation(mapHeight);
-        System.out.println(mapPane.getWidth());
 
         /*
          * A mouse listener to put focus on textField when textPane is clicked

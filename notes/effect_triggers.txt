@@ -1,1 +1,130 @@
-'attacked'      when attacked by a regular attack before hit is calculated or any damage is dealt
+'attacked'                          when attacked by a regular attack before hit is calculated or any damage is dealt
+'attacked_hit'                      when hit by a regular attack
+'attacked_miss'                     when attacked by a regular attack that misses
+'attacked_after'                    after being attacked by a regular attack regardless of if the attack hit or not
+'attacked_after_hit'                after being attacked by a regular attack that hit
+
+'skill_attacked'                    when attacked by a skill before hit is calculated or any damage is dealt
+'skill_attacked_hit'                when hit by a skill
+'skill_attacked_miss'               when attacked by a skill that misses
+'skill_attacked_after'              after being attacked by a skill regardless of if the skill hit or not
+'skill_attacked_after_hit'          after being attacked by a skill that hit
+
+'spell_attacked'                    when attacked by a spell before hit is calculated
+'spell_attacked_hit'                when hit by a spell
+'spell_attacked_miss'               when attacked by a spell that misses
+'spell_attacked_after'              after being attacked by a spell regardless of if the skill hit or not
+'spell_attacked_after_hit'          after being attacked by a spell that has hit
+
+'all_attacked'                      when attacked by a regular attack, skill, or spell before hit is calculated or any damage is dealt
+'all_attacked_hit'                  when hit by a regular attack, skill, or spell
+'all_attacked_miss'                 when attacked by a regular attack, skill, or spell that misses
+'all_attacked_after'                after being attacked by a regular attack, skill, or spell regardless of if it hit or not
+'all_attacked_after_hit'            after being attacked by a regular attack, skill, or spell that hit
+
+'attack'                            when the entity initiates an attack    
+'attack_hit'                        when the entity initiates an attack that hits
+'attack_miss'                       when the entity misses with an attack
+'attack_after'                      after the entity completes an attack regardless of if the attack hit or not
+'attack_after_hit'                  after the entity completes an attack that hits
+
+'skill_attack'                      when the entity initates a skill     
+'skill_attack_hit'                  when the entity hits with a skill   
+'skill_attack_miss'                 when the entity misses with a skill    
+'skill_attack_after'                after the entity finishes using a skill regardless of it it hit or not
+'skill_attack_after_hit'            after the entity finishes using a skill that hit
+
+'spell_attack'                      when the entity casts a spell
+'spell_attack_hit'                  when the entity casts a spell that hits
+'spell_attack_miss'                 when the entity misses with a spell
+'spell_attack_after'                after the entity casts a spell regardlesssifit hit or missed
+'spell_attack_after_hit'            after the entity casts a spell that hit
+
+'all_attack'                        when the entity initiates an attack, skill, or spell    
+'all_attack_hit'                    when the entity initiates an attack, skill, or spell that hits
+'all_attack_miss'                   when the entity misses with an attack, skill, or spell
+'all_attack_after'                  after the entity completes an attack, skill, or spell regardless of if the attack hit or not
+'all_attack_after_hit'              after the entity completes an attack, skill, or spell that hits
+
+'use_item_before'                   before the entity uses an item
+'use_item_after'                    after the entity uses an item
+
+'damage_taken_before'               after being told to take damage but before damage is taken
+'damage_taken_after'                after damage has been taken
+'slashing_damage_taken_before'      after being told to take slashing damage but before damage is taken
+'slashing_damage_taken_after'       after slashing damage has been taken
+'piercing_damage_taken_before'      after being told to take piercing damage but before damage is taken
+'piercing_damage_taken_after'       after slashing piercing has been taken
+'bludgeoning_damage_taken_before'   after being told to take bludgeoning damage but before damage is taken
+'bludgeoning_damage_taken_after'    after bludgeoning damage has been taken
+'fire_damage_taken_before'          after being told to take fire damage but before damage is taken
+'fire_damage_taken_after'           after fire damage has been taken
+'cold_damage_taken_before'          after being told to take cold damage but before damage is taken
+'cold_damage_taken_after'           after cold damage has been taken
+'lightning_damage_taken_before'     after being told to take lightning damage but before damage is taken
+'lightning_damage_taken_after'      after lightning damage has been taken
+'sacred_damage_taken_before'        after being told to take sacred damage but before damage is taken
+'sacred_damage_taken_after'         after sacred damage has been taken
+'poison_damage_taken_before'        after being told to take poison damage but before damage is taken
+'poison_damage_taken_after'         after poison damage has been taken
+'unresistable_damage_taken_before'  after being told to take unresistable damage but before damage is taken
+'unresistable_damage_taken_after'   after unresistable damage has been taken
+
+'health_restored_before'            after being told to gain health but before any health is healed
+'health_restore_after'              after healing 
+
+'item_gained_before'                before an item is added to the inventory
+'item_gained_after'                 after an item is added to the inventory
+'item_used_on_before'               before an item is used on this entity
+'item_used_on_after'                after an item is used on this entity
+'currency_gained_before'            before currency is gained            
+'currency_gained_after'             after currency is gained            
+'currency_removed_before'           before currency is removed
+'currency_removed_after'            after currency is removed
+
+'vitality_increased_before'         before vitality is increased
+'vitality_increased_after'          after vitality is increased
+'vitality_decreased_before'         before vitality is decreased
+'vitality_decreased_after'          after vitality is decreased
+'strength_increased_before'         before strength is increased
+'strength_increased_after'          after strength is increased
+'strength_decreased_before'         before strength is decreased
+'strength_decreased_after'          after strength is decreased
+'dexterity_increased_before'        before dexterity is increased
+'dexterity_increased_after'         after dexterity is increased
+'dexterity_decreased_before'        before dexterity is decreased
+'dexterity_decreased_after'         after dexterity is decreased
+'intellect_increased_before'        before intellect is increased
+'intellect_increased_after'         after intellect is increased
+'intellect_decreased_before'        before intellect is decreased
+'intellect_decreased_after'         after intellect is decreased
+'spirit_increased_before'           before spirit is increased
+'spirit_increased_after'            after spirit is increased
+'spirit_decreased_before'           before spirit is decreased
+'spirit_decreased_after'            after spirit is decreased
+'luck_increased_before'             before luck is increased
+'luck_increased_after'              after luck is increased
+'luck_decreased_before'             before luck is decreased
+'luck_decreased_after'              after luck is decreased
+'dodge_increased_before'            before dodge is increased
+'dodge_increased_after'             after dodge is increased
+'dodge_decreased_before'            before dodge is decreased
+'dodge_decreased_after'             after dodge is decreased
+'hit_increased_before'              before hit is increased
+'hit_increased_after'               after hit is increased
+'hit_decreased_before'              before hit is decreased
+'hit_decreased_after'               after hit is decreased
+
+
+
+
+
+
+
+
+
+
+
+
+
+
