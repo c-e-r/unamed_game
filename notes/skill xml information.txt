@@ -1,7 +1,11 @@
 <skill>
     name=''                     [REQUIRED]                      the name of the skill
     damageType=''               [REQUIRED if isAttack='true']   the type of damage the skill does
-    description=''              [REQUIRED]                      a description of the skill
+    description=''              [REQUIRED]                      a short description of the skill
+    longDescription=''          [REQUIRED]                      a longer more detailed description of the skill
+    battleUse                   [OPTIONAL: default false]       if the skill can be used in battle
+    fieldUse                    [OPTIONAL: default false]       if the skill can be used outside of battle
+    offensive                   [OPTIONAL: default false]       if when used in battle the skill will be used on the opponent rather than self
     attackDescription=''        [REQUIRED]                      a description displayed when a non-player entity uses the skill and hits
     playerAttackDescription=''  [REQUIRED]                      a description displayed when a player uses the skill and hits
     missDescription=''          [REQUIRED if isAttack='true']   a description displayed when a non-player entity uses the skill and misses

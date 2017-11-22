@@ -1,6 +1,10 @@
 <spell>
     name=''                     [REQUIRED]                      the name of the spell
-    description=''              [REQUIRED]                      a description of the spell
+    description=''              [REQUIRED]                      a short description of the spell
+    longDescription=''          [REQUIRED]                      a longer more detailed description of the spell
+    battleUse                   [OPTIONAL: default false]       if the spell can be used in battle
+    fieldUse                    [OPTIONAL: default false]       if the spell can be used outside of battle
+    offensive                   [OPTIONAL: default false]       if when used in battle the spell will be used on the opponent rather than self
     attackDescription=''        [REQUIRED]                      a description displayed when a non-player entity uses the spell and hits
     playerAttackDescription=''  [REQUIRED]                      a description displayed when a player uses the spell and hits
     missDescription=''          [REQUIRED if isAttack='true']   a description displayed when a non-player entity uses the spell and misses
