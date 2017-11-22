@@ -45,8 +45,12 @@ public class Spell implements Serializable {
     private String name;
     private String id;
     private boolean isAttack;
+    private boolean battleUse;
+    private boolean fieldUse;
+    private boolean offensive;
     private String spellType;
     private String description;
+    private String longDescription;
     private String attackDescription;
     private String playerAttackDescription;
     private String missDescription;
@@ -106,13 +110,17 @@ public class Spell implements Serializable {
     public void buildSpell(Element element) {
         name = element.attributeValue("name");
         description = element.attributeValue("description");
+        longDescription = element.attributeValue("longDescription");
+
         attackDescription = element.attributeValue("attackDescription");
         playerAttackDescription = element
                 .attributeValue("playerAttackDescription");
         missDescription = element.attributeValue("missDescription");
         playerMissDescription = element.attributeValue("playerMissDescription");
         spellType = element.attributeValue("spellType");
-
+        fieldUse = Boolean.parseBoolean(element.attributeValue("fieldUse"));
+        battleUse = Boolean.parseBoolean(element.attributeValue("combatUse"));
+        offensive = Boolean.parseBoolean(element.attributeValue("offensive"));
         if (element.attributeValue("manaCost") != null) {
             manaCost = Integer.parseInt(element.attributeValue("manaCost"));
         }
@@ -398,7 +406,35 @@ public class Spell implements Serializable {
     public String getSpellType() {
         return spellType;
     }
-    
+
+    /**
+     * @return the battleUse
+     */
+    public boolean isBattleUse() {
+        return battleUse;
+    }
+
+    /**
+     * @return the fieldUse
+     */
+    public boolean isFieldUse() {
+        return fieldUse;
+    }
+
+    /**
+     * @return the offensive
+     */
+    public boolean isOffensive() {
+        return offensive;
+    }
+
+    /**
+     * @return the longDescription
+     */
+    public String getLongDescription() {
+        return longDescription;
+    }
+
     public String getId() {
         return id;
     }

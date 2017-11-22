@@ -5,6 +5,7 @@
     staminaCost='10'
     skillType='heal'
     description='Taunty'
+    longDescription='Tauntier'
     attackDescription='#userNameCapital# taunts you'
     playerAttackDescription='You taunt the enemy'
     >

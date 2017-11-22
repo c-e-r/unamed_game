@@ -42,9 +42,13 @@ public final class Skill implements Serializable {
     private String id;
     private String name;
     private boolean isAttack;
+    private boolean battleUse;
+    private boolean fieldUse;
+    private boolean offensive;
     private String skillType;
     private String damageType;
     private String description;
+    private String longDescription;
     private String attackDescription;
     private String playerAttackDescription;
     private String missDescription;
@@ -118,6 +122,7 @@ public final class Skill implements Serializable {
         name = element.attributeValue("name");
         damageType = element.attributeValue("damageType");
         description = element.attributeValue("description");
+        longDescription = element.attributeValue("longDescription");
         attackDescription = element.attributeValue("attackDescription");
         playerAttackDescription = element
                 .attributeValue("playerAttackDescription");
@@ -126,6 +131,9 @@ public final class Skill implements Serializable {
         skillType = element.attributeValue("skillType");
         offhandSkill = Boolean
                 .parseBoolean(element.attributeValue("offhandSkill"));
+        fieldUse = Boolean.parseBoolean(element.attributeValue("fieldUse"));
+        battleUse = Boolean.parseBoolean(element.attributeValue("combatUse"));
+        offensive = Boolean.parseBoolean(element.attributeValue("offensive"));
 
         if (element.attributeValue("staminaCost") != null) {
             staminaCost = Integer
@@ -477,10 +485,37 @@ public final class Skill implements Serializable {
     public boolean isOffhandSkill() {
         return offhandSkill;
     }
-    
 
     public String getId() {
         return id;
+    }
+
+    /**
+     * @return the battleUse
+     */
+    public boolean isBattleUse() {
+        return battleUse;
+    }
+
+    /**
+     * @return the fieldUse
+     */
+    public boolean isFieldUse() {
+        return fieldUse;
+    }
+
+    /**
+     * @return the offensive
+     */
+    public boolean isOffensive() {
+        return offensive;
+    }
+
+    /**
+     * @return the longDescription
+     */
+    public String getLongDescription() {
+        return longDescription;
     }
 
     /*

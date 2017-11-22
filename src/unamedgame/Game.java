@@ -312,7 +312,7 @@ public class Game {
         Window.getInstance().getMapPane().repaint();
         Window.clearSide();
         Window.appendSide(
-                "1: Explore \n2: Move\n3: Gather\n4: Inventory\n5: Quests \n6: Status\n7: Wait\n8: Save\n9: Load\n10: Exit to Main Menu");
+                "1: Explore \n2: Move\n3: Gather\n4: Inventory\n5: Skills\n6: Spells\n7: Quests \n8: Status\n9: Wait\n10: Save\n11: Load\n12: Exit to Main Menu");
 
         Window.getInstance().addInputObsever(new InputObserver() {
             @Override
@@ -345,27 +345,35 @@ public class Game {
                     window.removeInputObsever(this);
                     openInventoryMenu(() -> openExplorationMenu());
                     break;
-                case 5: // quest
+                case 5: // skills
+                    window.removeInputObsever(this);
+                    openSkillMenu(() -> openExplorationMenu());
+                    break;
+                case 6: // spells
+                    window.removeInputObsever(this);
+                    openSpellMenu(() -> openExplorationMenu());
+                    break;
+                case 7: // quest
                     window.removeInputObsever(this);
                     openQuestMenu(() -> openExplorationMenu());
                     break;
-                case 6: // status
+                case 8: // status
                     window.removeInputObsever(this);
                     openStatusMenu(() -> openExplorationMenu());
                     break;
-                case 7:
+                case 9: // wait
                     window.removeInputObsever(this);
                     openWaitMenu(() -> openExplorationMenu());
                     break;
-                case 8: // save
+                case 10: // save
                     window.removeInputObsever(this);
                     openSaveMenu(() -> openExplorationMenu());
                     break;
-                case 9: // load
+                case 11: // load
                     window.removeInputObsever(this);
                     openLoadMenu(() -> openExplorationMenu());
                     break;
-                case 10: // main Menu
+                case 12: // main Menu
                     window.removeInputObsever(this);
                     openMainMenu();
                     break;
@@ -1799,6 +1807,206 @@ public class Game {
 
             }
         });
+    }
+
+    private static void openSkillMenu(Runnable back) {
+        Window.clearSide();
+        Window.appendSide(
+                String.format("%-14s%6s%18s\n", "Name", "Cost", "Description"));
+        Window.appendSide("------------------------------------------------\n");
+        Window.appendSide(String.format("0: Back\n"));
+        int i = 1;
+        for (Skill skill : Player.getInstance().getCombinedSkills()) {
+            if (i % 2 != 0) {
+                Window.appendSide(
+                        String.format("%-14s%5d%25s\n",
+                                i++ + ": "
+                                        + Game.capitalizeFirstLetter(
+                                                skill.getName()),
+                                skill.getStaminaCost(), skill.getDescription()),
+                        new Color(244, 244, 244));
+
+            } else {
+                Window.appendSide(String.format("%-14s%5d%25s\n",
+                        i++ + ": "
+                                + Game.capitalizeFirstLetter(skill.getName()),
+                        skill.getStaminaCost(), skill.getDescription()));
+
+            }
+
+        }
+        Window.getInstance().addInputObsever(new InputObserver() {
+            @Override
+            public void inputChanged(InputEvent evt) {
+                int skillIndex = -2;
+                if (Game.isNumeric(evt.getText())) {
+                    skillIndex = Integer.parseInt(evt.getText()) - 1;
+                }
+                if (skillIndex >= 0 && skillIndex < Player.getInstance()
+                        .getCombinedSkills().size()) {
+                    skillChoiceMenu(() -> openSkillMenu(back), skillIndex);
+                    Window.getInstance().removeInputObsever(this);
+                } else if (skillIndex == -1) {
+                    Window.getInstance().removeInputObsever(this);
+                    back.run();
+                } else {
+                    Window.appendText("Invalid Attack\n");
+
+                }
+            }
+        });
+    }
+
+    private static void skillChoiceMenu(Runnable back, int skillIndex) {
+        Skill skill = Player.getInstance().getCombinedSkills().get(skillIndex);
+        Window.clearSide();
+        if (skill != null) {
+            Window.appendSide(capitalizeFirstLetter(skill.getName()));
+            Window.appendSide("\n0: Back\n1: Use\n2: Information\n");
+            Window.getInstance().addInputObsever(new InputObserver() {
+                @Override
+                public void inputChanged(InputEvent evt) {
+                    int command = -1;
+                    if (isNumeric(evt.getText())) {
+                        command = Integer.parseInt(evt.getText());
+                    }
+
+                    switch (command) {
+                    case 0: // back
+                        Window.getInstance().removeInputObsever(this);
+                        back.run();
+                        break;
+                    case 1: // use
+                        if (skill.isFieldUse()) {
+                            if (Player.getInstance()
+                                    .getCurrentStamina() >= skill
+                                            .getStaminaCost()) {
+                                Player.getInstance().useSkill(skillIndex,
+                                        Player.getInstance());
+                                Window.getInstance().removeInputObsever(this);
+                                back.run();
+                            } else {
+                                Window.appendText(
+                                        "You don't have enough stamina!\n");
+                            }
+                        } else {
+                            Window.appendText(
+                                    "You can't use that skill out of battle!\n");
+                        }
+                        break;
+                    case 2: // information
+                        Window.appendText(skill.getLongDescription() + "\n");
+                        break;
+                    default:
+                        Window.appendText("Invalid Command\n");
+                        break;
+                    }
+
+                }
+            });
+        } else {
+            LOG.error("Somehow you tried to access an item that dosn't exist");
+        }
+    }
+    
+    private static void openSpellMenu(Runnable back) {
+        Window.clearSide();
+        Window.appendSide(
+                String.format("%-14s%6s%18s\n", "Name", "Cost", "Description"));
+        Window.appendSide("------------------------------------------------\n");
+        Window.appendSide(String.format("0: Back\n"));
+        int i = 1;
+        for (Spell spell : Player.getInstance().getSpells()) {
+            if (i % 2 != 0) {
+                Window.appendSide(
+                        String.format("%-14s%5d%25s\n",
+                                i++ + ": "
+                                        + Game.capitalizeFirstLetter(
+                                                spell.getName()),
+                                spell.getManaCost(), spell.getDescription()),
+                        new Color(244, 244, 244));
+
+            } else {
+                Window.appendSide(String.format("%-14s%5d%25s\n",
+                        i++ + ": "
+                                + Game.capitalizeFirstLetter(spell.getName()),
+                        spell.getManaCost(), spell.getDescription()));
+
+            }
+
+        }
+        Window.getInstance().addInputObsever(new InputObserver() {
+            @Override
+            public void inputChanged(InputEvent evt) {
+                int spellIndex = -2;
+                if (Game.isNumeric(evt.getText())) {
+                    spellIndex = Integer.parseInt(evt.getText()) - 1;
+                }
+                if (spellIndex >= 0 && spellIndex < Player.getInstance()
+                        .getSpells().size()) {
+                    spellChoiceMenu(() -> openSpellMenu(back), spellIndex);
+                    Window.getInstance().removeInputObsever(this);
+                } else if (spellIndex == -1) {
+                    Window.getInstance().removeInputObsever(this);
+                    back.run();
+                } else {
+                    Window.appendText("Invalid Attack\n");
+
+                }
+            }
+        });
+    }
+    
+    private static void spellChoiceMenu(Runnable back, int spellIndex) {
+        Spell spell = Player.getInstance().getSpells().get(spellIndex);
+        Window.clearSide();
+        if (spell != null) {
+            Window.appendSide(capitalizeFirstLetter(spell.getName()));
+            Window.appendSide("\n0: Back\n1: Use\n2: Information\n");
+            Window.getInstance().addInputObsever(new InputObserver() {
+                @Override
+                public void inputChanged(InputEvent evt) {
+                    int command = -1;
+                    if (isNumeric(evt.getText())) {
+                        command = Integer.parseInt(evt.getText());
+                    }
+
+                    switch (command) {
+                    case 0: // back
+                        Window.getInstance().removeInputObsever(this);
+                        back.run();
+                        break;
+                    case 1: // use
+                        if (spell.isFieldUse()) {
+                            if (Player.getInstance()
+                                    .getCurrentMana() >= spell
+                                            .getManaCost()) {
+                                Player.getInstance().useSpell(spellIndex,
+                                        Player.getInstance());
+                                Window.getInstance().removeInputObsever(this);
+                                back.run();
+                            } else {
+                                Window.appendText(
+                                        "You don't have enough mana!\n");
+                            }
+                        } else {
+                            Window.appendText(
+                                    "You can't use that spell out of battle!\n");
+                        }
+                        break;
+                    case 2: // information
+                        Window.appendText(spell.getLongDescription() + "\n");
+                        break;
+                    default:
+                        Window.appendText("Invalid Command\n");
+                        break;
+                    }
+
+                }
+            });
+        } else {
+            LOG.error("Somehow you tried to access an item that dosn't exist");
+        }
     }
 
     /**

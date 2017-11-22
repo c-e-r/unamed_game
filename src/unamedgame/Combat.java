@@ -148,10 +148,18 @@ public class Combat {
 
             break;
         case 2: // skill
-            player.useSkill(index, enemy);
+            if (player.getCombinedSkills().get(index).isOffensive()) {
+                player.useSkill(index, enemy);
+            } else {
+                player.useSkill(index, player);
+            }
             break;
         case 3: // spell
-            player.useSpell(index, enemy);
+            if (player.getSpells().get(index).isOffensive()) {
+                player.useSpell(index, enemy);
+            } else {
+                player.useSpell(index, player);
+            }
             break;
         case 4: // item
             if (player.getInventoryItem(index).isOffensive()) {
@@ -272,16 +280,8 @@ public class Combat {
                 }
                 if (skillIndex >= 0 && skillIndex < Player.getInstance()
                         .getCombinedSkills().size()) {
-                    if (player.getCurrentStamina() >= player.getCombinedSkills()
-                            .get(skillIndex).getStaminaCost()) {
-
-                        combatTurn(2, skillIndex);
-                        Window.getInstance().removeInputObsever(this);
-                    } else {
-
-                        Window.appendText("Not enough stamina\n");
-
-                    }
+                    skillChoiceMenu(() -> skillSelection(back), skillIndex);
+                    Window.getInstance().removeInputObsever(this);
                 } else if (skillIndex == -1) {
                     Window.getInstance().removeInputObsever(this);
                     back.run();
@@ -291,6 +291,55 @@ public class Combat {
                 }
             }
         });
+    }
+
+    private void skillChoiceMenu(Runnable back, int skillIndex) {
+        Skill skill = Player.getInstance().getCombinedSkills().get(skillIndex);
+        Window.clearSide();
+        if (skill != null) {
+            Window.appendSide(Game.capitalizeFirstLetter(skill.getName()));
+            Window.appendSide("\n0: Back\n1: Use\n2: Information\n");
+            Window.getInstance().addInputObsever(new InputObserver() {
+                @Override
+                public void inputChanged(InputEvent evt) {
+                    int command = -1;
+                    if (Game.isNumeric(evt.getText())) {
+                        command = Integer.parseInt(evt.getText());
+                    }
+
+                    switch (command) {
+                    case 0: // back
+                        Window.getInstance().removeInputObsever(this);
+                        back.run();
+                        break;
+                    case 1: // use
+                        if (skill.isBattleUse()) {
+                            if (player.getCurrentStamina() >= skill
+                                    .getStaminaCost()) {
+
+                                combatTurn(2, skillIndex);
+                                Window.getInstance().removeInputObsever(this);
+                            } else {
+                                Window.appendText("Not enough stamina!\n");
+                            }
+                        } else {
+                            Window.appendText(
+                                    "That skill cant be used in combat!\n");
+                        }
+                        break;
+                    case 2: // information
+                        Window.appendText(skill.getLongDescription() + "\n");
+                        break;
+                    default:
+                        Window.appendText("Invalid Command\n");
+                        break;
+                    }
+
+                }
+            });
+        } else {
+            LOG.error("Somehow you tried to access an item that dosn't exist");
+        }
     }
 
     /**
@@ -334,16 +383,8 @@ public class Combat {
                 }
                 if (spellIndex >= 0 && spellIndex < Player.getInstance()
                         .getSpells().size()) {
-                    if (player.getCurrentMana() >= player.getSpells()
-                            .get(spellIndex).getManaCost()) {
-
-                        combatTurn(3, spellIndex);
-                        Window.getInstance().removeInputObsever(this);
-                    } else {
-
-                        Window.appendText("Not enough mana\n");
-
-                    }
+                    spellChoiceMenu(() -> spellSelection(back), spellIndex);
+                    Window.getInstance().removeInputObsever(this);
                 } else if (spellIndex == -1) {
                     Window.getInstance().removeInputObsever(this);
                     back.run();
@@ -353,6 +394,57 @@ public class Combat {
                 }
             }
         });
+    }
+
+    private void spellChoiceMenu(Runnable back, int spellIndex) {
+        Spell spell = Player.getInstance().getSpells().get(spellIndex);
+        Window.clearSide();
+        if (spell != null) {
+            Window.appendSide(Game.capitalizeFirstLetter(spell.getName()));
+            Window.appendSide("\n0: Back\n1: Use\n2: Information\n");
+            Window.getInstance().addInputObsever(new InputObserver() {
+                @Override
+                public void inputChanged(InputEvent evt) {
+                    int command = -1;
+                    if (Game.isNumeric(evt.getText())) {
+                        command = Integer.parseInt(evt.getText());
+                    }
+
+                    switch (command) {
+                    case 0: // back
+                        Window.getInstance().removeInputObsever(this);
+                        back.run();
+                        break;
+                    case 1: // use
+                        if (spell.isBattleUse()) {
+                            if (player.getCurrentMana() >= spell
+                                    .getManaCost()) {
+
+                                combatTurn(3, spellIndex);
+                                Window.getInstance().removeInputObsever(this);
+                            } else {
+
+                                Window.appendText("Not enough mana!\n");
+
+                            }
+                        } else {
+                            Window.appendText(
+                                    "That spell cant be used in combat!\n");
+                        }
+                        break;
+                    case 2: // information
+                        Window.appendText(spell.getLongDescription() + "\n");
+                        break;
+                    default:
+                        Window.appendText("Invalid Command\n");
+                        break;
+                    }
+
+                }
+            });
+        } else {
+            LOG.error("Somehow you tried to access an item that dosn't exist");
+        }
     }
 
     /**
