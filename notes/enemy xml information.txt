@@ -14,6 +14,9 @@
     <intellect>                     [OPTIONAL: default 0]   the enemy's intellect stat
     <spirit>                        [OPTIONAL: default 0]   the enemy's spirit stat
     <luck>                          [OPTIONAL: default 0]   the enemy's luck stat
+    <critChance>                    [OPTIONAL: default 0]   the enemy's base chance to crit
+    <critMult>                      [OPTIONAL: default 1.5] the enemy's crit chance multiplier
+    
                    \
     <attackChance>  |
     <skillChance>   | Must add up to 100                    used to decide what action the enemy will take in battle

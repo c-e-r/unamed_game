@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <skill
     name='bite'
+    combatUse='true'
     isAttack='true'
     skillType='offensive'
     attackHitBonus='0'

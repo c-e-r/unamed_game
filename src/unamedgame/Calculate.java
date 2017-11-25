@@ -35,13 +35,21 @@ public class Calculate {
      *            the weapon being used for the attack
      * @param offHandAttack
      *            if the attack is an offhand attack
-     * @return the damage
+     * @return an array with the damage as the first value and if the attack crit as the second
      */
-    public static int calculateAttackDamage(Entity attacker, Item weapon,
+    public static int[] calculateAttackDamage(Entity attacker, Item weapon,
             boolean offHandAttack) {
 
         double handMultiplier = 1;
         double strRequirementMod = 1;
+        double critMult = 1;
+        int crit = 0;
+        if (Dice.roll(Dice.CRIT_DIE) <= attacker.getEffectiveCritChance()
+                + weapon.getWeaponCritChance()) {
+            critMult = attacker.getEffectiveCritMult()
+                    + weapon.getWeaponCritMult();
+            crit = 1;
+        }
         if (offHandAttack) {
             handMultiplier = OFF_HAND_MULTIPLIER;
         }
@@ -54,25 +62,25 @@ public class Calculate {
         }
         int dieRoll = Dice.roll(weapon.getWeaponVariableDamage());
 
-        int damage = (int) (((((attacker.getEffectiveStrength()
+        int damage = (int) ((((((attacker.getEffectiveStrength()
                 + weapon.getWeaponBaseDamage() + dieRoll
                 + attacker.getEffectiveDamageBonus())
                 * attacker.getEffectiveDamageMult())) * handMultiplier)
-                * strRequirementMod);
+                * strRequirementMod) * critMult);
 
         LOG.debug(
-                "(((strength + weaponBase + weaponVariable + damageBonus) * damageMultiplier) * handMultipler) * strengthRequirementMod");
+                "((((strength + weaponBase + weaponVariable + damageBonus) * damageMultiplier) * handMultipler) * strengthRequirementMod) * critMultiplier");
         LOG.debug(String.format(
-                "Damage roll: (((%d + %d + %d[1-%d] + %d) * %.2f) * %.2f) * %.2f = %d",
+                "Damage roll: (((%d + %d + %d[1-%d] + %d) * %.2f) * %.2f) * %.2f) *%.2f = %d",
                 attacker.getEffectiveStrength(), weapon.getWeaponBaseDamage(),
                 dieRoll, weapon.getWeaponVariableDamage(),
                 attacker.getDamageBonus(), attacker.getEffectiveDamageMult(),
-                handMultiplier, strRequirementMod, damage));
+                handMultiplier, strRequirementMod, critMult, damage));
 
         if (damage < 0) {
-            return 0;
+            damage = 0;
         }
-        return damage;
+        return new int[] { damage, crit };
     }
 
     /**
@@ -86,13 +94,21 @@ public class Calculate {
      *            the weapon being used by the attacker
      * @param offHandAttack
      *            if the attack is an offhand attack
-     * @return the damage
+     * @return an array with the damage as the first value and if the attack crit as the second
      */
-    public static int calculateSkillAttackDamage(Entity attacker, Skill skill,
+    public static int[] calculateSkillAttackDamage(Entity attacker, Skill skill,
             Item weapon, boolean offHandAttack) {
 
         double handMultiplier = 1;
         double strRequirementMod = 1;
+        double critMult = 1;
+        int crit = 0;
+        if (Dice.roll(Dice.CRIT_DIE) <= attacker.getEffectiveCritChance()
+                + weapon.getWeaponCritChance()) {
+            critMult = attacker.getEffectiveCritMult()
+                    + weapon.getWeaponCritMult();
+            crit = 1;
+        }
         if (offHandAttack) {
             handMultiplier = OFF_HAND_MULTIPLIER;
         }
@@ -107,29 +123,29 @@ public class Calculate {
         int weaponDieRoll = Dice.roll(weapon.getWeaponVariableDamage());
         int skillDieRoll = Dice.roll(skill.getAttackVariableDamageBonus());
 
-        int damage = (int) (((attacker.getEffectiveStrength()
+        int damage = (int) ((((attacker.getEffectiveStrength()
                 + weapon.getWeaponBaseDamage() + weaponDieRoll
                 + attacker.getEffectiveDamageBonus()
                 + skill.getAttackDamageBonus() + skillDieRoll)
                 * (attacker.getEffectiveDamageMult()
                         + skill.getAttackDamageMult())
-                * handMultiplier) * strRequirementMod);
+                * handMultiplier) * strRequirementMod) * critMult);
 
         LOG.debug(
-                "(((strength + weaponBase + weaponVariable + damageBonus + skillBase + skillVariable) * (damageMultiplier + skillDamageMultiplier)) * handMultipler) * strengthRequirementMod");
+                "((((strength + weaponBase + weaponVariable + damageBonus + skillBase + skillVariable) * (damageMultiplier + skillDamageMultiplier)) * handMultipler) * strengthRequirementMod) * critMultiplier");
         LOG.debug(String.format(
-                "Damage roll: (((%d + %d + %d[1-%d] + %d + %d + %d[1-%d]) * (%.2f + %.2f)) * %.2f) * %.2f = %d",
+                "Damage roll: ((((%d + %d + %d[1-%d] + %d + %d + %d[1-%d]) * (%.2f + %.2f)) * %.2f) * %.2f) * %.2f= %d",
                 attacker.getEffectiveStrength(), weapon.getWeaponBaseDamage(),
                 weaponDieRoll, weapon.getWeaponVariableDamage(),
                 attacker.getDamageBonus(), skill.getAttackDamageBonus(),
                 skillDieRoll, skill.getAttackVariableDamageBonus(),
                 attacker.getEffectiveDamageMult(), skill.getAttackDamageMult(),
-                handMultiplier, strRequirementMod, damage));
+                handMultiplier, strRequirementMod, critMult, damage));
 
         if (damage < 0) {
-            return 0;
+            damage = 0;
         }
-        return damage;
+        return new int[] { damage, crit };
 
     }
 
@@ -178,7 +194,7 @@ public class Calculate {
     }
 
     /**
-     * Calcualtes the hit roll for a spell attack.
+     * Calculates the hit roll for a spell attack.
      * 
      * @param attacker
      *            the entity initiating the attack

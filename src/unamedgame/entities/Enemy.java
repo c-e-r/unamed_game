@@ -485,9 +485,21 @@ public final class Enemy extends Entity {
                 innateWeapon = new Item(element);
                 break;
             case "currency":
-                currency = Integer.parseInt(element.getText());
+                if (Game.isNumeric(element.getText())) {
+                    currency = Integer.parseInt(element.getText());
+                }
             case "currencyRoll":
-                currency += Dice.roll(Integer.parseInt(element.getText()));
+                if (Game.isNumeric(element.getText())) {
+                    currency += Dice.roll(Integer.parseInt(element.getText()));
+                }
+            case "critMult":
+                if (Game.isNumeric(element.getText())) {
+                    critMult = Integer.parseInt(element.getText());
+                }
+            case "critChance":
+                if (Game.isNumeric(element.getText())) {
+                    critChance = Integer.parseInt(element.getText());
+                }
             default:
                 LOG.error("Error unrecognized element name: "
                         + element.getName());

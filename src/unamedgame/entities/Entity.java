@@ -96,6 +96,12 @@ public class Entity extends Observable implements Serializable {
     protected int dodgeBonus;
     protected int dodgePenalty;
     protected int baseDodge = 20;
+    protected int critChance;
+    protected int critChanceBonus;
+    protected int critChancePenalty;
+    protected double critMult = 1.5;
+    protected double critMultBonus;
+    protected double critMultPenalty;
 
     protected int globalReduction;
     protected double globalResistance;
@@ -350,12 +356,15 @@ public class Entity extends Observable implements Serializable {
         String description = null;
 
         int damage = 0;
+        boolean crit = false;
 
         attackHit = Calculate.calculateAttackHitChance(attacker,
                 weaponHitChance) >= this.getEffectiveDodge();
         if (attackHit) {
-            damage = Calculate.calculateAttackDamage(attacker, weapon,
+            int[] calc = Calculate.calculateAttackDamage(attacker, weapon,
                     usingOffhandWeapon);
+            damage = calc[0];
+            crit = calc[1] == 1;
             damage = this.takeDamage(damage, weaponDamageType);
 
             if (attacker instanceof Player) {
@@ -374,7 +383,7 @@ public class Entity extends Observable implements Serializable {
 
         }
         // Replace the placeholder words with variables
-        printAttackDescription(description, attacker, damage, weapon);
+        printAttackDescription(description, attacker, damage, weapon, crit);
 
         if (attackHit) {
             attacker.triggerEffects("attack_hit");
@@ -426,7 +435,7 @@ public class Entity extends Observable implements Serializable {
     }
 
     public void printAttackDescription(String description, Entity attacker,
-            int damage, Item weapon) {
+            int damage, Item weapon, boolean crit) {
 
         for (String string : description.split("#")) {
             switch (string) {
@@ -445,11 +454,22 @@ public class Entity extends Observable implements Serializable {
                         Game.capitalizeFirstLetter(this.getUseName()));
                 break;
             case "damage":
-                if (damage == 0) {
-                    Window.appendText(Integer.toString(damage),
-                            Colors.DAMAGE_BLOCK);
+                if (crit) {
+                    if (damage == 0) {
+                        Window.appendText("*" + damage + "*",
+                                Colors.DAMAGE_BLOCK);
+                    } else {
+                        Window.appendText("*" + damage + "*",
+                                Colors.DAMAGE);
+                    }
                 } else {
-                    Window.appendText(Integer.toString(damage), Colors.DAMAGE);
+                    if (damage == 0) {
+                        Window.appendText(Integer.toString(damage),
+                                Colors.DAMAGE_BLOCK);
+                    } else {
+                        Window.appendText(Integer.toString(damage),
+                                Colors.DAMAGE);
+                    }
                 }
                 break;
             case "weaponName":
@@ -536,14 +556,15 @@ public class Entity extends Observable implements Serializable {
         String description = null;
 
         int damage = 0;
-        // Prevent damage from going below 0
-
+        boolean crit = false;
         if (skill.isAttack()) {
             attackHit = Calculate.calculateSkillAttackHitChance(attacker, skill,
                     weaponHitChance) >= this.getEffectiveDodge();
             if (attackHit) {
-                damage = Calculate.calculateSkillAttackDamage(attacker, skill,
-                        weapon, usingOffhandWeapon);
+                int[] calc = Calculate.calculateSkillAttackDamage(attacker,
+                        skill, weapon, usingOffhandWeapon);
+                damage = calc[0];
+                crit = calc[1] == 1;
                 damage = this.takeDamage(damage, weaponDamageType);
 
             }
@@ -565,7 +586,7 @@ public class Entity extends Observable implements Serializable {
         }
 
         // Replace keywords in description with variables
-        printAttackDescription(description, attacker, damage, weapon);
+        printAttackDescription(description, attacker, damage, weapon, crit);
         if (attackHit) {
             attacker.triggerEffects("skill_attack_hit");
             attacker.triggerEffects("all_attack_hit");
@@ -719,7 +740,7 @@ public class Entity extends Observable implements Serializable {
 
         }
         // Replace keywords in description with variables
-        printAttackDescription(description, attacker, 0, spellFocus);
+        printAttackDescription(description, attacker, 0, spellFocus, false);
         if (spellHit) {
             attacker.triggerEffects("spell_attack_hit");
             attacker.triggerEffects("all_attack_hit");
@@ -959,7 +980,7 @@ public class Entity extends Observable implements Serializable {
      * @param modifier
      *            the number to increase the stat by
      */
-    public void increaseModifier(String stat, int modifier) {
+    public void increaseModifier(String stat, double modifier) {
         switch (stat) {
         case "vitality":
             triggerEffects("vitality_increased_before");
@@ -1091,6 +1112,10 @@ public class Entity extends Observable implements Serializable {
         case "physicalResistance":
             physicalResistanceBonus += modifier;
             break;
+        case "critChance":
+            critChanceBonus += modifier;
+        case "critMult":
+            critMultBonus += modifier;
         default:
             break;
         }
@@ -1220,6 +1245,10 @@ public class Entity extends Observable implements Serializable {
         case "physicalResistance":
             physicalResistancePenalty += modifier;
             break;
+        case "critChance":
+            critChancePenalty += modifier;
+        case "critMult":
+            critMultPenalty += modifier;
         default:
             break;
         }
@@ -2751,6 +2780,10 @@ public class Entity extends Observable implements Serializable {
 
         case "carryCapacity":
             return getEffectiveCarryCapacity();
+        case "critChance":
+            return getEffectiveCritChance();
+        case "critMult":
+            return getEffectiveCritMult();
         default:
             break;
         }
@@ -3009,6 +3042,15 @@ public class Entity extends Observable implements Serializable {
      */
     public void addEntityListener(EntityListener listener) {
         entityListeners.add(listener);
+    }
+
+    public int getEffectiveCritChance() {
+        return (int) (dexterity * 0.5 + luck + critChance + critChanceBonus
+                - critChancePenalty);
+    }
+
+    public double getEffectiveCritMult() {
+        return critMult + critMultBonus - critMultPenalty;
     }
 
     /**

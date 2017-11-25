@@ -78,6 +78,8 @@ public class Item implements Serializable {
     private int weaponBaseDamage;
     private int weaponVariableDamage;
     private int weaponSpeed;
+    private int weaponCritChance;
+    private int weaponCritMult;
 
     private int piercingReduction;
     private int slashingReduction;
@@ -534,10 +536,11 @@ public class Item implements Serializable {
         }
         uses--;
         if (uses <= 0 && maxUses > 0 && user instanceof Player) {
-            if(user instanceof Player) {
-                Window.appendText(Game.capitalizeFirstLetter(getName()) + " has run out of uses\n");
+            if (user instanceof Player) {
+                Window.appendText(Game.capitalizeFirstLetter(getName())
+                        + " has run out of uses\n");
             }
-            if(perishable) {
+            if (perishable) {
                 user.removeItemFromInventory(this);
             }
         }
@@ -1029,6 +1032,13 @@ public class Item implements Serializable {
 
     public boolean isBound() {
         return bound;
+    }
+
+    public int getWeaponCritChance() {
+        return weaponCritChance;
+    }
+    public int getWeaponCritMult() {
+        return weaponCritMult;
     }
 
     /*

@@ -79,7 +79,7 @@ public final class Player extends Entity implements Serializable {
         dexterity = 3;
         intellect = 3;
         spirit = 3;
-        luck = 3;
+        luck = 50;
         expToNextLevel = 100;
         level = 1;
 
