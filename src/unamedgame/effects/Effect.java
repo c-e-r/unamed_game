@@ -28,7 +28,7 @@ public class Effect implements Serializable {
 
     private static final long serialVersionUID = 1153105558946744535L;
 
-    private static final Logger LOG = LogManager.getLogger(Game.class);
+    protected static final Logger LOG = LogManager.getLogger(Game.class);
 
     protected List<Effect> effects;
     protected String id;
@@ -51,6 +51,7 @@ public class Effect implements Serializable {
     protected String resistType;
     protected String repeatType;
     protected Entity owner;
+    protected Entity creator;
     protected Effect parent;
     protected boolean toSelf;
     protected int duration;
@@ -344,6 +345,7 @@ public class Effect implements Serializable {
      */
     public void instantiate(Entity owner, Entity creator) {
         this.owner = owner;
+        this.creator = creator;
         calculateAccuracy(creator);
 
         if (checkResistance()) {
@@ -695,9 +697,33 @@ public class Effect implements Serializable {
             return new HealEffect(effect,
                     Integer.parseInt(element.attributeValue("magnitude")));
         case "damage":
+            int critChance = 0;
+            if (Game.isNumeric(element.attributeValue("critChance"))) {
+                critChance = Integer
+                        .parseInt(element.attributeValue("critChance"));
+            }
+            int base = 0;
+            if (Game.isNumeric(element.attributeValue("critChance"))) {
+                base = Integer.parseInt(element.attributeValue("critChance"));
+            }
+            double critMult = 0;
+            if (Game.isDoubleNumeric(element.attributeValue("critMult"))) {
+                critMult = Double
+                        .parseDouble(element.attributeValue("critMult"));
+            }
+            double scaling = 0;
+            if (Game.isDoubleNumeric(element.attributeValue("scaling"))) {
+                scaling = Double.parseDouble(element.attributeValue("scaling"));
+            }
+            double percentRoll = 0;
+            if (Game.isDoubleNumeric(element.attributeValue("percentRoll"))) {
+                percentRoll = Double
+                        .parseDouble(element.attributeValue("percentRoll"));
+            }
             return new DamageEffect(effect,
-                    element.attributeValue("damageType"),
-                    Integer.parseInt(element.attributeValue("magnitude")));
+                    element.attributeValue("damageType"), base,
+                    element.attributeValue("stat"), scaling, critChance,
+                    critMult, percentRoll);
         default:
 
             return null;

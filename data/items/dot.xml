@@ -17,7 +17,7 @@
     <effect 
         type='damage'
         name='dotDot' 
-        magnitude='2' 
+        base='2' 
         duration='10000'
         increment='1'
         damageType='sacred' 

@@ -2040,6 +2040,9 @@ public class Game {
      * @return if the string contains only numeric characters
      */
     public static boolean isDoubleNumeric(String str) {
+        if(str == null) {
+            return false;
+        }
         return str.matches("\\d+.\\d+");
 
     }

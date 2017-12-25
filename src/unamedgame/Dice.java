@@ -36,5 +36,12 @@ public class Dice {
 		result = rand.nextInt(d) + 1;
 		return result;
 	}
+	
+	
+	public static double rollPercent(double n) {
+	    double random = rand.nextDouble();
+	    return random *n + 1-n;
+	    	    
+	}
 
 }

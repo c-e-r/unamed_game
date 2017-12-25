@@ -2695,6 +2695,9 @@ public class Entity extends Observable implements Serializable {
      * @return the stat as a double
      */
     public double getStat(String statName) {
+        if(statName == null) {
+            return 0;
+        }
         switch (statName) {
         case "vitality":
             return getEffectiveVitality();
@@ -2787,7 +2790,7 @@ public class Entity extends Observable implements Serializable {
         default:
             break;
         }
-        return baseDodge;
+        return 0;
 
     }
 

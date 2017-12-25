@@ -2,6 +2,7 @@ package unamedgame.effects;
 
 import java.util.List;
 
+import unamedgame.Dice;
 import unamedgame.entities.Entity;
 import unamedgame.entities.Player;
 import unamedgame.ui.Window;
@@ -16,8 +17,13 @@ import unamedgame.util.Colors;
 public class DamageEffect extends Effect {
 
     private static final long serialVersionUID = -6069813639114427398L;
-    private int magnitude;
+    private int base;
+    private String stat;
+    private double scaling;
+    private int critChance;
+    private double critMult;
     private int totalDamage;
+    private double percentRoll;
     private String damageType;
 
     /**
@@ -32,17 +38,31 @@ public class DamageEffect extends Effect {
      * @param magnitude
      *            the amount of damage the effect deals
      */
-    public DamageEffect(Effect effect, String damageType, int magnitude) {
+    public DamageEffect(Effect effect, String damageType, int base, String stat,
+            double scaling, int critChance, double critMult,
+            double percentRoll) {
         super(effect);
         this.damageType = damageType;
-        this.magnitude = magnitude;
+        this.base = base;
+        this.stat = stat;
+        this.critChance = critChance;
+        this.critMult = critMult;
+        this.percentRoll = percentRoll;
     }
 
     /**
      * Deals damage to the owner.
      */
     public void activate() {
-        totalDamage = owner.takeDamage(magnitude, damageType);
+        int statValue = (int) creator.getStat(stat);
+        double scaled = scaling*statValue;
+        scaled = scaled == 0? 1 :scaled;
+        double roll = Dice.rollPercent(percentRoll);
+        int damage;
+        damage = (int) ((base * scaled)
+                * roll);
+        LOG.debug(String.format("(%d * %2f (%2f * %d) * %2f ", base, scaled,scaling,  statValue, roll));
+        totalDamage = owner.takeDamage(damage, damageType);
         if (owner instanceof Player) {
             printDescription(playerRepeatEffectDescription);
         } else {
@@ -54,7 +74,15 @@ public class DamageEffect extends Effect {
      * Deals damage to the owner.
      */
     public void firstActivate() {
-        totalDamage = owner.takeDamage(magnitude, damageType);
+        int statValue = (int) creator.getStat(stat);
+        double scaled = scaling*statValue;
+        scaled = scaled == 0? 1 :scaled;
+        double roll = Dice.rollPercent(percentRoll);
+        int damage;
+        damage = (int) ((base * scaled)
+                * roll);
+        LOG.debug(String.format("(%d * %2f (%2f * %d) * %2f ", base, scaled,scaling,  statValue, roll));
+        totalDamage = owner.takeDamage(damage, damageType);
         if (owner instanceof Player) {
             printDescription(playerEffectDescription);
         } else {
@@ -66,11 +94,19 @@ public class DamageEffect extends Effect {
      * Deals Damage to the owner.
      */
     public void specialActivate() {
-        totalDamage = owner.takeDamage(magnitude, damageType);
+        int statValue = (int) creator.getStat(stat);
+        double scaled = scaling*statValue;
+        scaled = scaled == 0? 1 :scaled;
+        double roll = Dice.rollPercent(percentRoll);
+        int damage;
+        damage = (int) ((base * scaled)
+                * roll);
+        LOG.debug(String.format("(%d * %2f{%2f * %d} * %2f ", base, scaled,scaling,  statValue, roll));
+        totalDamage = owner.takeDamage(damage, damageType);
         if (owner instanceof Player) {
-            printDescription(playerSpecialEffectDescription);
+            printDescription(playerRepeatEffectDescription);
         } else {
-            printDescription(specialEffectDescription);
+            printDescription(repeatEffectDescription);
         }
     }
 
